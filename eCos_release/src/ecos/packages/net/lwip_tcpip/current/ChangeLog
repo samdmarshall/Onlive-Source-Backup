@@ -1,0 +1,233 @@
+2006-05-09  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* src/ecos/init.c (arp_timer): Only compile this function when
+	Ethernet is supported.
+	* include/lwipopts.h: PAP_SUPPORT & CHAP_SUPPORT must be either 0
+	or 1 otherwise we get compiler errors.
+	
+2006-03-26  Uwe Kindler <uwe_kindler@web.de>
+
+	* Updated the complete lwIP source to the latest lwIP
+	CVS version 1.1.1
+	* src/ecos/init.c Added call to netif_set_up(netif) in
+	function lwip_set_addr() - this is required since lwIP
+	version 1.0.0
+	* cdl/lwip_net.cdl Minor modifications for UDP configuration
+	options. Renamed CYGNUM_LWIP_TCPIP_THREAD_PRIORITY to
+	CYGNUM_LWIP_NETWORK_THREAD_PRIORITY and moved option outside
+	CYGPKG_LWIP_TCPIP component because the network thread needs to
+	run in all configurations.
+	* tests/nc_slave.c
+	* tests/tcpecho.c 
+	* tests/udpecho.c
+	* tests/sockets.c
+	* tests/httpd.c Added eCos test infrastructure to tests and 
+	made tests applicable depending on lwip configuration.
+
+2006-03-15  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* tests/nc_test_slave.c (nc_slave): Fix some of the compiler
+	warnings.
+
+2006-03-13  Uwe Kindler <uwe_kindler@web.de>
+
+	* cdl/lwip_net.cdl Changed default value of 
+	CYGNUM_LWIP_MEMP_NUM_SYS_TIMEOUT (required for DHCP). 
+	Replaced CYGPKG_LWIP_DHCP_OPTIONS with CYGPKG_LWIP_DHCP 
+	and add CYGOPT_LWIP_DHCP_MANAGEMENT for automatic DHCP
+	management.
+	* include/lwip/ip_addr.h Add macro ip_addr_netcmp() 
+	(copied from lwIP CVS).
+	* include/netif/etharp.h Updated file to version of
+	lwIP CVS.
+	* src/ecos/init.c Add include <pkgconf/net_lwip.h>
+	Add lwip_dhcp_fine_tmr() and lwip_dhcp_coarse_tmr()
+	for DHCP processing.
+	Change tcpip_init_done() to start DHCP timers and
+	ARP timer.
+	Changed lwip_set_addr() to properly setup IP adress
+	if DHCP is used.
+	Added lwip_dhcp_init() for start of DHCP client.
+	Removed start of ARP timer from ecosclue_init().
+	* src/netif/etharp.c Updated file to version of
+	lwIP CVS.
+	
+2006-03-02  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* cdl/lwip_net.cdl: Add the interfaces CYGPKG_NET_STACK,
+	CYGPKG_NET_STACK_INET and CYGPKG_NET_STACK_INET6 and say that we
+	implement a network stack and an IPv4 stack. Without these interfaces
+	some of the Ethernet device drivers won't be compiled.
+
+2006-02-24  Uwe Kindler <uwe_kindler@web.de>
+
+	* cdl/lwip_net.cdl: Changed names of configuration options
+	according to eCos configuration option naming convention in 
+	component writers guide.
+	* include/lwipopts.h: Changed mapping of eCos configuration
+	parameters to lwip configuration parameters. The mapping
+	was wrong because it expected a disabled eCos configuration
+	option is defined as 0 but a disabled eCos configuration option
+	is not defined.
+	* include/lwip/api.h Enumeration values of netconn_type are
+	defined conditional now to avoid compiler warnings if these
+	values are not evaluated in a switch statement.
+	* src/api/api_lib.c Compilation of code in several switch 
+	statements is now conditional depending on configured 
+	functionality.
+	* src/api/sockets.c Compilation of some code is now conditional 
+	depending on configured functionality.
+	* src/ecos/init.c Changed initialisation values to match the
+	new configuration option names.
+
+2005-10-07  Uwe Kindler <uwe_kindler@web.de>
+
+	* src/core/tcp_in.c: pbuf_free() assert triggered by 
+	NULLified inseg.p
+	* include/lwip/tcp.h Do no longer try to free pbuf 
+	when TCP_EVENT_RECV() is called without a callback 
+	handler, and without packet. 
+	* tests/nc_test_slave.c Fixed test_printf and diag_printf
+	format strings that caused errors or warnings.
+	* tests/nc_test_slave.c Included <lwip/inet.h> - required
+	for compilation
+	* src/ecos/init.c Added structs ip_addr ipaddr, netmask and gw
+	in lwip_init() if loop interface is used
+
+2004-05-05  Jani Monoses <jani@iv.ro>
+
+	* src/netif/ppp/ppp.c: Decrease sleep period in main thread
+	from 250ms to 1ms. Was a leftover of debugging the code and
+	slowing things down.
+
+2004-05-04  Jani Monoses <jani@iv.ro>
+
+	* cdl/lwip_net.cdl
+	* src/api/err.c
+	* src/api/tcpip.c
+	* src/api/sockets.c
+	* src/api/api_lib.c
+	* src/api/api_msg.c
+	* src/core/tcp_in.c
+	* src/core/ipv4/ip.c
+	* src/core/ipv4/ip_addr.c
+	* src/core/ipv4/ip_frag.c
+	* src/core/ipv4/icmp.c
+	* src/core/tcp_out.c
+	* src/core/mem.c
+	* src/core/raw.c
+	* src/core/tcp.c
+	* src/core/sys.c
+	* src/core/udp.c
+	* src/core/stats.c
+	* src/core/dhcp.c
+	* src/core/netif.c
+	* src/core/inet.c
+	* src/core/memp.c
+	* src/core/pbuf.c
+	* src/ecos/sio.c
+	* src/ecos/sys_arch.c
+	* src/ecos/init.c
+	* src/netif/ppp/vj.c
+	* src/netif/ppp/vj.h
+	* src/netif/ppp/randm.c
+	* src/netif/ppp/randm.h
+	* src/netif/ppp/vjbsdhdr.h
+	* src/netif/ppp/fsm.c
+	* src/netif/ppp/fsm.h
+	* src/netif/ppp/lcp.c
+	* src/netif/ppp/lcp.h
+	* src/netif/ppp/md5.c
+	* src/netif/ppp/md5.h
+	* src/netif/ppp/pap.c
+	* src/netif/ppp/pap.h
+	* src/netif/ppp/ppp.c
+	* src/netif/ppp/ppp.h
+	* src/netif/ppp/magic.c
+	* src/netif/ppp/magic.h
+	* src/netif/ppp/pppdebug.h
+	* src/netif/ppp/auth.c
+	* src/netif/ppp/auth.h
+	* src/netif/ppp/chap.c
+	* src/netif/ppp/chap.h
+	* src/netif/ppp/ipcp.c
+	* src/netif/ppp/ipcp.h
+	* src/netif/ppp/chpms.c
+	* src/netif/ppp/chpms.h
+	* src/netif/etharp.c
+	* src/netif/slipif.c
+	* src/netif/loopif.c
+	* tests/tcpecho.c
+	* tests/udpecho.c
+	* tests/nc_test_framework.h
+	* tests/nc_test_slave.c
+	* tests/httpd.c
+	* tests/sys_timeout.c
+	* tests/socket.c
+	* include/arch/cc.h
+	* include/arch/sys_arch.h
+	* include/arch/perf.h
+	* include/lwip/ip.h
+	* include/lwip/debug.h
+	* include/lwip/ip_addr.h
+	* include/lwip/api.h
+	* include/lwip/def.h
+	* include/lwip/err.h
+	* include/lwip/mem.h
+	* include/lwip/opt.h
+	* include/lwip/ip_frag.h
+	* include/lwip/raw.h
+	* include/lwip/sio.h
+	* include/lwip/tcp.h
+	* include/lwip/sys.h
+	* include/lwip/udp.h
+	* include/lwip/tcpip.h
+	* include/lwip/stats.h
+	* include/lwip/arch.h
+	* include/lwip/dhcp.h
+	* include/lwip/netif.h
+	* include/lwip/icmp.h
+	* include/lwip/inet.h
+	* include/lwip/memp.h
+	* include/lwip/pbuf.h
+	* include/lwip/snmp.h
+	* include/lwip/sockets.h
+	* include/lwip/api_msg.h
+	* include/netif/etharp.h
+	* include/netif/slipif.h
+	* include/netif/loopif.h
+	* include/network.h
+	* include/lwipopts.h : Initial import of the lwIP TCP/IP stack.
+
+//===========================================================================
+//####ECOSGPLCOPYRIGHTBEGIN####
+// -------------------------------------------
+// This file is part of eCos, the Embedded Configurable Operating System.
+// Copyright (C) 2004 eCosCentric  
+//
+// eCos is free software; you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 or (at your option) any later version.
+//
+// eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with eCos; if not, write to the Free Software Foundation, Inc.,
+// 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+//
+// As a special exception, if other files instantiate templates or use macros
+// or inline functions from this file, or you compile this file and link it
+// with other works to produce a work based on this file, this file does not
+// by itself cause the resulting work to be covered by the GNU General Public
+// License. However the source code for this file must still be made available
+// in accordance with section (3) of the GNU General Public License.
+//
+// This exception does not invalidate any other reasons why a work based on
+// this file might be covered by the GNU General Public License.
+//
+// -------------------------------------------
+//####ECOSGPLCOPYRIGHTEND####
+//===========================================================================

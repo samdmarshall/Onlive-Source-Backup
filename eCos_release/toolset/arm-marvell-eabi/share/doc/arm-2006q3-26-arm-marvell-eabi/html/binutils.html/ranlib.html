@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+<title>ranlib - GNU Binary Utilities</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="GNU Binary Utilities">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="objdump.html#objdump" title="objdump">
+<link rel="next" href="readelf.html#readelf" title="readelf">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="ranlib"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="readelf.html#readelf">readelf</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="objdump.html#objdump">objdump</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">5 ranlib</h2>
+
+<p><a name="index-ranlib-94"></a><a name="index-archive-contents-95"></a><a name="index-symbol-index-96"></a>
+<!-- man title ranlib generate index to archive. -->
+
+<pre class="smallexample">     <!-- man begin SYNOPSIS ranlib -->
+     ranlib [<samp><span class="option">-vV</span></samp>] <var>archive</var>
+     <!-- man end -->
+</pre>
+   <!-- man begin DESCRIPTION ranlib -->
+<p><samp><span class="command">ranlib</span></samp> generates an index to the contents of an archive and
+stores it in the archive.  The index lists each symbol defined by a
+member of an archive that is a relocatable object file.
+
+   <p>You may use `<samp><span class="samp">nm -s</span></samp>' or `<samp><span class="samp">nm --print-armap</span></samp>' to list this index.
+
+   <p>An archive with such an index speeds up linking to the library and
+allows routines in the library to call each other without regard to
+their placement in the archive.
+
+   <p>The <span class="sc">gnu</span> <samp><span class="command">ranlib</span></samp> program is another form of <span class="sc">gnu</span> <samp><span class="command">ar</span></samp>; running
+<samp><span class="command">ranlib</span></samp> is completely equivalent to executing `<samp><span class="samp">ar -s</span></samp>'. 
+See <a href="ar.html#ar">ar</a>.
+
+<!-- man end -->
+<!-- man begin OPTIONS ranlib -->
+<dl>
+<dt><samp><span class="env">-v</span></samp><dt><samp><span class="env">-V</span></samp><dt><samp><span class="env">--version</span></samp><dd>Show the version number of <samp><span class="command">ranlib</span></samp>. 
+</dl>
+
+<!-- man end -->
+</body></html>
+

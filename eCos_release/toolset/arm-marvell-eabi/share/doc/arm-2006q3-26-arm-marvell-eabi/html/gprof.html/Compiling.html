@@ -1,0 +1,126 @@
+<html lang="en">
+<head>
+<title>Compiling - GNU gprof</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="GNU gprof">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Introduction.html#Introduction" title="Introduction">
+<link rel="next" href="Executing.html#Executing" title="Executing">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Compiling"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Executing.html#Executing">Executing</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Introduction.html#Introduction">Introduction</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">2 Compiling a Program for Profiling</h2>
+
+<p>The first step in generating profile information for your program is
+to compile and link it with profiling enabled.
+
+   <p>To compile a source file for profiling, specify the `<samp><span class="samp">-pg</span></samp>' option when
+you run the compiler.  (This is in addition to the options you normally
+use.)
+
+   <p>To link the program for profiling, if you use a compiler such as <code>cc</code>
+to do the linking, simply specify `<samp><span class="samp">-pg</span></samp>' in addition to your usual
+options.  The same option, `<samp><span class="samp">-pg</span></samp>', alters either compilation or linking
+to do what is necessary for profiling.  Here are examples:
+
+<pre class="example">     cc -g -c myprog.c utils.c -pg
+     cc -o myprog myprog.o utils.o -pg
+</pre>
+   <p>The `<samp><span class="samp">-pg</span></samp>' option also works with a command that both compiles and links:
+
+<pre class="example">     cc -o myprog myprog.c utils.c -g -pg
+</pre>
+   <p>Note: The `<samp><span class="samp">-pg</span></samp>' option must be part of your compilation options
+as well as your link options.  If it is not then no call-graph data
+will be gathered and when you run <code>gprof</code> you will get an error
+message like this:
+
+<pre class="example">     gprof: gmon.out file is missing call-graph data
+</pre>
+   <p>If you add the `<samp><span class="samp">-Q</span></samp>' switch to suppress the printing of the call
+graph data you will still be able to see the time samples:
+
+<pre class="example">     Flat profile:
+     
+     Each sample counts as 0.01 seconds.
+       %   cumulative   self              self     total
+      time   seconds   seconds    calls  Ts/call  Ts/call  name
+      44.12      0.07     0.07                             zazLoop
+      35.29      0.14     0.06                             main
+      20.59      0.17     0.04                             bazMillion
+     
+      %         the percentage of the total running time of the
+</pre>
+   <p>If you run the linker <code>ld</code> directly instead of through a compiler
+such as <code>cc</code>, you may have to specify a profiling startup file
+<samp><span class="file">gcrt0.o</span></samp> as the first input file instead of the usual startup
+file <samp><span class="file">crt0.o</span></samp>.  In addition, you would probably want to
+specify the profiling C library, <samp><span class="file">libc_p.a</span></samp>, by writing
+`<samp><span class="samp">-lc_p</span></samp>' instead of the usual `<samp><span class="samp">-lc</span></samp>'.  This is not absolutely
+necessary, but doing this gives you number-of-calls information for
+standard library functions such as <code>read</code> and <code>open</code>.  For
+example:
+
+<pre class="example">     ld -o myprog /lib/gcrt0.o myprog.o utils.o -lc_p
+</pre>
+   <p>If you compile only some of the modules of the program with `<samp><span class="samp">-pg</span></samp>', you
+can still profile the program, but you won't get complete information about
+the modules that were compiled without `<samp><span class="samp">-pg</span></samp>'.  The only information
+you get for the functions in those modules is the total time spent in them;
+there is no record of how many times they were called, or from where.  This
+will not affect the flat profile (except that the <code>calls</code> field for
+the functions will be blank), but will greatly reduce the usefulness of the
+call graph.
+
+   <p>If you wish to perform line-by-line profiling,
+you will also need to specify the `<samp><span class="samp">-g</span></samp>' option,
+instructing the compiler to insert debugging symbols into the program
+that match program addresses to source code lines. 
+See <a href="Line_002dby_002dline.html#Line_002dby_002dline">Line-by-line</a>.
+
+   <p>In addition to the `<samp><span class="samp">-pg</span></samp>' and `<samp><span class="samp">-g</span></samp>' options, older versions of
+GCC required you to specify the `<samp><span class="samp">-a</span></samp>' option when compiling in
+order to instrument it to perform basic-block counting.  Newer
+versions do not require this option and will not accept it;
+basic-block counting is always enabled when `<samp><span class="samp">-pg</span></samp>' is on.
+
+   <p>When basic-block counting is enabled, as the program runs
+it will count how many times it executed each branch of each `<samp><span class="samp">if</span></samp>'
+statement, each iteration of each `<samp><span class="samp">do</span></samp>' loop, etc.  This will
+enable <code>gprof</code> to construct an annotated source code
+listing showing how many times each line of code was executed.
+
+   <p>It also worth noting that GCC supports a different profiling method
+which is enabled by the `<samp><span class="samp">-fprofile-arcs</span></samp>', `<samp><span class="samp">-ftest-coverage</span></samp>'
+and `<samp><span class="samp">-fprofile-values</span></samp>' switches. These switches do not produce
+data which is useful to <code>gprof</code> however, so they are not
+discussed further here.  There is also the
+`<samp><span class="samp">-finstrument-functions</span></samp>' switch which will cause GCC to insert
+calls to special user supplied instrumentation routines at the entry
+and exit of every function in their program.  This can be used to
+implement an alternative profiling scheme.
+
+   </body></html>
+

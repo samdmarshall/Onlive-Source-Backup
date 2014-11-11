@@ -1,0 +1,143 @@
+2006-12-03  Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* cdl/httpd.cdl: Corrected a CDL error in the requirements of
+	CYGOPT_NET_ATHTTPD_USE_FS
+
+2006-11-27  Jonathan Larmour  <jifl@eCosCentric.com>
+
+	* cdl/httpd.cdl: Improve CDL dependencies.
+
+2006-11-08  Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* doc/athttpd.sgml: Updated to describe lasted changes and corrected
+	minor typos.
+	* src/http.c: Check for "Content-Type" header. This is needed if we
+	want to support parsing form variables in POST requests.
+	* src/jim.c: Updated with latest release from Jim CVS.
+	* src/cgi.c: streamlined cyg_httpd_exec_cgi_tcl(), now uses the 'source'
+	command of tcl to execute a tcl script.
+	* src/forms.c: Modified cyg_handle_method_POST so that the variables in the
+	payload are scanned only if the request has a Content-Type 
+	of 'application/x-www-form-urlencoded'
+	* src/jim-aio.c: Added to package. Now tcl has IO functions to access a
+	file system.
+	* include/httpd.h: Added a new mode, CYG_HTTPD_MODE_FORM_DATA which is set
+	when a POST request has a Content-Type of 
+	'application/x-www-form-urlencoded'
+	    
+2006-10-16  Lars Povlsen  <lpovlsen@vitesse.com> and Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* cdl/httpd.cdl: add CYGOPT_NET_ATHTTPD_CLOSE_CHUNKED_CONNECTIONS. Default
+	is set to CLOSE, so it is backward compatible with 
+	previous versions of the browser.
+	* src/socket.c: cyg_httpd_process_request() uses a loop to collect at least
+	one full frame (til a header terminator is found), 
+	cyg_httpd_start_chunked() only close if configured to do so.
+	* src/httpd.c: Overhaul of cyg_httpd_send_error to avoid the use of
+	inbuffer as temporary storage (conflicts with pipelined frames),
+	removed the option to send a page after calling a C language
+	handler
+	* include/httpd.h: Added a new mode, CYG_HTTPD_MODE_NO_CACHE
+	    
+2006-10-12  Lars Povlsen  <lpovlsen@vitesse.com> and Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* cdl/httpd.cdl: add CYGNUM_ATHTTPD_SERVER_MAX_POST to limit POST'ed data
+	* include/http.h: Added header_end, post_data fields to httpstate,
+	Added "302 Found" for POST handler redirect (CYG_HTTPD_STATUS_MOVED_TEMPORARILY)
+	* src/forms.c: Fixed variable decoding, fixed large POST processing
+	* src/http.c: Fixed some debug ouptuts, cleanup after POST processing, 
+	overhaul of the pipelined requests code which can now
+	handle multiple requests per frame.
+	* src/socket.c: Removed assert for socket write failure, Accumulating receiving
+	of requests (Browsers (Firefox) may pass partial headers in separate 
+	fragments). Fixed some diagnostics output.
+
+2006-07-19  Anthony Tonizzo  <atonizzo@gmail.com> and Sergei Gavrikov  <w3sg@softhome.net>
+
+	* cdl/httpd.cdl: 
+	* doc/athttpd.sgml: Corrected some typos and rectified some omissions.
+	* include/jim.h:    Added an inline to Jim_InitExtension()
+	* src/cgi.c:        used malloc() instead of cyg_ldr_malloc();
+	* src/forms.c:      Added a #define to be able tio use the TCL scripting
+	without OBJLOADER
+	* src/http.c:       
+	* src/socket.c:     Lots of typos stamped out, and some better comments too.
+	                     
+2006-07-19  Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* src/socket.c: Corrected a typo that generated an assertion.
+	Modified slightly the source of cyg_httpd_write and cyg_httpd_writev
+	to make the code more consistent as to when assertions are thrown.
+
+2006-07-19  Sergei Gavrikov  <w3sg@softhome.net>
+
+	* doc/athttpd.sgml: jade doesn't allow underscores in
+	id attributes, so fix.
+
+2006-07-18  Jonathan Larmour  <jifl@eCosCentric.com>
+
+	* cdl/httpd.cdl: Add -D __ECOS in compiler flags.
+	Change include_dir to cyg/athttpd.
+	Rename all CDL options from *_HTTPD_* to *_ATHTTPD_*.
+	* All files: Rename cyg/httpd include directory to cyg/athttpd.
+	Rename all CDL options from *_HTTPD_* to *_ATHTTPD_*.
+	* doc/athttpd.sgml: Document MD5 algorithm licensing.
+	* src/socket.c: Remove unused SNTP include.
+
+2006-06-13  Anthony Tonizzo  <atonizzo@gmail.com>
+
+	* cdl/httpd.cdl: 
+	* doc/athttpd.sgml: 
+	* doc/mime_types.txt: 
+	* include/auth.h: 
+	* include/cgi.h: 
+	* include/digcalc.h: 
+	* include/forms.h: 
+	* include/global.h: 
+	* include/handler.h: 
+	* include/http.h: 
+	* include/jim.h: 
+	* include/md5.h: 
+	* include/socket.h: 
+	* src/auth.c: 
+	* src/cgi.c: 
+	* src/forms.c: 
+	* src/handler.c: 
+	* src/http.c: 
+	* src/jim.c: 
+	* src/md5c.c: 
+	* src/socket.c: 
+	Created ATHTTPD package.
+	
+//===========================================================================
+//####ECOSGPLCOPYRIGHTBEGIN####
+// -------------------------------------------
+// This file is part of eCos, the Embedded Configurable Operating System.
+// Copyright (C) 2005, 2006 eCosCentric Ltd.
+//
+// eCos is free software; you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 or (at your option) any later version.
+//
+// eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with eCos; if not, write to the Free Software Foundation, Inc.,
+// 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+//
+// As a special exception, if other files instantiate templates or use macros
+// or inline functions from this file, or you compile this file and link it
+// with other works to produce a work based on this file, this file does not
+// by itself cause the resulting work to be covered by the GNU General Public
+// License. However the source code for this file must still be made available
+// in accordance with section (3) of the GNU General Public License.
+//
+// This exception does not invalidate any other reasons why a work based on
+// this file might be covered by the GNU General Public License.
+//
+// -------------------------------------------
+//####ECOSGPLCOPYRIGHTEND####
+//===========================================================================

@@ -1,0 +1,163 @@
+#shell cp 8M.img em2k.img
+#shell cp fm2k.img em2k.img
+#shell cp ../utils/yaffs.small.img ./em2k.img
+#shell cp ../utils/yaffs.mtd-src.img ./em2k.img
+#watch ACPRs of an object->acprList
+define watch-acprgroup-blocklist
+	set $d_acprgroup = (yaffs_ACPRGroupInfo*)$arg0
+	set $i = 0
+	while $i < $d_acprgroup->nACPBlocks
+		p $d_acprgroup->acpBlockList[$i]
+		set $i = $i + 1
+	end
+end
+define show-device-ios
+	set $d_dev = $arg0
+	p $d_dev->nPageReads
+	p $d_dev->nPageWrites
+end
+define watch-obj-acprs
+  set $d_rl = (RList*)$arg0
+  set $link = ($d_rl)->head.next
+  while $link != &($d_rl->head)
+    set $d_rlEntry = (RListEntry*)$link
+    p $d_rlEntry->acpr
+    set $link = $link->next
+  end
+end
+define print-clean-acpr
+	set $clean_link = (struct ylist_head *)$arg0
+	set $clean_off = &(((RListEntry*)0)->clean_entry)
+	set $clean_rlEntry = (RListEntry*)((char*)$clean_link-(char*)$clean_off)
+	p $clean_link
+	p $clean_rlEntry
+	p $clean_rlEntry->acpr
+end
+define watch-all-clean-acprs
+  set $d_dev = (yaffs_Device*)$arg0
+  set $d_dl = &($d_dev->acprCleanList)
+  set $link = ($d_dl)->next
+  while $link != $d_dl
+    print-clean-acpr $link
+    set $link = $link->next
+  end
+end
+define get-number-dirty-acprs-incleanlist
+  set $d_dev = (yaffs_Device*)$arg0
+  set $d_dl = &($d_dev->acprCleanList)
+  set $clean_off = &(((RListEntry*)0)->clean_entry)
+  set $link = ($d_dl)->next
+  set $number = 0
+  while $link != $d_dl
+  	set $rlEntry = (RListEntry*)((char*)$link-(char*)$clean_off)
+  	if $rlEntry->dirty_entry.next != &($rlEntry->dirty_entry)
+  		set $number = $number + 1
+  	end
+    set $link = $link->next
+  end
+  print $number
+end
+define get-number-dirty-acprs
+	set $d_dev = (yaffs_Device*)$arg0
+	set $d_dl = &($d_dev->acprDirtyList)
+  set $link = ($d_dl)->next
+  set $number = 0
+  while $link != $d_dl
+    set $number = $number + 1
+    set $link = $link->next
+  end
+  print $number
+end
+define print-dirty-acpr
+	set $dirty_link = (struct ylist_head *)$arg0
+	set $dirty_off = &(((RListEntry*)0)->dirty_entry)
+	set $dirty_rlEntry = (RListEntry*)((char*)$dirty_link-(char*)$dirty_off)
+	p $clean_link
+	p $dirty_rlEntry
+	p $dirty_rlEntry->acpr
+end
+define watch-all-dirty-acprs
+	set $d_dev = (yaffs_Device*)$arg0
+	set $d_dl = &($d_dev->acprDirtyList)
+  set $link = ($d_dl)->next
+  while $link != $d_dl
+    print-dirty-acpr $link
+    set $link = $link->next
+  end
+end
+define showchunkbits
+	set $d_dev = (yaffs_Device*)$arg0
+	set $d_blk = (int)$arg1
+	set $d_blkBits = $d_dev->chunkBits + $d_dev->chunkBitmapStride*($d_blk-$d_dev->internalStartBlock)
+	print "%p",$d_blkBits
+end
+
+#b dtest.c:2861
+#b diff_dir
+
+#b yaffsfs.c:476 if (obj->objectId==476)
+
+#b rlist.c:228
+
+#b yaffs_close
+
+#b yaffs_ACPScanBackwards
+#b yaffs_BlockBecameDirty
+
+#b yaffs_guts.c:6345
+#shell cp 16M.img em2k.img
+
+
+#### 090629 ####
+# verify /home/zhengshi/nfs/img/hzchen/mtd-utils-1.2.0/ / 1
+# diff /home/zhengshi/nfs/img/hzchen/mtd-utils-1.2.0/ /
+# !ls -l /home/zhengshi/nfs/img/hzchen/mtd-utils-1.2.0/tests/ubi-tests
+
+#b fstest.c:800
+#b fstest.c:322 if source_stat.st_ino == 11059439
+
+## handle ACP bits
+#b yaffs_guts.c:463
+
+## collect ACPRs
+#b yaffs_guts.c:7149 if acpr->objectId == 438
+#b yaffs_guts.c:7283
+#b yaffs_ACPCollectACPRs
+
+## scan ACPRs
+#b yaffs_guts.c:6641 if acpr->objectId == 438
+#b yaffs_guts.c:6658 if acpr->objectId == 455
+#b yaffs_guts.c:7286 if acpr->objectId == 455
+#b yaffs_guts.c:7021 if acpr->objectId==588
+
+## yaffs_MkNodObject
+#b yaffs_guts.c:2500
+
+#b yaffs_DoGenericObjectDeletion if in->objectId==279
+
+#b yaffs_ACPEraseACPRGroup
+
+## ACPStartNewACPRGroup
+#b yaffs_ACP.c:408
+#b yaffs_ACP.c:424 if rlEntry->acpr.objectId == 438
+#b yaffs_ACP.c:436
+#b yaffs_ACPStartNewACPRGroup
+
+## ACPFlushBuffer
+#b yaffs_ACPFlushBuffer
+#b yaffs_ACP.c:526 if tags.chunkId==15 || tags.chunkId==14
+
+## ACPRWrite
+#b yaffs_ACP.c:605 if acprGroup->pageSequence==15
+#b yaffs_PackExtInfoIntoACPR if acpr->objectId==588
+#b yaffs_AddToACPRCleanList if rlEntry->acpr.objectId == 438 || rlEntry->acpr.objectId == 729
+#b yaffs_AddToACPRDirtyList if rlEntry->acpr.objectId == 438 || rlEntry->acpr.objectId == 729
+
+#b fileem_WriteChunkWithTagsToNAND
+
+#b rlist.c:730 if acpr->objectId == 588
+#b RList_Update_Range_Backward if scanRLE->acpr.objectId==704
+#b RList_SetRListEntryExtraInfo if tags->objectId==588
+#b rlist.c:611 if acpr->objectId == 687
+
+#b fstest.c:669 if yaffsfs_handle[0].obj.objectId==455

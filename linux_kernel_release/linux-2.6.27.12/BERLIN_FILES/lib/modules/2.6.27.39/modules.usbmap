@@ -1,0 +1,4 @@
+# usb module         match_flags idVendor idProduct bcdDevice_lo bcdDevice_hi bDeviceClass bDeviceSubClass bDeviceProtocol bInterfaceClass bInterfaceSubClass bInterfaceProtocol driver_info
+usb8786              0x0003      0x1286   0x203c    0x0000       0x0000       0x00         0x00            0x00            0x00            0x00               0x00               0x0
+usb8xxx              0x0003      0x1286   0x2030    0x0000       0x0000       0x00         0x00            0x00            0x00            0x00               0x00               0x0
+usb8xxx              0x0003      0x1286   0x2031    0x0000       0x0000       0x00         0x00            0x00            0x00            0x00               0x00               0x0

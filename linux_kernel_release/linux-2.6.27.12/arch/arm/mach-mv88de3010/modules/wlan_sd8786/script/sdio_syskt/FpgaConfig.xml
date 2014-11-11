@@ -1,0 +1,11 @@
+<FpgaConfig>
+ <FpgaParameters>
+  <bus_type>1</bus_type>
+  <bus_width>4</bus_width>
+  <clock_speed>0</clock_speed>
+  <dma_support>1</dma_support>
+  <sdio_voltage>ef</sdio_voltage>
+  <intmode>0</intmode>
+  <gpiopin>2</gpiopin>
+ </FpgaParameters>
+</FpgaConfig>

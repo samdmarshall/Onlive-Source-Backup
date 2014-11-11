@@ -1,0 +1,27 @@
+This's ethernet on CPU#0 (half-duplex 100Mbps) by-default how to:
+
+1. After check out, overlap repository ecos.db with ecos.db here
+2. run ecosconfig tool to create compilation tree.
+3. In the tree, add one line "include $(REPOSITORY)/pkgconf/galois_rules.mak" before the last
+line "include $(REPOSITORY)/pkgconf/rules.mak" in "galois_cesnet/devs/eth/arm/galois/current/makefile".
+NOTE: please make sure that galois_rules.mak has the correct GaloisSoftware directory in your PC.
+
+NOTE: please refer to packages/templates/cesnet/ for a reference.
+
+
+NOTE:
+RTOS programming: avoid startvation
+THREAD			PRIORITY
+cyg_cpuload_calibrate: 1
+cyg_alarm_timeout_init: 6
+cyg_net_init: 7
+dhcp_mgt_thread: 8
+cyg_sntp_start: 8
+tftpd_start: 10
+cyg_httpd_startup: 16
+
+main() thread: 10
+
+
+So if someone calls dhcp client, please prevent that it's starved by other higher priority threads,
+such as main().

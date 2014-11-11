@@ -1,0 +1,78 @@
+<?xml version="1.0" standalone='no'?>
+<!DOCTYPE manpage SYSTEM "xmltoman.dtd">
+<?xml-stylesheet type="text/xsl" href="xmltoman.xsl" ?>
+
+<!-- $Id: ifplugd.conf.5.xml.in 52 2003-10-17 00:09:23Z lennart $ -->
+
+<!-- 
+  This file is part of ifplugd.
+
+  ifplugd is free software; you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free
+  Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
+
+  ifplugd is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+  for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with ifplugd; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA. 
+-->
+
+  <manpage name="ifplugd.conf" section="5" desc="ifplugd configuration file">
+
+	<synopsis>
+	  <cmd>@sysconfdir@/ifplugd/ifplugd.conf</cmd>
+	</synopsis>
+	
+	<description>
+	  <p>ifplugd.conf is the configuration file for ifplugd. It is a
+	  shell script that is sourced by the init script starting
+	  the daemon. It shall be used to set environment variables which
+	  are interpreted by the init script:</p>
+	</description>
+	
+	<options>
+
+	  <option>
+		<p><opt>INTERFACES</opt></p> <optdesc><p>Specifies the
+		ethernet interfaces to monitor. It has to contain a space
+		seperated list of network interfaces names. Most users will
+		probably use "eth0" here, however you may add additional
+		interfaces for monitoring more than one device. A special
+		value is supported as well: "auto" will enable a more or less
+		working auto detection of available network devices. This
+		won't make you happy when using network module auto loading,
+		since it cannot detect currently unloaded network
+		devices.</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>ARGS</opt></p> <optdesc><p>Additional command line
+		arguments for ifplugd invocation. See <manref name="ifplugd"
+		section="8"/> for further information.</p></optdesc>
+	  </option>
+
+
+	  <option>
+	       <p><opt>ARGS_</opt><arg>iface</arg></p>
+                  
+	       <optdesc><p>If specified for an interface this variable takes precedence over ARGS. This may be useful if more than one network device is present.</p></optdesc>
+	  </option>
+	</options>
+	
+	<section name="See also">
+	  <p>
+		<manref name="ifplugd" section="8"/>
+	  </p>
+	</section>
+	
+	<section name="Comments">
+	  <p>This man page was written using <manref name="xmltoman" section="1"
+		  href="http://masqmail.cx/xml2man/"/> by Oliver Kurth.</p>
+	</section>
+	
+  </manpage>

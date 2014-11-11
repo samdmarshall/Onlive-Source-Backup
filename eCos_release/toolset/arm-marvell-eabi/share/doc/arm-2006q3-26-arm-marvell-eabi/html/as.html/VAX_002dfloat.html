@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+<title>VAX-float - Using as</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using as">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Vax_002dDependent.html#Vax_002dDependent" title="Vax-Dependent">
+<link rel="prev" href="VAX_002dOpts.html#VAX_002dOpts" title="VAX-Opts">
+<link rel="next" href="VAX_002ddirectives.html#VAX_002ddirectives" title="VAX-directives">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="VAX-float"></a>
+<a name="VAX_002dfloat"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="VAX_002ddirectives.html#VAX_002ddirectives">VAX-directives</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="VAX_002dOpts.html#VAX_002dOpts">VAX-Opts</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Vax_002dDependent.html#Vax_002dDependent">Vax-Dependent</a>
+<hr>
+</div>
+
+<h4 class="subsection">8.32.2 VAX Floating Point</h4>
+
+<p><a name="index-VAX-floating-point-1669"></a><a name="index-floating-point_002c-VAX-1670"></a>Conversion of flonums to floating point is correct, and
+compatible with previous assemblers.  Rounding is
+towards zero if the remainder is exactly half the least significant bit.
+
+   <p><code>D</code>, <code>F</code>, <code>G</code> and <code>H</code> floating point formats
+are understood.
+
+   <p>Immediate floating literals (<em>e.g.</em> `<samp><span class="samp">S`$6.9</span></samp>')
+are rendered correctly.  Again, rounding is towards zero in the
+boundary case.
+
+   <p><a name="index-g_t_0040code_007bfloat_007d-directive_002c-VAX-1671"></a><a name="index-g_t_0040code_007bdouble_007d-directive_002c-VAX-1672"></a>The <code>.float</code> directive produces <code>f</code> format numbers. 
+The <code>.double</code> directive produces <code>d</code> format numbers.
+
+   </body></html>
+

@@ -1,0 +1,24 @@
+/*
+ * 2010-5-11 zhengshi@marvell.com
+ *     Steps to test STR
+ *
+ */
+
+1. Build linux kernel
+Enable CONFIG_PM and rebuild the kernel
+
+2. Check out GaloisSoftware rev.33176 or later
+make Berlin_Player
+
+3. Check out SDK rev.4114 or later
+generate uNAND image or OU image
+
+4. Upgrade the target platform using image generated in step 3
+
+5. Power on the target platform
+in serial console, run
+root@Galois:~# echo mem > /sys/power/state
+the system will enter suspend state.
+And the you can wake up the platform by either
+ using keypad in front IO board or IR controller.
+

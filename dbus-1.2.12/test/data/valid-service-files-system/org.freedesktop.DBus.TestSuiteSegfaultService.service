@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuiteSegfaultService
+Exec=/src/jhbuild/checkout/dbus/test/test-segfault
+User=anyrandomuser
+

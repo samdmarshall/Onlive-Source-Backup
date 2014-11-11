@@ -1,0 +1,10 @@
+current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+current/include/hal_platform_setup.h:        mcr        MMU_CP,0,r1,MMU_Control,c0
+current/include/.svn/text-base/hal_platform_setup.h.svn-base:        mcr  p15,0,r0,c1,c0,0
+current/include/.svn/text-base/hal_platform_setup.h.svn-base:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+current/include/.svn/text-base/hal_platform_setup.h.svn-base:        mcr        MMU_CP,0,r1,MMU_Control,c0
+current/src/orion_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+current/src/orion_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+current/src/.svn/text-base/orion_misc.c.svn-base:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+current/src/.svn/text-base/orion_misc.c.svn-base:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);

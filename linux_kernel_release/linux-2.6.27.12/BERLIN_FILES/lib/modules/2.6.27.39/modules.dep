@@ -1,0 +1,73 @@
+/lib/modules/2.6.27.39/kernel/crypto/aead.ko:
+/lib/modules/2.6.27.39/kernel/crypto/aes_generic.ko:
+/lib/modules/2.6.27.39/kernel/crypto/arc4.ko:
+/lib/modules/2.6.27.39/kernel/crypto/authenc.ko: /lib/modules/2.6.27.39/kernel/crypto/crypto_hash.ko /lib/modules/2.6.27.39/kernel/crypto/aead.ko
+/lib/modules/2.6.27.39/kernel/crypto/ccm.ko: /lib/modules/2.6.27.39/kernel/crypto/aead.ko
+/lib/modules/2.6.27.39/kernel/lib/crc16.ko:
+/lib/modules/2.6.27.39/kernel/crypto/cryptd.ko: /lib/modules/2.6.27.39/kernel/crypto/crypto_hash.ko
+/lib/modules/2.6.27.39/kernel/crypto/crypto_hash.ko:
+/lib/modules/2.6.27.39/kernel/crypto/ctr.ko:
+/lib/modules/2.6.27.39/kernel/crypto/cts.ko:
+/lib/modules/2.6.27.39/kernel/drivers/media/dvb/dvb-core/dvb-core.ko:
+/lib/modules/2.6.27.39/kernel/crypto/ecb.ko:
+/lib/modules/2.6.27.39/kernel/crypto/gcm.ko: /lib/modules/2.6.27.39/kernel/crypto/aead.ko /lib/modules/2.6.27.39/kernel/crypto/gf128mul.ko
+/lib/modules/2.6.27.39/kernel/crypto/gf128mul.ko:
+/lib/modules/2.6.27.39/kernel/drivers/input/joydev.ko:
+/lib/modules/2.6.27.39/kernel/lib/libcrc32c.ko:
+/lib/modules/2.6.27.39/kernel/crypto/lzo.ko: /lib/modules/2.6.27.39/kernel/lib/lzo/lzo_decompress.ko /lib/modules/2.6.27.39/kernel/lib/lzo/lzo_compress.ko
+/lib/modules/2.6.27.39/kernel/lib/lzo/lzo_compress.ko:
+/lib/modules/2.6.27.39/kernel/lib/lzo/lzo_decompress.ko:
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_usb8786/mlan.ko:
+/lib/modules/2.6.27.39/kernel/drivers/input/mousedev.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_ascii.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp1250.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp1251.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp1255.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp737.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp775.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp850.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp852.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp855.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp857.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp860.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp861.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp862.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp863.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp864.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp865.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp866.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp869.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp874.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp932.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp936.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp949.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_cp950.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_euc-jp.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-13.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-14.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-15.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-2.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-3.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-4.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-5.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-6.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-7.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_iso8859-9.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_koi8-r.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_koi8-ru.ko:
+/lib/modules/2.6.27.39/kernel/fs/nls/nls_koi8-u.ko:
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/regmap/regmap.ko:
+/lib/modules/2.6.27.39/kernel/crypto/rmd128.ko:
+/lib/modules/2.6.27.39/kernel/crypto/rmd160.ko:
+/lib/modules/2.6.27.39/kernel/crypto/rmd256.ko:
+/lib/modules/2.6.27.39/kernel/crypto/rmd320.ko:
+/lib/modules/2.6.27.39/kernel/crypto/salsa20_generic.ko:
+/lib/modules/2.6.27.39/kernel/drivers/scsi/scsi_wait_scan.ko:
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8786/sd8786.ko: /lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8786/sdmlan.ko
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8787/sd8787.ko: /lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8786/sdmlan.ko
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8786/sdmlan.ko:
+/lib/modules/2.6.27.39/kernel/crypto/seed.ko:
+/lib/modules/2.6.27.39/kernel/crypto/seqiv.ko: /lib/modules/2.6.27.39/kernel/crypto/aead.ko
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_usb8786/usb8786.ko: /lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_sd8786/sdmlan.ko /lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_usb8786/mlan.ko
+/lib/modules/2.6.27.39/kernel/arch/arm/mach-mv88de3010/modules/wlan_usb8682/usb8xxx.ko:
+/lib/modules/2.6.27.39/kernel/crypto/xts.ko: /lib/modules/2.6.27.39/kernel/crypto/gf128mul.ko

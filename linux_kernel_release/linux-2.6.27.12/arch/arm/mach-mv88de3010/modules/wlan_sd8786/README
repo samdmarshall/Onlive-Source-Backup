@@ -1,0 +1,1423 @@
+===============================================================================
+			U S E R  M A N U A L
+
+ Copyright (C) 2008-2009, Marvell International Ltd. 
+ All Rights Reserved
+
+1) FOR DRIVER BUILD
+
+	Goto source code directory wlan_src/. 
+	make [clean] build	
+	The driver and utility binaries can be found in ../bin_xxxx directory.
+
+2) FOR DRIVER INSTALL
+
+	a) Copy helper_sd.bin and sd8786.bin | sd8688.bin | ... to /lib/firmware/mrvl/ directory,
+	   create the directory if it doesn't exist. 
+	b) Install SDIO bus driver and WLAN driver:
+		./load sd8786 | sd8688 | ...
+	c) Uninstall WLAN driver and SDIO bus driver:
+		./unload
+
+3) FOR DRIVER PROC & DEBUG
+
+	The following info are provided in /proc/net/mwlan/mlanX/info,
+	on kernel 2.6.24 or later, the entry is /proc/mwlan/mlanX/info.
+
+	driver_name = "wlan"
+	driver_version = <chip id, firmware version and driver version>
+	interface_name = "mlanX"
+	bss_mode = "Ad-hoc" | "Managed" | "Auto" | "Unknown"
+	media_state = "Disconnected" | "Connected"
+	mac_address = <6-byte adapter MAC address>
+	multicase_count = <multicast address count>
+	essid = <current SSID>
+	bssid = <current BSSID>
+	channel = <current channel>
+	region_code = <current region code>
+	multicasr_address[n] = <multicast address>
+	num_tx_bytes = <number of bytes sent to device>
+	num_rx_bytes = <number of bytes received from device and sent to kernel>
+	num_tx_pkts = <number of packets sent to device>
+	num_rx_pkts = <number of packets received from device and sent to kernel>
+	num_tx_pkts_dropped = <number of Tx packets dropped by driver>
+	num_rx_pkts_dropped = <number of Rx packets dropped by driver>
+	num_tx_pkts_err = <number of Tx packets failed to send to device>
+	num_rx_pkts_err = <number of Rx packets failed to receive from device>
+	carrier "on" | "off"
+	tx queue "stopped" | "started"
+
+	The following debug info are provided in /proc/net/mwlan/mlanX/debug,
+	on kernel 2.6.24 or later, the entry is /proc/mwlan/mlanX/debug.
+
+	int_counter = <interrupt count, cleared when interrupt handled>
+	wmm_ac_vo = <number of packets sent to device from WMM AcVo queue>
+	wmm_ac_vi = <number of packets sent to device from WMM AcVi queue>
+	wmm_ac_be = <number of packets sent to device from WMM AcBE queue>
+	wmm_ac_bk = <number of packets sent to device from WMM AcBK queue>
+	max_tx_buf_size = <maximum Tx buffer size>
+	tx_buf_size = <current Tx buffer size>
+	ps_mode = <0/1, CAM mode/PS mode>
+	ps_state = <0/1/2/3, full power state/awake state/pre-sleep state/sleep state>
+	is_deep_sleep = <0/1, not deep sleep state/deep sleep state>
+	wakeup_dev_req = <0/1, wakeup device not required/required>
+	wakeup_tries = <wakeup device count, cleared when device awake>
+	hs_configured = <0/1, host sleep not configured/configured>
+	hs_activated = <0/1, extended host sleep not activated/activated>
+	num_tx_timeout = <number of Tx timeout>
+	num_cmd_timeout = <number of timeout commands>
+	timeout_cmd_id = <command id of the last timeout command>
+	timeout_cmd_act = <command action of the last timeout command>
+	last_cmd_id = <command id of the last several commands sent to device>
+	last_cmd_act = <command action of the last several commands sent to device>
+	last_cmd_index = <0 based last command index>
+	last_cmd_resp_id = <command id of the last several command responses received from device>
+	last_cmd_resp_index = <0 based last command response index>
+	last_event = <event id of the last several events received from device>
+	last_event_index = <0 based last event index>
+	num_cmd_h2c_fail = <number of commands failed to send to device>
+	num_cmd_sleep_cfm_fail = <number of sleep confirm failed to send to device>
+	num_tx_h2c_fail = <number of data packets failed to send to device>
+	num_evt_deauth = <number of deauthenticated events received from device>
+	num_evt_disassoc = <number of disassociated events received from device>
+	num_evt_link_lost = <number of link lost events received from device>
+	num_cmd_deauth = <number of deauthenticate commands sent to device>
+	num_cmd_assoc_ok = <number of associate commands with success return>
+	num_cmd_assoc_fail = <number of associate commands with failure return>
+	cmd_sent = <0/1, send command resources available/sending command to device>
+	data_sent = <0/1, send data resources available/sending data to device>
+	mp_rd_bitmap = <SDIO multi-port read bitmap>
+	mp_wr_bitmap = <SDIO multi-port write bitmap>
+	cmd_resp_received = <0/1, no cmd response to process/response received and yet to process>
+	event_received = <0/1, no event to process/event received and yet to process>
+	ioctl_pending = <number of ioctl pending>
+	tx_pending = <number of Tx packet pending>
+	rx_pending = <number of Rx packet pending>
+	malloc_count = <number of malloc done>
+	lock_count = <number of lock used>
+
+	Use dmesg or cat /var/log/debug to check driver debug messages.
+	To log driver debug messages to file,
+	a) Edit /etc/syslog.conf, add one line "*.debug		/var/log/debug"
+	   on kernel 2.6.24 or later, edit /etc/rsyslog.conf instead
+	b) touch /var/log/debug (if the file doesn't exist)
+	c) service syslog restart
+	   on kernel 2.6.24 or later, service rsyslog restart
+
+	Update /proc/sys/kernel/printk to change message log levels.
+	For example,
+	echo 6 > /proc/sys/kernel/printk    (messages with a higher priority than 6 
+	                                     will be printed to the console)
+	echo 15 > /proc/sys/kernel/printk   (all messages will be printed to console)
+
+4) FOR IWPRIV COMMAND
+
+NAME
+	This manual describes the usage of private commands used in Marvell MLAN
+	Linux Driver.
+
+	To use parameters as hex format, a '0x' must precede it for the parameters to 
+	be parsed properly. 
+
+SYNOPSIS
+	iwpriv <mlanX> <command> [sub-command] ...
+
+	iwpriv mlanX version
+	iwpriv mlanX verext
+	iwpriv mlanX getsignal [m] [n]
+	iwpriv mlanX antcfg [m]
+	iwpriv mlanX regioncode [n]
+	iwpriv mlanX wwscfg [m]
+	iwpriv mlanX esuppmode
+	iwpriv mlanX passphrase <ssid/psk/passphrase>
+	iwpriv mlanX httxcfg <m>
+	iwpriv mlanX htcapinfo <m>
+	iwpriv mlanX addbapara <m> <n> <o>
+	iwpriv mlanX aggrpriotbl <n>
+	iwpriv mlanX addbareject <n>
+	iwpriv mlanX txbufcfg <n>
+	iwpriv mlanx amsduaggrctrl <n>
+	iwpriv mlanX mpactrl [tx_ena] [rx_ena] [tx_size] [rx_size] [tx_ports] [rx_ports]
+	iwpriv mlanX tideligtbl [N0] [N1] [N2] [N3] [N4] [N5] [N6] [N7]
+	iwpriv mlanX atimwindow [n]
+	iwpriv mlanX deepsleep [n] [m]
+	iwpriv mlanX hscfg [condition [[GPIO# [gap]]]]
+	iwpriv mlanX hssetpara condition [GPIO# [gap]]
+	iwpriv mlanX deauth [n]
+	iwpriv mlanX radioctrl
+	iwpriv mlanX reassoctrl [n]
+	iwpriv mlanX adhocaes
+	iwpriv mlanX bandcfg [l] [m] [n]
+	iwpriv mlanX getlog
+	iwpriv mlanX 11dcfg
+	iwpriv mlanX wmmcfg [n]
+	iwpriv mlanX txpowercfg [<RateIndex> [<MinPwr> [<MaxPwr> <step>]]]
+	iwpriv mlanX qoscfg
+	iwpriv mlanX getdatarate
+	iwpriv mlanX txratecfg [n]
+	iwpriv mlanX bcninterval [n]
+	iwpriv mlanX sysclock [clk1] [clk2] [clk3] [clk4]
+	iwpriv mlanX ldocfg [n]
+	iwpriv mlanX drvdbg [n] [m]
+	iwpriv mlanX warmreset
+	iwpriv mlanX regrdwr <type> <offset> [value]
+	iwpriv mlanX rdeeprom <offset> <length>
+	iwpriv mlanX memrdwr <address> [value]
+	iwpriv mlanX inactivityto <n> <m> <l> [k]
+	iwpriv mlanX bcats <traffic_type> [<timeshare_interval> <bt_time>]
+	iwpriv mlanX sdioclock <n>
+	iwpriv mlanX scancfg [t] [m] [p] [s] [a] [b]
+	iwpriv mlanX vsiecfg <action> <id> [<mask> [data1] ... [dataN]]
+	iwpriv mlanX sleeppd [n]
+	iwpriv mlanX pscfg [n1] [n2] [n3] [n4] [n5] [n6]
+        iwpriv mlanX fwwakeupmethod [n]
+
+DESCRIPTION
+	Those commands are used to send additional commands to the Marvell MLAN
+	card via the Linux device driver.
+
+	The mlanX parameter specifies the network device that is to be used to 
+	perform this command on. It could be mlan0, mlan1 etc.
+
+version	
+	This is used to get the current version of the driver and the firmware.
+
+verext
+	Retrieve and display an extended version string from the firmware
+
+	Usage:
+		iwpriv mlanX verext [#]
+
+	where [#] is an optional argument to retrieve a specific version string,
+	omission of the argument retrieves the 0 indexed string.
+
+getsignal
+	This command gets the last and average value of RSSI, SNR and NF of
+	Beacon and Data.
+	Note: This command is available only when STA is connected.
+
+	where value of m is:
+		1   -- RSSI (Receive Signal Strength Indication)
+		2   -- SNR (Signal to Noise Ratio)
+		3   -- NF (Noise Floor)
+	where value of n is:
+		1   -- Beacon last
+		2   -- Beacon average
+		3   -- Data last
+		4   -- Data average
+
+	Examples:
+		iwpriv mlan0 getsignal 1        : Get the RSSI info (beacon last, beacon
+		                                  average, data last and data average)
+		iwpriv mlan0 getsignal 3 4      : Get the NF of data average
+		iwpriv mlan0 getsignal 2 1      : Get the SNR of beacon last
+		iwpriv mlan0 getsignal          : Get all of the signal info
+		mlan0     getsignal:-32  -33  -35  -36  67  59  63  56  -99  -92  -98  -92
+		RSSI info: beacon last -32, beacon average -33, data last -35, data average -36
+		SNR info: beacon last 67, beacon average 59, data last 63, data average 56
+		NF info: beacon last -99, beacon average -92, data last -98, data average -92
+
+antcfg
+	This command is used to set/get the mode of Tx/Rx antenna. 
+
+	where value of m is:
+		1       -- Tx/Rx antenna 1.
+		2       -- Tx/Rx antenna 2.
+		0xFFFF  -- Tx/Rx antenna diversity.
+
+	Examples:
+		iwpriv mlan0 antcfg             : Get Tx/Rx antenna mode
+		iwpriv mlan0 antcfg 1           : Set Tx/Rx antenna 1
+		iwpriv mlan0 antcfg 0xFFFF      : Set Tx/Rx antenna diversity
+
+regioncode
+	This command is used to set/get the region code in the station.
+	Note: This command should be issued at beginning before band/channel selection
+	and association.
+
+	where value is 'region code' for various regions like
+	USA FCC, Canada IC, Europe ETSI, Japan ...
+	The special code (0xff) is used for Japan to support channel 1-14 in B/G/N mode.
+
+	Examples:
+		iwpriv mlan0 regioncode         : Get region code
+		iwpriv mlan0 regioncode 0x10    : Set region code to USA (0x10)
+
+wwscfg
+	This command is used to set/get the WWS (World Wide Safe) mode.
+
+	where value of m is:
+		0       -- Disable WWS mode (default)
+		1       -- Enable WWS mode
+
+	Examples:
+		iwpriv mlan0 wwscfg             : Get WWS mode
+		iwpriv mlan0 wwscfg 1           : Enable WWS mode
+		iwpriv mlan0 wwscfg 0           : Disable WWS mode
+
+esuppmode
+	This command is used to get the current RSN mode and active pairwise/group 
+    cipher for WPA/WPA2 mode.
+	Note: This command is available only when STA is connected.
+
+	These are bits settings used to indicate each RSN mode.
+		Bit 0    : No RSN
+		Bit 1-2  : RFU
+		Bit 3    : WPA
+		Bit 4    : WPA-NONE
+		Bit 5    : WPA2
+		Bit 6    : AES CCKM
+		Bit 7-15 : RFU
+
+	These are bits settings used to indicate each pairwise and group cipher.
+		Bit 0    : RFU
+		Bit 1    : RFU
+		Bit 2    : TKIP
+		Bit 3    : AES CCKM
+		Bit 2-7  : RFU
+
+	Example:
+		iwpriv mlan0 esuppmode          : Get RSN mode and pairwise/group cipher
+		8 4 4
+		(The current RSN mode is WPA, active pairwise cipher is TKIP and 
+		 active group cipher is TKIP.)
+
+passphrase
+	This command is used to set/get passphrase for WPA-PSK/WPA2-PSK mode.
+	
+	Where <n>		
+		ASCII string for ssid/passphrase/psk.
+	
+	1) "0;<ssid=valid ssid>" - This will get the passphrase, AKMP 
+	   for specified ssid, if none specified then it will get all.
+	            
+	Example:
+		iwpriv mlan0 passphrase "0;ssid=marvell"
+
+	2) "1;<psk=64 byte hexpsk>;<passphrase=1-63 byte passphare>
+	   <ssid=valid ssid>" - Passphrase and psk cannot be provided for the same SSID. 
+	   This command takes only one SSID at a time, If ssid= is present it should contain 
+	   a passphrase or psk. If no arguments are provided then AKMP=802.1x, and passphrase 
+	   should be provided after association.
+	   End of each parameter should be followed by a ';'(except for the last parameter) 
+	   as the delimiter. If ';' or '/' has to be used in an SSID then a '/' should be preceded 
+	   to ';' or '/' as a escape.
+	            
+	Examples:
+		iwpriv mlan0 passphrase "1;ssid=mrvlAP;passphrase=abcdefgd"
+		iwpriv mlan0 passphrase "1;ssid=mrvl AP;psk=<64 bytes hexpsk>"
+
+		If user wants to input the ssid as "mrvl; AP" then command has to be
+		iwpriv mlan0 passphrase "1;ssid=mrvl/; AP;passphrase=abcdefgh"
+
+		If user wants to input the ssid as "//;" then command has to be
+		iwpriv mlan0 passphrase "1;ssid=/////;;passphrase=abcdefgh"
+
+	3) "2;<ssid=valid ssid>" - This will clear the passphrase 
+	   for specified ssid, if none specified then it will clear all.
+	            
+	Examples:
+		iwpriv mlan0 passphrase "2;ssid=marvell"
+		iwpriv mlan0 passphrase "2"     : Clear all profiles and disable embedded supplicant
+
+httxcfg
+	This command is used to configure various 11n specific configration 
+	for transmit (such as Short GI, Channel BW and Green field support)
+
+	where <m>
+	This is a bitmap and should be used as following
+		Bit 15-7: Reserved set to 0
+		Bit 6: Short GI in 40 Mhz enable/disable
+		Bit 5: Short GI in 20 Mhz enable/disable
+		Bit 4: Green field enable/disble
+		Bit 3-2: Reserved set to 0
+		Bit 1: 20/40 Mhz enable disable.
+		Bit 0: Reserved set to 0
+
+	When Bit 1 is set then firmware could transmit in 20Mhz or 40Mhz based
+	on rate adaptation. When this bit is reset then firmware will only
+	transmit in 20Mhz.
+
+	iwpriv mlanX httxcfg 0x62
+	This will enable 20/40 and Short GI but will disable Green field.
+
+	iwpriv mlanX httxcfg 0x30
+	This will enable Short GI and Green field.
+
+	The default value is 0x20
+
+	Note:- If 20/40 MHz support is disabled in htcapinfo, device will not transmit
+	in 40 MHz even 20/40 MHz is enabled in httxcfg.
+
+htcapinfo
+	This command is used to configure some of paramters in HTCapInfo IE 
+	(such as Short GI, Channel BW, and Green field support)
+
+	where <m>
+	This is a bitmap and should be used as following
+		Bit 29: Green field enable/disable
+		Bit 26: Rx STBC Support enable/disable. (As we support
+			single spatial stream only 1 bit is used for Rx STBC)
+		Bit 24: Short GI in 40 Mhz enable/disable
+		Bit 23: Short GI in 20 Mhz enable/disable
+		Bit 17: 20/40 Mhz enable disable.
+		Bit  8: Enable/disable 40Mhz Intolarent bit in ht capinfo.
+		        0 will reset this bit and 1 will set this bit in
+		        htcapinfo attached in assoc request.
+		All others are reserved and should be set to 0.
+
+	Setting of any other bits will return error.
+
+	iwpriv mlanX htcapinfo 0x1820000
+	This will enable Short GI, Channel BW to 20/40 and disable Green field support.
+
+	iwpriv mlanX htcapinfo 0x800000
+	This will enable Short GI, Channel BW to 20 only, No Rx STBC support and disable Green field support.
+
+	The default value is 0x4800000
+
+	Note:- This command can be issued any time but it will only come to effect from
+	next association. (as HTCapInfo is sent only during Association).
+
+addbapara
+	This command can be used to update the default ADDBA parameters.
+
+	where <m> is <timeout>
+	<timeout> - This is the block ack timeout for ADDBA request. 
+		0 : Disable (recommended for throughput test)
+		1 - 65535 : Block Ack Timeout in us
+
+	where <n> is <txwinsize>
+	<txwinsize> - Buffer size for ADDBA request. (64 is recommended and default value)
+
+	where <o> is <rxwinsize>
+	<rxwinsize> - Buffer size for ADDBA response. (16 is recommended value for most APs, 64
+			      is recommended for AP85)
+
+	eg:
+	iwpriv mlanX addbapara - This command will get the current addba params
+	iwpriv mlanX addbapara 1000 64 5 (This will change the ADDBA timeout to (1000 * 1024) us,
+			txwinsize to 64 and rxwinsize to 5.
+
+	In case the ADDBA timeout value is updated then a ADDBA is sent for all streams 
+	to update the timeout value.
+
+	In case txwinsize and/or rxwinsize is update the effect could only be seen on
+	next ADDBA request/response. The current streams will not be affected with this
+	change.
+
+aggrpriotbl
+	This command is used set/get the priority table for AMPDU/AMSDU traffic per tid.
+	This command can also be used to disable AMPDU/AMSDU for a given tid.
+	In case of AMPDU this priority table will be used to setup block ack (to make
+	sure the highest priority tid always uses AMPDU as we have limited AMPDU streams)
+
+	where <m0> <n0> <m1> <n1> ... <m7> <n7>
+
+	<mx> - This is priority for Tid0 for AMPDU packet. A priority could be any 
+		   values between 0 - 7, 0xff to disable aggregation.
+	<nx> - This is priority for Tid0 for AMSDU packet. A priority could be any 
+		   values between 0 - 7, 0xff to disable aggregation.
+
+	eg:
+	iwpriv mlanX aggrpriotbl - This command will get the current Priority table for AMPDU and AMSDU.
+						  <2 2 0 0 1 1 3 3 4 4 5 5 255 255 255 255>. This is read as
+						  <"Prio for AMPDU for Tid0" "Prio for AMSDU for Tid0" 
+						   "Prio for AMPDU for Tid1" "Prio for AMSDU for Tid1" and so on
+	iwpriv mlanX aggrpriotbl 2 2 0 0 1 1 3 3 4 4 5 5 255 255 255 255 - 
+						This will set the priority table for AMPDU and AMSDU
+						Priority for Tid0/AMPDU = 2, Tid0/AMSDU = 2, Tid1/AMPDU = 0, Tid1/AMSDU = 0
+						and so on. Aggregation for Tid6 and Tid7 are disabled. 
+						Here higher the priority number, higher the priority (i.e. 7 
+						has higher priority than 6). Similarly for AMSDU.
+	iwpriv mlanX aggrpriotbl 0xff 2 0xff 0 0xff 1 0xff 3 0xff 4 0xff 5 0xff 0xff 0xff 0xff - This will disable
+						AMPDU for all the TIDs but will still keep AMSDU enabled to Tid0 to Tid5
+
+	A delBA should be seen in case a disable happens on a TID for which AMPDU stream 
+	is currently setup. 
+
+	Note:- This command should only be issue in disconnected state.
+
+addbareject
+	This command is used set/get the addbareject table for all the TIDs.
+	This command can also be used to enable rejection of ADDBA requests for a given tid.
+
+	where <m0> <m1> ... <m7>
+
+	<mX> - This can be 0/1 for TidX. 1 enables rejection of ADDBA request for TidX and 
+		   0 would accept any ADDBAs for TidX.
+
+	eg:
+	iwpriv mlanX addbareject - This command will get the current table.
+	    [0 0 0 0 0 0 0 0]. ADDBA would be accepted for all TIDs. This is the default state.
+
+	iwpriv mlanX addbareject 0 0 1 1 0 0 0 0 - This command will accept ADDBA requests for
+		Tid [0,1,4,5,6,7] and reject ADDBA requests for Tid [2,3]
+							
+	iwpriv mlanX addbareject 1 1 1 1 1 1 1 1 - This will enable rejection of ADDBA requests for
+		all Tids.
+
+	Note:- This command should only be issue in disconnected state.
+
+txbufcfg
+	This command can be used to set max transmit buffer size of firmware. Increasing this
+	buffer size is recommended for AMSDU packets. (Default is 2048)
+
+	where <n> is <buffer size in byte>
+
+	<buffer size> - This can be 2048/4096/8192.
+
+	eg:
+	iwpriv mlanX txbufcfg 	  - This will display the current buffer size.
+	iwpriv mlanX txbufcfg 8192 - This will change the tx buffer size of 8192.
+
+	For AMSDU for work for multiple packets we may need the max tx buffer size to be
+	4096/8192.
+
+	Note:- This command should be issue in disconnected state.
+           Otherwise, new setting will be effected in next time associate. 
+           The actual tx buf size will depends on AP's capability and max transmit buffer size. 
+
+amsduaggrctrl
+	This command could be used to enable/disable a feature where firmware gives feedback to driver
+	regarding the optimal AMSDU buffer size to use with the current rate. Firmware will use the 
+	current rate to decide the buffer size we could transmit. The max buffer size will still be 
+	limited by buffer size provided in txbufcfg. (i.e. if the txbufcfg is 4K, then we could only transmit
+	4K/2K AMSDU packets, if the txbufcfg is 8K then we could transmit 8k/4k/2k based on current rate)
+
+	If enabled AMSDU buffer size at various rates will be as follows
+
+	1.	Legacy B/G rate.
+		No AMSDU aggregation.
+
+	2.	BW20 HT Rate:
+		When TX rate goes down, 
+		MCS 7, 6, 5, 4:
+			a	8K aggregation size (if TX buffer size is 8K)
+			b	4K aggregation size (if TX buffer size is 4K)
+			c	2K aggregation size (if TX buffer size is 2K)
+
+		MCS 3, 2:
+			a	4K aggregation size (if TX buffer size is 8K/4K)
+			b	2K aggregation size (if TX buffer size is 2K)
+
+		MCS 1, 0:
+			a	No aggregation
+		
+	3.	BW40 HT Rate:
+		When TX rate goes down, 
+		MCS 7, 6, 5, 4, 3, 2, 1:
+		a	8K aggregation size (if TX buffer size is 8K)
+		b	4K aggregation size (if TX buffer size is 4K)
+		c	2K aggregation size (if TX buffer size is 2K)
+
+		MCS 0:
+		a	No aggregation
+
+	where <n> is 0/1 (for disable/enable)
+
+	eg:
+	iwpriv mlanx amsduaggrctrl 1 - Enable this feature
+	iwpriv mlanx amsduaggrctrl 0 - Disable this feature
+	iwpriv mlanx amsduaggrctrl (This will get the enable/disable flag
+	and the current AMSDU buffer size). The AMSDU buffer size returned is only
+	valid after association as before association there is no rate info.
+
+	Note:- This command to enable/disable could be given anytime (before/after
+			association). This feature is enabled by default by the driver during
+			initialization.
+
+mpactrl
+	This command is used to set/get the Tx, Rx SDIO aggregation parameters
+	Note: The parameters can be set only in disconnected state.
+
+	Examples:
+		iwpriv mlan0 mpactrl       : Get MP aggregation parameters
+		iwpriv mlan0 mpactrl 1 1 2048 2048 5 7
+		                           : Enable MP aggregation for Tx, Rx
+		                           : Set Tx, Rx buffer size to 2048 bytes.
+		                           : Set maximum Tx ports to 5 and maximum Rx ports to 7.
+	default values are 1 1 8192 16384 7 7
+
+tideligtbl
+	This command is used to set/get number of available ports for transfer 
+	eligibility for TIDs (TID0-TID7).
+
+	Usage:
+		iwpriv mlanX tideligtbl [N0] [N1] [N2] [N3] [N4] [N5] [N6] [N7]
+
+	The Nx (x=0-7) is for TIDx. For each TIDx, there must be at least Nx 
+	number of available ports to transfer the corresponding packet.
+	The Nx could be 1-15, 0 or no input for unchanged.
+
+	Examples:
+		iwpriv mlan0 tideligtbl         : Get the TID eligibility table
+		iwpriv mlan0 tideligtbl 6 6 5 4 3 2 1 1
+		                                : Set the TID eligibility table
+		iwpriv mlan0 tideligtbl 4 0 2   : Set TID table TID0 and TID2,
+		                                  keep the others unchanged
+
+atimwindow
+	This command is used to set/get the ATIM window value in the station.
+	The range of ATIM window is 0 - 50.
+	Note: This command should be issued before ad-hoc start/join and ad-hoc 
+	power save on.
+
+	Examples:
+		iwpriv mlan0 atimwindow 20      : Set atimwindow to 20
+		iwpriv mlan0 atimwindow         : Get atimwindow
+
+deepsleep
+	This command is used to set/get auto deep sleep mode.
+
+	Usage:
+		iwpriv mlanX deepsleep [n] [m]
+
+	where the parameters are:
+		[n]: Enable/disable auto deep sleep mode (1/0)
+		[m]: Idle time in milliseconds after which firmware will put the device 
+		     in deep sleep mode. Default value is 0.
+
+	Examples:
+		iwpriv mlan0 deepsleep          : Display auto deep sleep mode
+		iwpriv mlan0 deepsleep 1        : Enable auto deep sleep mode, idle time unchanged
+		iwpriv mlan0 deepsleep 0        : Disable auto deep sleep mode
+		iwpriv mlan0 deepsleep 1 500    : Enable auto deep sleep mode with idle time 500 ms
+
+hscfg
+	This command is used to configure the host sleep parameters.
+
+	Usage:
+		iwpriv mlanX hscfg [condition [[GPIO# [gap]]]]
+
+	This command takes one (condition), two (condition and GPIO#) or three 
+	(condition, GPIO# and gap) parameters for set. If no paramter provided, 
+	get is performed.
+
+	where Condition is:
+		bit 0 = 1   -- broadcast data
+		bit 1 = 1   -- unicast data
+		bit 2 = 1   -- mac event
+		bit 3 = 1   -- multicast packet
+
+	where GPIO is the pin number of GPIO used to wakeup the host. It could be 
+	any valid GPIO pin# (e.g. 0-7) or 0xff (interface, e.g. SDIO will be used 
+	instead).
+
+	where Gap is the gap in milliseconds between wakeup signal and wakeup event
+	or 0xff for special setting.
+
+	The host sleep mode will be cancelled if condition is set to -1.
+
+	Examples:
+		iwpriv mlan0 hscfg              : Get current host sleep mode
+		iwpriv mlan0 hscfg -1           : Cancel host sleep mode
+		iwpriv mlan0 hscfg 3            : Broadcast and unicast data
+		                                  Use GPIO and gap set previously
+		iwpriv mlan0 hscfg 2 3          : Unicast data
+		                                  Use GPIO 3 and gap set previously
+		iwpriv mlan0 hscfg 2 1 0xa0     : Unicast data
+		                                  Use GPIO 1 and gap 160 ms
+		iwpriv mlan0 hscfg 2 0xff       : Unicast data
+		                                  Use interface (e.g. SDIO)
+		                                  Use gap set previously
+		iwpriv mlan0 hscfg 4 3 0xff     : MAC event
+		                                  Use GPIO 3
+		                                  Special host sleep mode
+		iwpriv mlan0 hscfg 1 0xff 0xff  : Broadcast data
+		                                  Use interface (e.g. SDIO)
+		                                  Special host sleep mode
+
+hssetpara
+	This command is used to set host sleep parameters.
+
+	Usage:
+		iwpriv mlanX hssetpara Condition [GPIO# [gap]]
+
+	Note:
+	1) The usages of parameters are the same as "hscfg" command.
+	2) The parameters will be saved in the driver and be used when host suspends.
+
+deauth
+	This command is used to send a de-authentication to an arbitrary AP.
+	If [n] is omitted, the driver will deauth the associated AP.
+	If in ad-hoc mode this command is used to stop beacon transmission 
+	from the station and go into idle state.
+
+	When <n> is supplied as a MAC address, the driver will deauth the 
+	  specified AP.  If the AP address matches the driver's associated AP,
+	  the driver will disconnect. Otherwise, the driver remains connected.
+
+radioctrl
+	This command is used to turn on/off the radio.
+	Note: The radio can be disabled only in disconnected state.
+
+	where value of n is:
+		0   -- Disable
+		1   -- Enable
+
+	Examples:
+		iwpriv mlan0 radioctrl 1        : Turn the radio on
+		iwpriv mlan0 radioctrl          : Get radio status
+
+reassoctrl
+	This command is used to turn on/off re-association in driver.
+
+	Usage:
+		iwpriv mlanX reassoctrl [n]
+
+	Where value of n is:
+		0   -- Disable
+		1   -- Enable
+
+	Examples:
+		iwpriv mlan0 reassoctrl         : Get re-association status
+		iwpriv mlan0 reassoctrl 1       : Turn re-association on
+
+adhocaes
+	This command is used to set/get the AES key, when the station is in ad-hoc mode.
+	Note: This command is only available in disconnected state.
+
+	where value can be any 16 byte value.
+
+	Examples:
+		iwpriv mlan0 adhocaes           : Get ad-hoc aes key
+		iwpriv mlan0 adhocaes "1;12345678901234567890123456789012" 
+		                                : Set ad-hoc aes key
+		iwpriv mlan0 adhocaes 2         : Clear ad-hoc aes key
+
+bandcfg
+	This command is used to set/get infra/ad-hoc band.
+	Note: This command is only available in disconnected state.
+
+	Usage:
+		iwpriv mlanX bandcfg [l] [m] [n]
+
+	where the parameters:
+		[l]: Infrastructure band
+		     bit 0: B
+		     bit 1: G
+		     bit 3: N
+		[m]: Ad-hoc start band
+		     bit 0: B
+		     bit 1: G
+		[n]: Ad-hoc start channel 
+
+	Examples:
+		iwpriv mlan0 bandcfg            : Get infra/ad-hoc band and ad-hoc
+		                                  start channel configurations
+		iwpriv mlan0 bandcfg 1          : Set infra band to B only
+		iwpriv mlan0 bandcfg 3 2 6      : Set infra band to B/G, ad-hoc start band
+		                                  to G and ad-hoc start channel to 6
+
+getlog
+	This command is used to get the statistics available in the station.
+
+11dcfg
+	This command is used to control 11D. No argument is used to get.
+
+	where value of n is:
+		0   -- Disable
+		1   -- Enable
+
+	Examples:
+		iwpriv mlan0 11dcfg 1           : Enable 11D
+		iwpriv mlan0 11dcfg             : Get 11D status
+
+wmmcfg
+	This command is used to control WMM. No argument is used to get.
+
+	where value of n is:
+		0   -- Disable
+		1   -- Enable
+
+	Examples:
+		iwpriv mlan0 wmmcfg 1           : Enable WMM
+		iwpriv mlan0 wmmcfg             : Get WMM status
+
+txpowercfg
+	This command is used to get/set the Tx power configuration.
+
+	Where 
+		<RateIndex> - Data rate index
+			0	1 Mbps
+			1	2 Mbps
+			2	5.5 Mbps
+			3	11 Mbps
+			4	6 Mbps
+			5	9 Mbps
+			6	12 Mbps
+			7	18 Mbps
+			8	24 Mbps
+			9	36 Mbps
+			10	48 Mbps
+			11	54 Mbps
+			12	MCS0 (BW20)
+			13	MCS1 (BW20)
+			14	MCS2 (BW20)
+			15	MCS3 (BW20)
+			16	MCS4 (BW20)
+			17	MCS5 (BW20)
+			18	MCS6 (BW20)
+			19	MCS7 (BW20)
+			140	MCS0 (BW40)
+			141	MCS1 (BW40)
+			142	MCS2 (BW40)
+			143	MCS3 (BW40)
+			144	MCS4 (BW40)
+			145	MCS5 (BW40)
+			146	MCS6 (BW40)
+			147	MCS7 (BW40)
+			0xff	Default
+		<MinPwr> - Minimum power level in dBm
+		<MaxPwr> - Maximum power level in dBm
+		<step>   - Power step
+
+	Note: Firmware may adjust the setting if over limit, use get command to
+	      check the current setting.
+
+	Examples:
+		iwpriv mlan0 txpowercfg 0xff        : Default power configuration
+		iwpriv mlan0 txpowercfg 11 12       : Set power level 12 dBm to data rate 54 Mbps
+		iwpriv mlan0 txpowercfg 7 11 16 1   : Set power level 11 dBm to 16 dBm with
+		                                      step 1 to data rate 18 Mbps
+		iwpriv mlan0 txpowercfg             : Get current configuration
+		mlan0     txpowercfg:2  3  13  18  2  1  1  13  18  2  0  0  13  18  2  
+		10  11  13  15  2  8  9  13  16  2  6  7  13  17  2  4  5  13  17  2  
+		17  19  13  15  2  15  16  13  16  2  13  14  13  17  2  12  12  13  17  2  
+		145  147  13  14  1  143  144  13  14  1  141  142  13  14  1  140  140  13  14  1 
+
+		 2 -> First rate index is 5.5 Mbps.
+		 3 -> Last rate index is 11 Mbps.
+		13 -> Min Tx power value is 13 dBm.
+		18 -> Max Tx power value is 18 dBm.
+		 2 -> Power adjustment step value is 2.
+
+		Similarly
+		17 -> First rate index is MCS5 (BW20).
+		19 -> Last rate index is MCS7 (BW20).
+		13 -> Min Tx power value is 13 dBm.
+		15 -> Max Tx power value is 15 dBm.
+		 2 -> Power adjustment step value is 2.
+
+		so on...
+
+qoscfg
+	This command sets WMM IE QOS info when an argument is given, and gets current WMM
+	IE QOS info when no argument is given.
+
+	Examples:
+		iwpriv mlan0 qoscfg 0x0f        : Set WMM IE QOS info to 0x0f
+		iwpriv mlan0 qoscfg             : Get WMM IE QOS info
+
+getdatarate
+	This command is used to get the data rate (index) being used in last Tx 
+	packet and last Rx packet.
+
+txratecfg
+	This command is used to set/get the transmit data rate.
+	
+	Note: 
+	1) The data rate can be set only after association. 
+	
+	2) If the reassoc is OFF driver reset the data rate to auto if the connection state is disconnected.
+	Please note that user has to re-issue the set data rate command if the driver is disconnected.
+	
+	3) If the reassoc is ON driver remembers the data rate set by the user, if the driver is 
+	disconnected user does not have to re-issue the set data rate again.
+	
+	Where <n>
+		 data rate
+				Data rate
+			0	1 Mbps
+			1	2 Mbps
+			2	5.5 Mbps
+			3	11 Mbps
+			4	6 Mbps
+			5	9 Mbps
+			6	12 Mbps
+			7	18 Mbps
+			8	24 Mbps
+			9	36 Mbps
+			10	48 Mbps
+			11	54 Mbps
+			12	MCS0
+			13	MCS1
+			14	MCS2
+			15	MCS3
+			16	MCS4
+			17	MCS5
+			18	MCS6
+			19	MCS7
+			44	MCS32
+			0xff	Auto
+
+	Examples:
+		iwpriv mlan0 txratecfg 3        : Set fixed Tx rate to 11 Mbps
+		iwpriv mlan0 txratecfg 11       : Set fixed Tx rate to 54 Mbps	
+		iwpriv mlan0 txratecfg 15       : Set fixed Tx rate to MCS3	
+		iwpriv mlan0 txratecfg 0xff     : Disable fixed rate and uses auto rate
+		iwpriv mlan0 txratecfg          : Read the current data rate setting
+
+bcninterval
+	This command is used to set/get the beacon interval in ad-hoc mode.
+	The valid beacon interval is between 20 - 1000, default beacon
+	interval is 100.
+
+	Where <n>
+		Beacon interval in TU (Time Unit: 1024 us).
+
+	Examples:
+		iwpriv mlan0 bcninterval 200    : Set ad-hoc beacon interval to 200
+		iwpriv mlan0 bcninterval        : Get ad-hoc beacon interval
+
+sysclock
+	This command is used to set/get system clocks in MHz.
+	The current system clock, configurable system clocks and all of the 
+	supported system clocks will be returned if no parameter provided.
+
+	Examples:
+		iwpriv mlan0 sysclock           : Get system clocks
+		80 80 128 128 128 5 11 16 20 22 32 40 44 64 80 106 128 160
+		(The current system clock is 80 MHz.
+		 The configurable system clocks of non-security, security, non-security 
+		 A-MPDU and security A-MPDU are 80 MHz, 128 MHz, 128 MHz and 128 MHz.
+		 The supported system clocks are 5 MHz, 11 MHz, ..., 160 MHz.)
+
+		iwpriv mlanX sysclock 80        : Set system clock in non-security mode
+		                                  to 80 MHz, no change for others
+		iwpriv mlanX sysclock 0 0 128   : Set system clock in non-security A-MPDU 
+		                                  mode to 128 MHz, no changes for others
+
+ldocfg
+	This command is used to set/get internal/external core power voltage source.
+	By default firmware uses internal LDO for 1.2V core power supply.
+	The current setting will be returned if no parameter provided.
+
+	Usage:
+		iwpriv mlanX ldocfg [n]
+
+	where the parameter is,
+		0       -- internal
+		1       -- external
+
+drvdbg
+	This command is used to set/get the bit masks of driver debug message control.
+
+	Usage:
+		iwpriv mlanX drvdbg [n] [m]
+
+	Where the parameter <n> is the generic debug message control bit mask.
+	The following types of driver debug messages can be dynamically enabled or 
+	disabled by setting or clearing the corresponding bits, 
+		bit 0:  MMSG  		PRINTM(MMSG,...)
+		bit 1:  MFATAL		PRINTM(MFATAL,...)
+		bit 2:  MERROR		PRINTM(MERROR,...)
+		bit 3:  MDATA 		PRINTM(MDATA,...)
+		bit 4:  MCMND 		PRINTM(MCMND,...)
+		bit 5:  MEVENT		PRINTM(MEVENT,...)
+		bit 6:  MINTR 		PRINTM(MINTR,...)
+		...
+		bit 16: MDAT_D		PRINTM(MDAT_D,...), DBG_HEXDUMP(MDAT_D,...)
+		bit 17: MCMD_D		PRINTM(MCMD_D,...), DBG_HEXDUMP(MCMD_D,...)
+		bit 18: MFW_D		PRINTM(MFW_D,...)
+		...
+		bit 28: MENTRY		PRINTM(MENTRY,...), ENTER(), LEAVE()
+		bit 29: MWARN 		PRINTM(MWARN,...)
+		bit 30: MINFO 		PRINTM(MINFO,...)
+
+	Where the parameter <m> is the extended interface module debug message control 
+	bit mask. The following types of debug messages can be controlled.
+
+		bit 0:  MIF_D 		PRINTM(MIF_D,...),  DBG_HEXDUMP(MIF_D,...)
+
+	If CONFIG_DEBUG=2, all kinds of debug messages can be configured. 
+	By default all debug messages are enabled except for MEVENT and MIF_D.
+
+	If CONFIG_DEBUG=1, all kinds of debug messages can be configured except 
+	for MENTRY, MWARN and MINFO. By default MMSG, MFATAL and MERROR are enabled.
+
+	Some special debug messages,
+		'*'		// MLAN driver ISR is called (bit 6 MINTR enabled)
+		'|'		// PS awake event is received (bit 5 MEVENT enabled)
+		'_'		// PS sleep event is received (bit 5 MEVENT enabled)
+		'+'		// PS sleep confirm is sent (bit 5 MEVENT enabled)
+
+	Examples:
+		iwpriv mlan0 drvdbg             : Get the current driver debug masks
+		iwpriv mlan0 drvdbg 0 0         : Disable all the debug messages
+		iwpriv mlan0 drvdbg 7           : Enable MMSG, MFATAL and MERROR messages,
+		                                  no change for if debug control
+		iwpriv mlan0 drvdbg 3 1         : Enable MMSG and MFATAL messages,
+		                                  enable MIF_D message
+		iwpriv mlan0 drvdbg -1 -1       : Enable all the debug messages
+
+warmreset
+	This command is used for warm reset of the interface.
+
+	Usage:
+		iwpriv mlanX warmreset
+
+regrdwr
+	This command is used to read/write the adapter register.
+	
+	Usage:
+		iwpriv mlanX regrdwr <type> <offset> [value]
+
+	where the parameters are,
+		<type>:     1:MAC, 2:BBP, 3:RF, 4: PMIC
+		<offset>:   offset of register
+		[value]:    value to be written
+	Note: If highest bit of a 32-bit value needs to be set, use negitive input.
+
+	Examples:
+		iwpriv mlan0 regrdwr 1 0xa060       : Read the MAC register
+		iwpriv mlan0 regrdwr 1 0xa060 0x12  : Write the MAC register
+		iwpriv mlan0 regrdwr 1 0xa794 -0x80000000
+		                                    : Write 0x80000000 to MAC register
+		iwpriv mlan0 regrdwr 1 0xa794 -0x00000001
+		                                    : Write 0xffffffff to MAC register
+
+rdeeprom
+	This command is used to read the EEPROM contents of the card.
+
+	Usage:
+		iwpriv mlanX rdeeprom <offset> <length>
+
+	where the parameters are,
+		<offset>:   multiples of 4
+		<length>:   4-20, multiples of 4
+
+	Example:
+		iwpriv mlan0 rdeeprom 0 20      : Read 20 bytes of EEPROM data from offset 0
+
+memrdwr
+	This command is used to read/write the adapter memory.
+	
+	Usage:
+		iwpriv mlanX memrdwr <address> [value]
+
+	where the parameters are,
+		<address>:  memory address
+		[value]:    value to be written
+	Note: If highest bit of a 32-bit value needs to be set, use negitive input.
+
+	Examples:
+		iwpriv mlan0 memrdwr -0x80000000
+		                                : Read memory address 0x80000000
+		iwpriv mlan0 memrdwr -0x80000000 -0x00000001
+		                                : Write 0xffffffff to memory address 0x80000000
+
+inactivityto
+	This command is used to set/get the inactivity timeout value, which specifies 
+	when WLAN device is put to sleep.
+
+	Usage:
+		iwpriv mlanX inactivityto <n> <m> <l> [k]
+
+	where the parameter are:
+		<n>: timeout unit in microseconds.
+		<m>: Inactivity timeout for unicast data.
+		<l>: Inactivity timeout for multicast data.
+		[k]: Inactivity timeout for new Rx traffic after PS notification to AP.
+
+	Examples:
+		iwpriv mlan0 inactivityto           : Get the timeout value
+		iwpriv mlan0 inactivityto 1000 2 3  : Set timeout unit to 1000 us (1 ms), 
+		                                      inactivity timeout for unicast data is 2 ms,
+		                                      inactivity timeout for multicast data is 3 ms
+
+bcats
+	This command is used to set/get the BCA timeshare parameters.
+	This command only works after BCA has been enabled. 
+
+	Usage:
+		iwpriv mlanX bcats <traffic_type> [<timeshare_interval> <bt_time>]
+
+	where:
+		<traffic_type>: 0 - Wlan and bluetooth are low priority.
+		                1 - Wlan and bluetooth are high priority.
+		                2 - Wlan and bluetooth are medium priority.
+		                3 - Wlan and bluetooth are medium high priority.
+		                0xffff - Reset fairshare.
+ 	
+		If <timeshare_interval> value is not multiple of 10 then floor value 
+		is taken and the valid range is <20 ... 60,000> in milliseconds.
+
+		If <bt_time> value is not multiple of 10 then floor value is taken 
+		and the valid range is <0 ... timeshare_interval value> in milliseconds.
+
+	Examples:
+		iwpriv mlan0 bcats 1            : Get the BCA timeshare settings when wlan
+		                                  and bluetooth are set to high priority
+		iwpriv mlan0 bcats 0xffff       : Reset fairshare, disable all modes above 
+		                                  that are running, and restore arbitration 
+		                                  table register values to before the user 
+		                                  enabled any of the above fairshare modes.   
+		iwpriv mlan0 bcats 1 30 20      : Set wlan and bluetooth to high priority, 
+		                                  wlan timeshare_interval to 30 ms and
+		                                  bt_time to 20 ms
+
+sdioclock
+	Turn On(1) or Off(0) the SDIO clock.
+
+	Usage:
+		iwpriv mlanX sdioclock 1 (on)
+		iwpriv mlanX sdioclock 0 (off)
+
+scancfg
+	This command is used to set/get scan configuration parameters.
+                
+	Usage:
+		iwpriv mlanX scancfg [t] [m] [p] [s] [a] [b]
+                
+	where the parameters:
+		[t]: Scan Type (0: Unchanged, 1: Active, 2: Passive)
+		[m]: Scan Mode (0: Unchanged, 1: BSS, 2: IBSS, 3: Any)
+		[p]: Scan Probes (0: Unchanged, 1-10: Number of probes per channel)
+		[s]: Specific Scan Time (0: Unchanged, n: Value in ms, default 110 ms, max 500 ms)
+		[a]: Active Scan Time (0: Unchanged, n: Value in ms, default 200 ms, max 500 ms)
+		[b]: Passive Scan Time (0: Unchanged, n: Value in ms, default 200 ms, max 2000 ms)
+	No change if the parameter is 0 or the parameter is not provided.
+
+	Examples:
+		iwpriv mlan0 scancfg            : Get all the current scan configuration settings
+		iwpriv mlan0 scancfg 1 3        : Set scan type to active and scan mode to any,
+		                                  all the other scan configurations are unchanged
+		iwpriv mlan0 scancfg 0 1 2 200  : Set scan mode to BSS, number of probes to 2 and 
+		                                  specific scan time to 200 ms, all the other scan 
+		                                  configurations are unchanged
+
+vsiecfg
+	This command is used to get/add/remove vendor specific IE.
+
+	Usage:
+		iwpriv mlanX vsiecfg <action> <id> [<mask> [data1] ... [dataN]]
+
+	where:
+		<action>:   0/1/2:  Get/Add/Remove
+		<id>:       0-7:    IE index in the driver IE array
+		[mask]:     Bit 0:  IE for scan
+		            Bit 1:  IE for associate
+		            Bit 2:  IE for ad-hoc
+		[data1]...[dataN]:  IE data
+
+	Note: The max data length is 254-byte, IE ID (221) and length is not included.
+	      The max total length of vendor specific IEs for scan/assoc/ad-hoc is 512-byte.
+
+	Examples:
+		iwpriv mlan0 vsiecfg 0 2        : Get the 3rd IE
+		iwpriv mlan0 vsiecfg 1 0 4 0x12 0x34
+		                                : Add IE in 1st position for ad-hoc
+		iwpriv mlan0 vsiecfg 1 6 3 0x00 0x50 0x43 0x20 0xFF 0xFE
+		                                : Add IE in 7th position for scan and associate
+		iwpriv mlan0 vsiecfg 2 1        : Remove the 2nd IE
+
+sleeppd
+	This command is used to configure the sleep period of the WLAN device.
+
+	Usage:
+		iwpriv mlanX sleeppd [<period>]
+
+	Where the parameter is:
+		period: sleep period in milliseconds. Range 10~60. 0 for disable.
+
+	Examples:
+		iwpriv mlan0 sleeppd            : Get sleep period configuration
+		iwpriv mlan0 sleeppd 10         : Set sleep period to 10 ms
+
+pscfg
+	This command is used to set/get PS configuration parameters.
+
+	Usage:
+		iwpriv mlanX pscfg [n1] [n2] [n3] [n4] [n5] [n6]
+
+	Where the parameters:
+		[n1]: PS null interval (0: Unchanged, -1: Disable, n: Interval in seconds)
+		[n2]: DTIM interval (0: Unchanged, 1-5: Value, 65534: DTIM will be ignored 
+		                     in firmware, listen interval will be used)
+		[n3]: Local listen interval (0: Unchanged, n: Interval)
+		[n5]: Beacon miss timeout (0: Unchanged, 1-50: Value in milliseconds, 65535: Disable)
+		[n6]: Delay to PS (0-65535: Value in milliseconds)
+	No change if parameters are not provided.
+
+	Examples:
+		iwpriv mlan0 pscfg              : Get all the current PS configuration settings
+		iwpriv mlan0 pscfg 3 4          : Set PS null interval to 3 seconds and DTIM interval
+		                                  to 4, all the other PS configurations are unchanged
+		iwpriv mlan0 pscfg 0 0xfffe 234 0 20 
+		                                : Disable DTIM interval, set listen interval to 234
+		                                  milliseconds and beacon miss interval to 20, 
+		                                  all the other configurations are unchanged
+		iwpriv mlan0 pscfg 0 0 0 0 0 50 : Set delay to PS to 50 ms, keep the others unchanged
+
+fwwakeupmethod
+	This command is used to set/get the firmware wakeup method.
+
+	where value is:
+		1	-- Firmware wakeup through the interface command interrupt
+			-- (default setting for SDIO/GSPI)
+		2	-- Firmware wakeup through the GPIO pin
+
+	Examples:
+		iwpriv mlan0 fwwakeupmethod     : Get current firmware wakeup method
+		iwpriv mlan0 fwwakeupmethod 2   : Set firmware wakeup method to GPIO mode
+
+===============================================================================
+		U S E R  M A N U A L  F O R  M L A N C O N F I G 
+
+NAME
+mlanconfig - configure the additional parameters available for the Marvell mdriver.
+
+SYNOPSIS
+mlanconfig -v
+mlanconfig <mlanX> <command> [parameters] ...
+
+mlanconfig mlanX hostcmd <bg_scan.conf> bgscfg
+mlanconfig mlanX hostcmd <crypto_test.conf> crypto_test
+mlanconfig mlanX hostcmd <mef.conf> mefcfg
+mlanconfig mlanX hostcmd <subevent.conf> subevent_get
+mlanconfig mlanX hostcmd <subevent.conf> subevent_set
+mlanconfig mlanX hostcmd <auto_tx.conf> auto_tx_get
+mlanconfig mlanX hostcmd <auto_tx.conf> nat_keep_alive
+mlanconfig mlanX hostcmd <auto_tx.conf> auto_tx_unreg
+mlanconfig mlanX hostcmd <txrate_cfg.conf> txrate_cfg_get
+mlanconfig mlanX hostcmd <txrate_cfg.conf> txrate_cfg_set_bg
+mlanconfig mlanX hostcmd <txrate_cfg.conf> txrate_cfg_set_bgn
+mlanconfig mlanX hostcmd <txpwrlimit_cfg.conf> txpwrlimit_cfg_get
+mlanconfig mlanX hostcmd <txpwrlimit_cfg.conf> txpwrlimit_cfg_set
+mlanconfig mlanX hostcmd <11n_2040coex.conf> 2040coex
+mlanconfig mlanX arpfilter <arpfilter.conf>
+mlanconfig mlanX cfgdata <register type> <conf file>
+mlanconfig mlanX sdcmd52rw <FN no.> <address> [data]
+mlanconfig mlanX sdcmd53rw <FN no.> <address> <mode> <blksize> <blknum> [data1] ... [dataN]
+mlanconfig mlanX setuserscan [ARGS]
+mlanconfig mlanX getscantable
+
+DESCRIPTION
+
+Those commands are used in Marvell specific application called mlanconfig.
+
+===========
+-v
+	This command is used to display the version of mlanconfig utility.
+	Usage:	
+		mlanconfig -v
+
+hostcmd bgscfg
+	This command is used to configure the various parameters for PPS/UAPSD 
+	or normal background scan.
+	
+	Usage:
+		mlanconfig mlanX hostcmd config/bg_scan.conf bgscfg
+
+hostcmd crypto_test
+	This command is used to test the encryption/decryption API of the firmware.
+
+	Usage:
+		mlanconfig mlanX hostcmd config/crypto_test.conf crypto_test
+
+hostcmd mefcfg
+	This command is used to set MEF settings.
+
+	Usage:
+		mlanconfig mlanX hostcmd config/mef.conf mefcfg
+
+hostcmd subevent_get
+hostcmd subevent_set
+	This command is used to get/set the configurations for event descriptor 
+	interface command.
+	subsvent_get: get subscribed event parameters
+	subsvent_set: set subscribed event parameters
+
+	Usage:
+		mlanconfig mlanX hostcmd config/subevent.conf subevent_get
+		mlanconfig mlanX hostcmd config/subevent.conf subevent_set
+
+hostcmd auto_tx_get
+hostcmd nat_keep_alive
+hostcmd auto_tx_unreg
+	This command is used to configures the Frame Auto Transmission parameters.
+	auto_tx_get: get auto_tx parameters
+	nat_keep_alive: register to firmware for sending NAT Keep Alive packet
+	auto_tx_unreg: unregister to firmware auto_tx
+
+	Usage:
+		mlanconfig mlanX hostcmd config/auto_tx.conf auto_tx_get
+		mlanconfig mlanX hostcmd config/auto_tx.conf nat_keep_alive
+		mlanconfig mlanX hostcmd config/auto_tx.conf auto_tx_unreg
+
+hostcmd txrate_cfg_get
+hostcmd txrate_cfg_set_bg
+hostcmd txrate_cfg_set_bgn
+	This command is used to set/get the transmit data rate.
+
+	Usage:
+		mlanconfig mlanX hostcmd config/txrate_cfg.conf txrate_cfg_get
+		mlanconfig mlanX hostcmd config/txrate_cfg.conf txrate_cfg_set_bg
+		mlanconfig mlanX hostcmd config/txrate_cfg.conf txrate_cfg_set_bgn
+
+hostcmd txpwrlimit_cfg_get
+hostcmd txpwrlimit_cfg_set
+	This command is used to set/get the configuration data of Tx power limitation.
+	Note: The configuration set should be issued when STA is disconnetced.
+
+	Usage:
+		mlanconfig mlanX hostcmd config/txpwrlimit_cfg.conf txpwrlimit_cfg_get
+		mlanconfig mlanX hostcmd config/txpwrlimit_cfg.conf txpwrlimit_cfg_set
+
+hostcmd 2040coex
+	This command is used to send the 11n 20/40 Coex command to firmware. 
+	Firmware will send 11n 20/40 Coex management action frame to AP.
+	
+	Usage:
+		mlanconfig mlanX hostcmd config/11n_2040coex.conf 2040coex
+
+arpfilter
+	This command is used to configure the ARP filtering parameters.
+
+	Usage:
+		mlanconfig mlanX arpfilter config/arpfilter.conf
+
+cfgdata
+	This command is used to set/get the configuration data to/from firmware.
+
+	Usage:
+		mlanconfig mlanX cfgdata <type> <.conf file name>
+		This command is used to set the cfg data in the .conf file to firmware.
+
+		mlanconfig mlanX cfgdata <type>
+		This command is used to get the cfg data from firmware and display
+		on to the console.
+
+	Where the value of <type> field is:
+		1   -- Optimal Register download and <.conf file name > is or_data.conf
+		2   -- Cal data download and <.conf file name> is cal_data.conf
+		3   -- PMIC data download and <.conf file name> is pmic_data.conf
+
+sdcmd52rw
+	This command is used to read/write a controller register in 
+	Secure Digital I/O Interfaces.
+
+	Usage:
+		mlanconfig mlanX sdcmd52rw <function number> <register address> [value]
+
+    Examples:
+		mlanconfig mlan0 sdcmd52rw 1 3
+		mlanconfig mlan0 sdcmd52rw 1 1 0x3f
+
+sdcmd53rw
+	This command is used to issue a CMD53 read/write data in 
+	Secure Digital I/O Interfaces.
+
+	Usage:
+		mlanconfig mlanX sdcmd53rw <func> <address> <mode> <blksize> <blknum> [data1] ... [dataN]
+
+	where the parameters are,
+		<func>:     function number (0/1/2/..)
+		<address>:  data address
+		<mode>:     byte mode/block mode (0/1)
+		<blksize>:  block size (32/64/../512, NA for byte mode)
+		<blknum>:   block number or byte number
+		<data1> ... <dataN>:  data for write
+
+	Note: The max data length is 2000-byte.
+
+	Examples:
+		mlanconfig mlan0 sdcmd53rw 0 0x8000 1 64 2
+		mlanconfig mlan0 sdcmd53rw 1 0x10000 0 1 5 0x0a 0x0b 0x0c 0x0d 0x0e
+
+setuserscan
+	Initiate a customized scan and retrieve the results
+
+	Usage:
+		mlanconfig mlanX setuserscan [ARGS]
+
+	Where [ARGS]:
+	  chan=[chan#][band][mode] where band is [a,b,g,n] and mode is
+	                           blank for active or 'p' for passive
+	  bssid=xx:xx:xx:xx:xx:xx  specify a BSSID filter for the scan
+	  ssid="[SSID]"            specify a SSID filter for the scan
+	  wc="[WILDCARD SSID]"     specify a UNIX pattern matching filter (using *
+	                           and ?) for SSIDs found in a broadcast probe
+	  keep=[0 or 1]            keep the previous scan results (1), discard (0)
+	  dur=[scan time]          time to scan for each channel in milliseconds
+	  probes=[#]               number of probe requests to send on each chan
+	                           for each broadcast probe required and each SSID
+	                           specific probe required (1-10)
+	  type=[1,2,3]             BSS type: 1 (Infra), 2(Adhoc), 3(Any)
+
+	Any combination of the above arguments can be supplied on the command line.
+	If the chan token is absent, a full channel scan will be completed by driver.
+	If the dur or probes tokens are absent, the driver default setting will be 
+	used. The bssid and ssid fields, if blank, will produce an unfiltered scan.
+	The type field will default to 3 (Any) and the keep field will default to 0 
+	(Discard).
+
+	Examples:
+	1) Perform an active scan on channels 1, 6, and 11 in the 'g' band:
+		setuserscan chan=1g,6g,11g
+
+	2) Perform a passive scan on channel 11 for 20 ms:
+		setuserscan chan=11gp dur=20
+
+	3) Perform an active scan on channels 1, 6, and 11; and a passive scan on
+	   channel 36 in the 'a' band:
+		setuserscan chan=1g,6g,11g,36ap
+
+	4) Perform an active scan on channel 6 and 36 for a specific SSID:
+		setuserscan chan=6g,36a ssid="TestAP"
+
+	5) Scan all available channels (B/G/N, A bands) for a specific BSSID, keep
+	   the current scan table intact, update existing or append new scan data:
+		setuserscan bssid=00:50:43:20:12:82 keep=1
+
+	6) Scan channel 6, for all infrastructure networks, sending two probe
+	   requests.  Keep the previous scan table intact. Update any duplicate
+	   BSSID/SSID matches with the new scan data:
+		setuserscan chan=6g type=1 probes=2 keep=1
+
+	7) Scan channel 1 and 6, for all networks matching the Mrvl*AP
+	   or AP*Mrvl? patterns and for MrvlTst SSID.  Generate 3 broadcast
+	   probes for the patterns and 3 SSID specific probes for MrvlTst on
+	   both channel 1 and channel 6.
+		setuserscan chan=1g,6g probes=3 wc="Mrvl*AP" wc="AP*Mrvl?" ssid="MrvlTst"
+
+	8) Scan all the channels for specified band.
+		setuserscan chan=0g
+
+	All entries in the scan table (not just the new scan data when keep=1)
+	will be displayed upon completion by use of the getscantable ioctl.
+
+getscantable
+	Display the current contents of the driver scan table
+
+	Usage:
+		mlanconfig mlanX getscantable
+		mlanconfig mlanX getscantable [#]
+		mlanconfig mlanX getscantable tsf
+		mlanconfig mlanX getscantable help
+
+	1) Without argument, the entire scantable is displayed.
+	2) Specifying a # will display detailed information about a specific scan
+	   table entry.  '0' displays driver cached information regarding the
+	   current association (if any).
+	3) The tsf argument will display the entire scan table with the recorded
+	   TSF timestamp for the entry.
+	4) The help argument will display the legend for the capability field.
+
+===============================================================================
+		U S E R  M A N U A L  F O R  M L A N 2 0 4 0 C O E X 
+
+NAME
+mlan2040coex - This application handles the 11n 20/40 coexistence operation for 
+               the Marvell mdriver
+
+SYNOPSIS
+mlan2040coex [-i <intfname>] [hvB]
+(If intfname not present then mlan0 assumed)
+	-h = Help
+	-v = Version
+	-B = Run the process in background
+
+===============================================================================

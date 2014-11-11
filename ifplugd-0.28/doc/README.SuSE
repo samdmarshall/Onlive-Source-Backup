@@ -1,0 +1,15 @@
+To use ifplugd with SuSE Linux you have to change the start mode of all
+interfaces mentioned in ifplugd.conf to manual instead of onboot.
+Hotplug devices should specify hotplug as usual.
+
+For example:
+
+if /etc/ifplugd/ifplugd.conf contains
+
+	INTERFACES='eth0'
+
+your /etc/sysconfig/network/ifcfg-eth0 must contain
+
+	STARTMODE='manual'
+
+$Id: README.SuSE 86 2004-01-26 15:34:24Z lennart $

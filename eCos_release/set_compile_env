@@ -1,0 +1,2 @@
+export ECOS_REPOSITORY=$PWD/src/ecos/packages
+PATH=$PATH:$PWD/toolset/arm-marvell-eabi/bin:$PWD/toolset/tools/bin

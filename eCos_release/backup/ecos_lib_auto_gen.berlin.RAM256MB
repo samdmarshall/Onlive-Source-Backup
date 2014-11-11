@@ -1,0 +1,72 @@
+PATH=$PATH:$PWD/toolset/tools/bin
+export ECOS_REPOSITORY=$PWD/src/ecos/packages
+LOCAL_ROOT=$PWD
+
+MLT_H=src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.h
+MLT_LDI=src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.ldi
+VECTOR=src/ecos/packages/hal/arm/arch/current/src/vectors.S
+
+rm -fr $MLT_H $MLT_H.RAM256MB
+svn update $MLT_H.RAM256MB
+mv $MLT_H.RAM256MB $MLT_H
+rm -fr $MLT_LDI $MLT_LDI.RAM256MB
+svn update $MLT_LDI.RAM256MB 
+mv $MLT_LDI.RAM256MB $MLT_LDI
+rm -fr $VECTOR $VECTOR.Berlin
+svn update $VECTOR.Berlin
+mv $VECTOR.Berlin $VECTOR
+
+rm -fr release
+
+mkdir -p release/final/lib
+mkdir -p release/final/include
+
+##############################################################################################
+
+mkdir -p release/berlin.RAM256MB
+
+echo "build Berlin LIB for RAM256MB"
+
+rm -fr galois_default
+mkdir galois_default
+cd galois_default
+
+ecosconfig new galois default_Galois
+ecosconfig tree
+make -s
+cp -fr install/. ../release/berlin.RAM256MB/.
+
+cd $LOCAL_ROOT
+
+cp release/berlin.RAM256MB/lib/extras.o release/final/lib/extras_CPU1.o
+cp release/berlin.RAM256MB/lib/libextras.a release/final/lib/libextras_CPU1.a
+cp release/berlin.RAM256MB/lib/libtarget.a release/final/lib/libtarget_CPU1.a
+cp release/berlin.RAM256MB/lib/vectors.o release/final/lib/vectors_Berlin.o
+
+cp -rf release/berlin.RAM256MB/include release/final/
+
+##############################################################################################
+
+mkdir -p release/berlin.RAM256MB_sysmon
+
+echo "build Berlin LIB for RAM256MB for system monitor measurement"
+
+rm -fr galois_default
+mkdir galois_default
+cd galois_default
+
+ecosconfig new galois default_for_sysmon
+ecosconfig tree
+make -s
+cp -fr install/. ../release/berlin.RAM256MB_sysmon/.
+
+cd $LOCAL_ROOT
+
+cp release/berlin.RAM256MB_sysmon/lib/extras.o release/final/lib/extras_CPU1_SysMonitor.o
+cp release/berlin.RAM256MB_sysmon/lib/libextras.a release/final/lib/libextras_CPU1_SysMonitor.a
+cp release/berlin.RAM256MB_sysmon/lib/libtarget.a release/final/lib/libtarget_CPU1_SysMonitor.a
+
+##############################################################################################
+
+echo
+echo "The eCos lib berlin.RAM256MB is released at release/final"

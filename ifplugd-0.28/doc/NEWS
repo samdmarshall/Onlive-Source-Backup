@@ -1,0 +1,117 @@
+
+[[[ newer changes are recorded in the README file only ]]]
+
+
+0.20 :: 9 Nov 2003 :: SVN 71
+	Error output fix
+	Build system fix
+
+0.19 :: 20 Oct 2003 :: SVN 62
+	--wait-for-kill fix
+	minor documentation updates, other fixes
+	
+0.18 :: 17 Oct 2003 :: SVN ??
+	Bugfixes
+
+0.17b :: 13 Sep 2003 :: SVN 48
+	Fixed some typos
+
+0.17 :: 13 Sep 2003 :: SVN 42
+        Init script update
+	compativility fix for gcc 2.95
+
+0.16 :: 13. Aug 2003 :: SVN 31
+	Spec file update
+	Build fixes
+	monitor mode
+	init script update
+
+0.15 :: 10. Jul 2003 :: SVN 16
+	umask fix
+	Documentation update
+
+0.14 :: 7. Jul 2003 :: SVN 9
+	Add WLAN support
+	Move to Autoconf
+	Add switch -F
+	Add suspend/resume
+	Modify logging
+	Depend on libdaemon
+	
+0.13 :: 1. Feb 2003 :: PRCS 0.40
+     	Add note about 3c59x on kernel 2.4.20 to SUPPORTED_DRIVERS
+	Add Suse/United Linux compatibility
+	Move Manpages from man/ to share/man/
+	Apply patch from Mandrake Linux regarding syslog, potential buffer overflow and more
+	Reduce stack usage
+	Remove -Werror from gcc command line
+	Small improvement to client program logging
+	Added option -c and adjustet init script accordingly
+
+0.12 :: 11. Jan 2003 :: PRCS 0.34
+        Fix to the specfile (thanks to Asgeir Nilsen)
+        chkonfig compatibility (the same)
+        RH6.2 compatibility (thanks to R. Steve McKown)
+        New option -x (as well)
+
+0.11 :: 24. Dec 2002 :: PRCS 0.25
+        added RPM specfile (thanks to Sean Reifschneider)
+        Extended SUPPORTED_DRIVERS
+
+0.10 :: 13. Nov 2002
+        Added the option -w
+        Portability fixes
+        Corrected daemonizing strategy
+        Removed PRCS residues from distribution
+
+0.9 :: 7. Nov 2002
+        Automatically remove all IP addresses from interface when doing "interface up" without -a
+        Add SUPPORTED_DRIVERS
+        Add patch for 8139too
+        Added trailing newline to version.h
+
+0.8 :: 25. Oct. 2002
+        Syslog spamming corrected
+        Makefile fixes
+        Manpage typos removed
+        Ignore-failure logic inverted, broken in 0.7
+
+0.7 :: 23. Oct. 2002
+        Introduced ifstatus
+        New manpages
+        Implemented support for SIOCPRIV
+        Fixed some bashisms and ashisms
+        Changed -m semantics
+        set -e in default action script
+        Created seperate module interface.c for link status detection functions
+        Documentation update
+        On request of Enrico Zini:
+            Environment variables are now exported to the action script
+            Network devices may be detected automatically
+
+0.6 :: 14. Oct. 2002
+        Documentation fixes
+        License fixes
+        Manpage added
+        New option -q
+
+0.5 :: n.n.
+        Workaround for kernel bug triggered by using tcpdump together with ifplugd
+
+0.4 :: n.n.
+        Link beat detection fixes
+
+0.3 :: n.n.
+        Link beat detection fixes
+        Syslog cleanup
+
+0.2 :: 30. Sept. 2002
+        New option -m
+        Command line parsing fixes
+        Documentation update
+        Installation script fixes
+
+0.1 :: 29. Sept. 2002
+        Initial version
+
+$Id: NEWS 109 2004-04-12 13:58:11Z lennart $

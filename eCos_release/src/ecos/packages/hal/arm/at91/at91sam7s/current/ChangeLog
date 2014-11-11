@@ -1,0 +1,122 @@
+2006-06-01  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* cdl/hal_arm_at91sam7s.cdl: Implement the SPI bus 1 interface for
+	the SAM7X and SAM7XC.
+
+2006-06-01  John Eigelaar <jeigelaar@mweb.co.za>
+
+	* include/plf_io.h: Add SPI DMA registers.
+
+2006-05-20  John Eigelaar <jeigelaar@mweb.co.za>
+
+	include/pkgconf/mlt_arm_at91sam7x128_rom.{h|ldi}
+	include/pkgconf/mlt_arm_at91sam7x256_rom.{h|ldi}: Linker files
+	for AT91SAM7X processor.
+	
+2006-05-17  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* src/at91sam7s_misc.c: Use the AT91 generic PIO manipulation
+	macros. Move the LED function out into the board specific HAL
+	package.
+
+2006-04-07  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* cdl/hal_arm_at91sam7s.cdl: 
+	* include/pkgconf/mlt_arm_at91sam7s32_rom.ldi: 
+	* include/pkgconf/mlt_arm_at91sam7s64_rom.ldi: 
+	* include/pkgconf/mlt_arm_at91sam7s128_rom.ldi: 
+	* include/pkgconf/mlt_arm_at91sam7s267_rom.ldi: 
+	Allow CDL to control where in flash the image is placed.
+
+2006-03-23  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* cdl/hal_arm_at91sam7s.cdl: Implement the USB interface when chip
+	has the device.
+	
+2006-03-10  Oliver Munz  <oli@snr.ch>
+
+	* hal_arm_at91sam7s.cdl: Change the PLL-defaults so that 96MHz is
+	generated so that the USB does work.
+	
+2006-03-10  Andrew Lunn  <andrew.lunn@ascom.ch>
+            Oliver Munz  <munz@speag.ch>
+	
+	* cdl/hal_arm_at91sam7s.cdl: Set the debug UART as the default
+	channel and fix some dodge spelling.
+	* src/at91sam7s_misc.c (hal_plf_hardware_init): Enable the Debug UART
+	pins for output and control by the device.
+	* include/plf_io.h: Define USART2 to be the debug UART.
+	
+2006-03-01  Andrew Lunn  <andrew.lunn@ascom.ch>
+
+	* cdl/hal_arm_at91sam7s.cdl: Change the crystal frequency.  The
+	numbers printed on top of the crystal are misleading. It has a
+	18.432MHz crystal, not 20MHz. This error when combined with the
+	previous fix to the PLL made the serial baud rate wrong.  Change
+	the multiplier and divisor to achieve about the same CPU clock,
+	which should be USB compatible.
+	* src/at91sam7s_misc.c (hal_at91_us_baud): Need the same PLL fix
+	when calculating the baud rate dynamically.
+	* include/plf_io.h: Add the Programmable Clock Output registers.
+	
+2006-02-28  Oliver Munz <munz@speag.ch>
+
+	* include/hal_platform_setup.h: Fix the PLL multiplier settings
+	
+2006-02-25  Andrew Lunn <andrew.lunn@ascom.ch>
+
+	* misc/redboot_R[AO]M.ecm: Disable FIS and fconfig, enable
+	loading directly into flash with the load command.
+	
+2006-01-01  Oliver Munz <munz@speag.ch>
+	    Andrew Lunn <andrew.lunn@ascom.ch>
+
+	* cdl/hal_arm_at91sam7s.cdl:
+	* include/hal_platform_ints.h:
+	* include/hal_platform_setup.h:
+	* include/plf_io.h:
+	* include/pkgconf/mlt_arm_at91sam7s256_rom.h:
+	* include/pkgconf/mlt_arm_at91sam7s256_rom.ldi:
+	* include/pkgconf/mlt_arm_at91sam7s128_rom.h:
+	* include/pkgconf/mlt_arm_at91sam7s128_rom.ldi:
+	* include/pkgconf/mlt_arm_at91sam7s64_rom.h:
+	* include/pkgconf/mlt_arm_at91sam7s64_rom.ldi:
+	* include/pkgconf/mlt_arm_at91sam7s32_rom.h:
+	* include/pkgconf/mlt_arm_at91sam7s32_rom.ldi:
+	* src/at91sam7s_misc.c:
+	* misc/redboot_ROM.ecm:
+	* misc/redboot_RAM.ecm:
+	* ChangeLog: First import of a hal for the AT91SAM7S family.
+
+//===========================================================================
+//####ECOSGPLCOPYRIGHTBEGIN####
+// -------------------------------------------
+// This file is part of eCos, the Embedded Configurable Operating System.
+// Copyright (C) 2006 eCosCentric Ltd
+// Copyright (C) 2006 Andrew Lunn <andrew.lunn@ascom.ch>
+//
+// eCos is free software; you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 or (at your option) any later version.
+//
+// eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with eCos; if not, write to the Free Software Foundation, Inc.,
+// 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+//
+// As a special exception, if other files instantiate templates or use macros
+// or inline functions from this file, or you compile this file and link it
+// with other works to produce a work based on this file, this file does not
+// by itself cause the resulting work to be covered by the GNU General Public
+// License. However the source code for this file must still be made available
+// in accordance with section (3) of the GNU General Public License.
+//
+// This exception does not invalidate any other reasons why a work based on
+// this file might be covered by the GNU General Public License.
+// -------------------------------------------
+//####ECOSGPLCOPYRIGHTEND####
+//===========================================================================

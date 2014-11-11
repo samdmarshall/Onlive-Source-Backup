@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+<title>MIPS ISA - Using as</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using as">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="MIPS_002dDependent.html#MIPS_002dDependent" title="MIPS-Dependent">
+<link rel="prev" href="MIPS-Stabs.html#MIPS-Stabs" title="MIPS Stabs">
+<link rel="next" href="MIPS-symbol-sizes.html#MIPS-symbol-sizes" title="MIPS symbol sizes">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="MIPS-ISA"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="MIPS-symbol-sizes.html#MIPS-symbol-sizes">MIPS symbol sizes</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="MIPS-Stabs.html#MIPS-Stabs">MIPS Stabs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="MIPS_002dDependent.html#MIPS_002dDependent">MIPS-Dependent</a>
+<hr>
+</div>
+
+<h4 class="subsection">8.20.5 Directives to override the ISA level</h4>
+
+<p><a name="index-MIPS-ISA-override-1160"></a><a name="index-g_t_0040code_007b_002eset-mips_0040var_007bn_007d_007d-1161"></a><span class="sc">gnu</span> <code>as</code> supports an additional directive to change
+the <span class="sc">mips</span> Instruction Set Architecture level on the fly: <code>.set
+mips</code><var>n</var>.  <var>n</var> should be a number from 0 to 5, or 32, 32r2, 64
+or 64r2. 
+The values other than 0 make the assembler accept instructions
+for the corresponding <span class="sc">isa</span> level, from that point on in the
+assembly.  <code>.set mips</code><var>n</var> affects not only which instructions
+are permitted, but also how certain macros are expanded.  <code>.set
+mips0</code> restores the <span class="sc">isa</span> level to its original level: either the
+level you selected with command line options, or the default for your
+configuration.  You can use this feature to permit specific <span class="sc">r4000</span>
+instructions while assembling in 32 bit mode.  Use this directive with
+care!
+
+   <p>The directive `<samp><span class="samp">.set mips16</span></samp>' puts the assembler into MIPS 16 mode,
+in which it will assemble instructions for the MIPS 16 processor.  Use
+`<samp><span class="samp">.set nomips16</span></samp>' to return to normal 32 bit mode.
+
+   <p>Traditional <span class="sc">mips</span> assemblers do not support this directive.
+
+   </body></html>
+

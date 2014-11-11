@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+<title>Liveness information - GNU Compiler Collection (GCC) Internals</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="GNU Compiler Collection (GCC) Internals">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Control-Flow.html#Control-Flow" title="Control Flow">
+<link rel="prev" href="Maintaining-the-CFG.html#Maintaining-the-CFG" title="Maintaining the CFG">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'' and ``Funding
+Free Software'', the Front-Cover texts being (a) (see below), and with
+the Back-Cover Texts being (b) (see below).  A copy of the license is
+included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Front-Cover Text is:
+
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Liveness-information"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Maintaining-the-CFG.html#Maintaining-the-CFG">Maintaining the CFG</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Control-Flow.html#Control-Flow">Control Flow</a>
+<hr>
+</div>
+
+<h3 class="section">12.5 Liveness information</h3>
+
+<p><a name="index-Liveness-representation-1222"></a>Liveness information is useful to determine whether some register is
+&ldquo;live&rdquo; at given point of program, i.e. that it contains a value that
+may be used at a later point in the program.  This information is
+used, for instance, during register allocation, as the pseudo
+registers only need to be assigned to a unique hard register or to a
+stack slot if they are live.  The hard registers and stack slots may
+be freely reused for other values when a register is dead.
+
+ <p><a name="index-REG_005fDEAD_002c-REG_005fUNUSED-1223"></a>The liveness information is stored partly in the RTL instruction
+stream and partly in the flow graph.  Local information is stored in
+the instruction stream:
+Each instruction may contain <code>REG_DEAD</code> notes representing that
+the value of a given register is no longer needed, or
+<code>REG_UNUSED</code> notes representing that the value computed by the
+instruction is never used.  The second is useful for instructions
+computing multiple values at once.
+
+ <p><a name="index-global_005flive_005fat_005fstart_002c-global_005flive_005fat_005fend-1224"></a>Global liveness information is stored in the control flow graph. 
+Each basic block contains two bitmaps, <code>global_live_at_start</code> and
+<code>global_live_at_end</code> representing liveness of each register at
+the entry and exit of the basic block.  The file <code>flow.c</code>
+contains functions to compute liveness of each register at any given
+place in the instruction stream using this information.
+
+ <p><a name="index-BB_005fDIRTY_002c-clear_005fbb_005fflags_002c-update_005flife_005finfo_005fin_005fdirty_005fblocks-1225"></a>Liveness is expensive to compute and thus it is desirable to keep it
+up to date during code modifying passes.  This can be easily
+accomplished using the <code>flags</code> field of a basic block.  Functions
+modifying the instruction stream automatically set the <code>BB_DIRTY</code>
+flag of a modifies basic block, so the pass may simply
+use<code>clear_bb_flags</code> before doing any modifications and then ask
+the data flow module to have liveness updated via the
+<code>update_life_info_in_dirty_blocks</code> function.
+
+ <p>This scheme works reliably as long as no control flow graph
+transformations are done.  The task of updating liveness after control
+flow graph changes is more difficult as normal iterative data flow
+analysis may produce invalid results or get into an infinite cycle
+when the initial solution is not below the desired one.  Only simple
+transformations, like splitting basic blocks or inserting on edges,
+are safe, as functions to implement them already know how to update
+liveness information locally.
+
+<!-- Copyright (C) 1988, 1989, 1992, 1993, 1994, 1996, 1998, 1999, 2000, 2001, -->
+<!-- 2002, 2003, 2004, 2005 Free Software Foundation, Inc. -->
+<!-- This is part of the GCC manual. -->
+<!-- For copying conditions, see the file gcc.texi. -->
+</body></html>
+

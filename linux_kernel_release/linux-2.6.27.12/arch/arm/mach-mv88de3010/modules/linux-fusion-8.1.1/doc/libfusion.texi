@@ -1,0 +1,135 @@
+\input texinfo
+@c %**start of header
+@c Copyright 2003 Denis Oliver Kropp
+@c Licensed under the Gnu Public License, Version 2
+@c
+@c Fusion IPC
+@c
+@setfilename fusion.info
+@settitle Fusion
+@paragraphindent 0
+@c %**end of header
+
+@titlepage
+@title Fusion
+@subtitle High level IPC
+@subtitle July 2003
+@author by Denis Oliver Kropp <dok@@directfb.org>
+@end titlepage
+
+@contents
+
+@chapter Introduction
+
+@section What is Fusion?
+
+Fusion is a high level IPC API providing mechanisms
+for master/slave environments.
+
+@section Master/Slave vs. Client/Server
+
+In client/server environments clients delegate every operation
+to the server which has sole access to shared resources.
+Such environments suffer from the overhead caused by
+
+@itemize @bullet
+@item Command encoding and decoding
+@item Transport of command packets
+@item Transport of data referenced by commands
+@item Context switches between client and server processes
+@item Strict seperation of client and server implementation
+@end itemize
+
+The master/slave approach eliminates this overhead by virtually
+merging the processes at the lower level of their implementation.
+This way of making multiple processes look like multiple threads
+gave Fusion its name and includes
+
+@itemize @bullet
+@item Shared memory for data normally held solely by the server
+@item High level messaging for virtually local event handlers and callbacks
+@item Advanced locking techniques for synchronization and access control
+@item Framework for distributed allocation and cleanup of resources
+@end itemize
+
+
+
+@chapter Design
+
+This chapter explains some fundamental concepts of Fusion.
+
+
+@section Shared memory
+
+Shared memory provides direct access for all processes to many kinds of
+shared information, including structures, lists and data. It's also used by
+the user space part of Fusion itself.
+
+Fusion's shared memory has the following special features
+
+@itemize @bullet
+@item Shared memory is mapped to the same virtual address in all processes
+      to enable pointers within shared memory pointing to other locations
+      in shared memory
+@item Allocation and deallocation of shared memory blocks is provided by an API
+      that is equivalent to the libc malloc(), realloc(), free() etc.
+@end itemize
+
+
+@section Arena
+
+The first process in a master/slave environment initializes the session while
+additional processes simply join. The Fusion Arena represents such an
+environment and defines the role of each entering process. Each Arena is
+identified by a name which is specified when the Arena is entered. If the Arena
+doesn't exist yet, the process becomes the master and initializes the rest of
+the environment. Otherwise the process becomes a slave and joins the environment
+running the local setup only.
+
+The Fusion Arena also provides "fields" which are basically pairs of a string
+and a shared memory pointer. These fields are used to register entry points
+to the shared memory for each part of the environment during its initialization.
+They are looked up by their name when the environment is being joined by another
+process.
+
+The exit mechanism is similar to the enter mechanism. If the exiting process
+is the last one, it does a complete shutdown, otherwise it simply leaves. The
+master may reject to leave the environment before all slaves did. In this case
+the exit fails and the master can notify the user, wait for all slaves or kill
+them.
+
+
+@section Skirmish
+@section Reference counter
+@section Reactor
+@section Object
+@section Property
+@section Messages
+@section Call
+
+
+
+@chapter Implementation
+
+@section Kernel space
+
+@subsection Skirmish
+@subsection Reference counter
+@subsection Property
+
+
+@section Kernel/user space
+
+@subsection Messages
+@subsection Call
+@subsection Reactor
+
+
+@section User space
+
+@subsection POSIX shared memory
+@subsection Arena
+@subsection Object
+
+
+@bye

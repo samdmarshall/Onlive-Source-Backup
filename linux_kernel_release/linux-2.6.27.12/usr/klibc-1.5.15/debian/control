@@ -1,0 +1,80 @@
+Source: klibc
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: maximilian attems <maks@debian.org>
+Uploaders: Jeff Bailey <jbailey@raspberryginger.com>
+Build-Depends: cdbs, debhelper (>= 5.0.0), linux-libc-dev, bison, m4
+Section: libs
+Standards-Version: 3.8.0
+Vcs-Browser: http://git.debian.org/?p=kernel/klibc.git
+Vcs-Git: git://git.debian.org/git/kernel/klibc.git
+
+Package: libklibc-dev
+Section: libdevel
+Architecture: any
+Depends: libklibc (= ${binary:Version}), ${misc:Depends}
+Description: kernel headers used during the build of klibc
+ This package contains the set of kernel headers that were required to
+ build klibc and the utilities that ship with it.  This may or may
+ not be a complete enough set to build other programs that link against
+ klibc.  If in doubt, use real kernel headers instead.
+
+Package: libklibc
+Section: libs
+Architecture: any
+Depends: ${misc:Depends}
+Description: minimal libc subset for use with initramfs
+ klibc is intended to be a minimalistic libc subset for use with
+ initramfs.  It is deliberately written for small size, minimal
+ entanglement, and portability, not speed.  It is definitely a work in
+ progress, and a lot of things are still missing.
+
+
+Package: klibc-utils
+Section: libs
+Architecture: any
+Depends: libklibc (= ${binary:Version}), ${misc:Depends}
+Description: small utilities built with klibc for early boot
+ This package contains a collection of programs that are linked
+ against klibc. These duplicate some of the functionality of a
+ regular Linux toolset, but are typically much smaller than their
+ full-function counterparts.  They are intended for inclusion in
+ initramfs images and embedded systems.
+
+Package: klibc-utils-udeb
+Section: debian-installer
+Architecture: any
+XC-Package-Type: udeb
+Depends: libklibc-udeb (= ${binary:Version})
+Description: small utilities built with klibc for early boot
+ This package contains a collection of programs that are linked
+ against klibc. These duplicate some of the functionality of a
+ regular Linux toolset, but are typically much smaller than their
+ full-function counterparts.  They are intended for inclusion in
+ initramfs images and embedded systems.
+
+
+Package: klibc-utils-floppy-udeb
+Section: debian-installer
+Architecture: alpha armeb armel amd64 hppa i386 lpia m68k mips mipsel powerpc s390 sparc
+XC-Package-Type: udeb
+Depends: libklibc-udeb (= ${binary:Version})
+Description: small utilities built with klibc for the boot floppy
+ This package contains a small collection of programs that are linked
+ against klibc. These duplicate some of the functionality of a
+ regular Linux toolset, but are typically much smaller than their
+ full-function counterparts.  They are intended for inclusion in
+ boot floppies.
+
+
+Package: libklibc-udeb
+Section: debian-installer
+Architecture: any
+XC-Package-Type: udeb
+Description: minimal libc subset for use with initramfs
+ klibc is intended to be a minimalistic libc subset for use with
+ initramfs.  It is deliberately written for small size, minimal
+ entanglement, and portability, not speed.  It is definitely a work in
+ progress, and a lot of things are still missing.
+
+

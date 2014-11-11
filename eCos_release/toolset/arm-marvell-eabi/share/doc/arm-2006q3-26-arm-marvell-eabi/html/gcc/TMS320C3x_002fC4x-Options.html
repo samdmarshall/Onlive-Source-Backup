@@ -1,0 +1,152 @@
+<html lang="en">
+<head>
+<title>TMS320C3x/C4x Options - Using the GNU Compiler Collection (GCC)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using the GNU Compiler Collection (GCC)">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Submodel-Options.html#Submodel-Options" title="Submodel Options">
+<link rel="prev" href="System-V-Options.html#System-V-Options" title="System V Options">
+<link rel="next" href="V850-Options.html#V850-Options" title="V850 Options">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'' and ``Funding
+Free Software'', the Front-Cover texts being (a) (see below), and with
+the Back-Cover Texts being (b) (see below).  A copy of the license is
+included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Front-Cover Text is:
+
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="TMS320C3x%2fC4x-Options"></a>
+<a name="TMS320C3x_002fC4x-Options"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="V850-Options.html#V850-Options">V850 Options</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="System-V-Options.html#System-V-Options">System V Options</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Submodel-Options.html#Submodel-Options">Submodel Options</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.17.32 TMS320C3x/C4x Options</h4>
+
+<p><a name="index-TMS320C3x_002fC4x-Options-1555"></a>
+These `<samp><span class="samp">-m</span></samp>' options are defined for TMS320C3x/C4x implementations:
+
+     <dl>
+<dt><code>-mcpu=</code><var>cpu_type</var><dd><a name="index-mcpu-1556"></a>Set the instruction set, register set, and instruction scheduling
+parameters for machine type <var>cpu_type</var>.  Supported values for
+<var>cpu_type</var> are `<samp><span class="samp">c30</span></samp>', `<samp><span class="samp">c31</span></samp>', `<samp><span class="samp">c32</span></samp>', `<samp><span class="samp">c40</span></samp>', and
+`<samp><span class="samp">c44</span></samp>'.  The default is `<samp><span class="samp">c40</span></samp>' to generate code for the
+TMS320C40.
+
+     <br><dt><code>-mbig-memory</code><dt><code>-mbig</code><dt><code>-msmall-memory</code><dt><code>-msmall</code><dd><a name="index-mbig_002dmemory-1557"></a><a name="index-mbig-1558"></a><a name="index-msmall_002dmemory-1559"></a><a name="index-msmall-1560"></a>Generates code for the big or small memory model.  The small memory
+model assumed that all data fits into one 64K word page.  At run-time
+the data page (DP) register must be set to point to the 64K page
+containing the .bss and .data program sections.  The big memory model is
+the default and requires reloading of the DP register for every direct
+memory access.
+
+     <br><dt><code>-mbk</code><dt><code>-mno-bk</code><dd><a name="index-mbk-1561"></a><a name="index-mno_002dbk-1562"></a>Allow (disallow) allocation of general integer operands into the block
+count register BK.
+
+     <br><dt><code>-mdb</code><dt><code>-mno-db</code><dd><a name="index-mdb-1563"></a><a name="index-mno_002ddb-1564"></a>Enable (disable) generation of code using decrement and branch,
+DBcond(D), instructions.  This is enabled by default for the C4x.  To be
+on the safe side, this is disabled for the C3x, since the maximum
+iteration count on the C3x is 2^23 + 1 (but who iterates loops more than
+2^23 times on the C3x?).  Note that GCC will try to reverse a loop so
+that it can utilize the decrement and branch instruction, but will give
+up if there is more than one memory reference in the loop.  Thus a loop
+where the loop counter is decremented can generate slightly more
+efficient code, in cases where the RPTB instruction cannot be utilized.
+
+     <br><dt><code>-mdp-isr-reload</code><dt><code>-mparanoid</code><dd><a name="index-mdp_002disr_002dreload-1565"></a><a name="index-mparanoid-1566"></a>Force the DP register to be saved on entry to an interrupt service
+routine (ISR), reloaded to point to the data section, and restored on
+exit from the ISR.  This should not be required unless someone has
+violated the small memory model by modifying the DP register, say within
+an object library.
+
+     <br><dt><code>-mmpyi</code><dt><code>-mno-mpyi</code><dd><a name="index-mmpyi-1567"></a><a name="index-mno_002dmpyi-1568"></a>For the C3x use the 24-bit MPYI instruction for integer multiplies
+instead of a library call to guarantee 32-bit results.  Note that if one
+of the operands is a constant, then the multiplication will be performed
+using shifts and adds.  If the <samp><span class="option">-mmpyi</span></samp> option is not specified for the C3x,
+then squaring operations are performed inline instead of a library call.
+
+     <br><dt><code>-mfast-fix</code><dt><code>-mno-fast-fix</code><dd><a name="index-mfast_002dfix-1569"></a><a name="index-mno_002dfast_002dfix-1570"></a>The C3x/C4x FIX instruction to convert a floating point value to an
+integer value chooses the nearest integer less than or equal to the
+floating point value rather than to the nearest integer.  Thus if the
+floating point number is negative, the result will be incorrectly
+truncated an additional code is necessary to detect and correct this
+case.  This option can be used to disable generation of the additional
+code required to correct the result.
+
+     <br><dt><code>-mrptb</code><dt><code>-mno-rptb</code><dd><a name="index-mrptb-1571"></a><a name="index-mno_002drptb-1572"></a>Enable (disable) generation of repeat block sequences using the RPTB
+instruction for zero overhead looping.  The RPTB construct is only used
+for innermost loops that do not call functions or jump across the loop
+boundaries.  There is no advantage having nested RPTB loops due to the
+overhead required to save and restore the RC, RS, and RE registers. 
+This is enabled by default with <samp><span class="option">-O2</span></samp>.
+
+     <br><dt><code>-mrpts=</code><var>count</var><dt><code>-mno-rpts</code><dd><a name="index-mrpts-1573"></a><a name="index-mno_002drpts-1574"></a>Enable (disable) the use of the single instruction repeat instruction
+RPTS.  If a repeat block contains a single instruction, and the loop
+count can be guaranteed to be less than the value <var>count</var>, GCC will
+emit a RPTS instruction instead of a RPTB.  If no value is specified,
+then a RPTS will be emitted even if the loop count cannot be determined
+at compile time.  Note that the repeated instruction following RPTS does
+not have to be reloaded from memory each iteration, thus freeing up the
+CPU buses for operands.  However, since interrupts are blocked by this
+instruction, it is disabled by default.
+
+     <br><dt><code>-mloop-unsigned</code><dt><code>-mno-loop-unsigned</code><dd><a name="index-mloop_002dunsigned-1575"></a><a name="index-mno_002dloop_002dunsigned-1576"></a>The maximum iteration count when using RPTS and RPTB (and DB on the C40)
+is 2^31 + 1 since these instructions test if the iteration count is
+negative to terminate the loop.  If the iteration count is unsigned
+there is a possibility than the 2^31 + 1 maximum iteration count may be
+exceeded.  This switch allows an unsigned iteration count.
+
+     <br><dt><code>-mti</code><dd><a name="index-mti-1577"></a>Try to emit an assembler syntax that the TI assembler (asm30) is happy
+with.  This also enforces compatibility with the API employed by the TI
+C3x C compiler.  For example, long doubles are passed as structures
+rather than in floating point registers.
+
+     <br><dt><code>-mregparm</code><dt><code>-mmemparm</code><dd><a name="index-mregparm-1578"></a><a name="index-mmemparm-1579"></a>Generate code that uses registers (stack) for passing arguments to functions. 
+By default, arguments are passed in registers where possible rather
+than by pushing arguments on to the stack.
+
+     <br><dt><code>-mparallel-insns</code><dt><code>-mno-parallel-insns</code><dd><a name="index-mparallel_002dinsns-1580"></a><a name="index-mno_002dparallel_002dinsns-1581"></a>Allow the generation of parallel instructions.  This is enabled by
+default with <samp><span class="option">-O2</span></samp>.
+
+     <br><dt><code>-mparallel-mpy</code><dt><code>-mno-parallel-mpy</code><dd><a name="index-mparallel_002dmpy-1582"></a><a name="index-mno_002dparallel_002dmpy-1583"></a>Allow the generation of MPY||ADD and MPY||SUB parallel instructions,
+provided <samp><span class="option">-mparallel-insns</span></samp> is also specified.  These instructions have
+tight register constraints which can pessimize the code generation
+of large functions.
+
+ </dl>
+
+ </body></html>
+

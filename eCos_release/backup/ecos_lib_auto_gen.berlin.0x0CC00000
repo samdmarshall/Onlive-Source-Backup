@@ -1,0 +1,82 @@
+PATH=$PATH:$PWD/toolset/tools/bin
+export ECOS_REPOSITORY=$PWD/src/ecos/packages
+LOCAL_ROOT=$PWD
+
+MLT_H=src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.h
+MLT_LDI=src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.ldi
+VECTOR=src/ecos/packages/hal/arm/arch/current/src/vectors.S
+
+rm -fr $MLT_H $MLT_H.0x0CC00000
+svn update $MLT_H.0x0CC00000
+mv $MLT_H.0x0CC00000 $MLT_H
+rm -fr $MLT_LDI $MLT_LDI.0x0CC00000
+svn update $MLT_LDI.0x0CC00000
+mv $MLT_LDI.0x0CC00000 $MLT_LDI
+rm -fr $VECTOR $VECTOR.Berlin
+svn update $VECTOR.Berlin
+mv $VECTOR.Berlin $VECTOR
+
+rm -fr release
+
+mkdir -p release/final/lib
+mkdir -p release/final/include
+
+##############################################################################################
+
+mkdir -p release/berlin.0x0CC00000
+
+echo "build Berlin LIB with heap end at 0x0CC00000"
+
+rm -fr galois_default
+mkdir galois_default
+cd galois_default
+
+ecosconfig new galois default_Galois
+ecosconfig tree
+make -s
+cp -fr install/. ../release/berlin.0x0CC00000/.
+
+cd $LOCAL_ROOT
+
+cp release/berlin.0x0CC00000/lib/extras.o release/final/lib/extras_CPU1.o
+cp release/berlin.0x0CC00000/lib/libextras.a release/final/lib/libextras_CPU1.a
+cp release/berlin.0x0CC00000/lib/libtarget.a release/final/lib/libtarget_CPU1.a
+cp release/berlin.0x0CC00000/lib/vectors.o release/final/lib/vectors_Berlin.o
+cp release/berlin.0x0CC00000/lib/target.ld release/final/lib/target_Berlin_CPU1.ld
+sed -i 's/GROUP(/GROUP(impure.o /g' release/final/lib/target_Berlin_CPU1.ld
+sed -i 's/vectors.o/vectors_Berlin.o/g' release/final/lib/target_Berlin_CPU1.ld
+sed -i 's/extras.o/extras_CPU1.o/g' release/final/lib/target_Berlin_CPU1.ld
+sed -i 's/libtarget.a/libtarget_CPU1.a/g' release/final/lib/target_Berlin_CPU1.ld
+
+cp -rf release/berlin.0x0CC00000/include release/final/
+
+##############################################################################################
+
+mkdir -p release/berlin.0x0CC00000_sysmon
+
+echo "build Berlin LIB with heap end at 0x0CC00000 for system monitor measurement"
+
+rm -fr galois_default
+mkdir galois_default
+cd galois_default
+
+ecosconfig new galois default_for_sysmon
+ecosconfig tree
+make -s
+cp -fr install/. ../release/berlin.0x0CC00000_sysmon/.
+
+cd $LOCAL_ROOT
+
+cp release/berlin.0x0CC00000_sysmon/lib/extras.o release/final/lib/extras_CPU1_SysMonitor.o
+cp release/berlin.0x0CC00000_sysmon/lib/libextras.a release/final/lib/libextras_CPU1_SysMonitor.a
+cp release/berlin.0x0CC00000_sysmon/lib/libtarget.a release/final/lib/libtarget_CPU1_SysMonitor.a
+cp release/berlin.0x0CC00000_sysmon/lib/target.ld release/final/lib/target_Berlin_CPU1_SysMonitor.ld
+
+sed -i 's/vectors.o/vectors_Berlin.o/g' release/final/lib/target_Berlin_CPU1_SysMonitor.ld
+sed -i 's/extras.o/extras_CPU1_SysMonitor.o/g' release/final/lib/target_Berlin_CPU1_SysMonitor.ld
+sed -i 's/libtarget.a/libtarget_CPU1_SysMonitor.a/g' release/final/lib/target_Berlin_CPU1_SysMonitor.ld
+
+##############################################################################################
+
+echo
+echo "The eCos lib berlin.0x0CC00000 is released at release/final"

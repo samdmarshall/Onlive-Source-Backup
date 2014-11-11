@@ -1,0 +1,241 @@
+The guidelines in this file are the ideals; it's better to send a
+not-fully-following-guidelines patch than no patch at all, though.  We
+can always polish it up.
+
+Mailing list
+===
+
+The D-Bus mailing list is dbus@lists.freedesktop.org; discussion
+of patches, etc. should go there.
+
+Security
+===
+
+Most of D-Bus is security sensitive.  Guidelines related to that:
+
+ - avoid memcpy(), sprintf(), strlen(), snprintf, strlcat(),
+   strstr(), strtok(), or any of this stuff. Use DBusString. 
+   If DBusString doesn't have the feature you need, add it 
+   to DBusString. 
+
+   There are some exceptions, for example
+   if your strings are just used to index a hash table 
+   and you don't do any parsing/modification of them, perhaps
+   DBusString is wasteful and wouldn't help much. But definitely 
+   if you're doing any parsing, reallocation, etc. use DBusString.
+
+ - do not include system headers outside of dbus-memory.c, 
+   dbus-sysdeps.c, and other places where they are already 
+   included. This gives us one place to audit all external 
+   dependencies on features in libc, etc.
+
+ - do not use libc features that are "complicated" 
+   and may contain security holes. For example, you probably shouldn't
+   try to use regcomp() to compile an untrusted regular expression.
+   Regular expressions are just too complicated, and there are many 
+   different libc's out there.
+
+ - we need to design the message bus daemon (and any similar features)
+   to use limited privileges, run in a chroot jail, and so on.
+
+http://vsftpd.beasts.org/ has other good security suggestions.
+
+Coding Style
+===
+
+ - The C library uses GNU coding conventions, with GLib-like
+   extensions (e.g. lining up function arguments). The
+   Qt wrapper uses KDE coding conventions.
+
+ - Write docs for all non-static functions and structs and so on. try
+   "doxygen Doxyfile" prior to commit and be sure there are no
+   warnings printed.
+
+ - All external interfaces (network protocols, file formats, etc.)
+   should have documented specifications sufficient to allow an
+   alternative implementation to be written. Our implementation should
+   be strict about specification compliance (should not for example
+   heuristically parse a file and accept not-well-formed
+   data). Avoiding heuristics is also important for security reasons;
+   if it looks funny, ignore it (or exit, or disconnect).
+
+Making a release
+===
+
+To make a release of D-Bus, do the following:
+
+ - check out a fresh copy from CVS
+
+ - verify that the libtool versioning/library soname is 
+   changed if it needs to be, or not changed if not
+
+ - update the file NEWS based on the ChangeLog
+
+ - update the AUTHORS file based on the ChangeLog
+
+ - add a ChangeLog entry containing the version number 
+   you're releasing ("Released 0.3" or something)
+   so people can see which changes were before and after
+   a given release
+
+ - the version number should have major.minor.micro even
+   if micro is 0, i.e. "1.0.0" and "1.2.0" not "1.0"/"1.2"
+
+ - "make distcheck" (DO NOT just "make dist" - pass the check!)
+
+ - if make distcheck fails, fix it.
+
+ - once distcheck succeeds, "git-commit -a".  This is the version
+   of the tree that corresponds exactly to the released tarball.
+
+ - tag the tree with "git-tag -s -m 'Released X.Y.Z' dbus-X.Y.Z"
+   where X.Y.Z is the version of the release.  If you can't sign
+   then simply created an unannotated tag: "git-tag dbus-X.Y.Z".
+
+ - bump the version number up in configure.in, and commit
+   it.  Make sure you do this *after* tagging the previous
+   release! The idea is that git has a newer version number
+   than anything released.
+
+ - push your changes to the central repository with "git-push"
+
+ - push your new tag, too: "git-push origin dbus-X.Y.Z"
+
+ - scp your tarball to freedesktop.org server and copy it 
+   to /srv/dbus.freedesktop.org/www/releases/dbus. This should 
+   be possible if you're in group "dbus"
+
+ - update the wiki page http://www.freedesktop.org/Software/dbus by
+   adding the new release under the Download heading. Then, cut the
+   link and changelog for the previous that was there.
+
+ - update the wiki page
+   http://www.freedesktop.org/Software/DbusReleaseArchive pasting the
+   previous release. Note that bullet points for each of the changelog
+   items must be indented three more spaces to conform to the
+   formatting of the other releases there.
+  
+ - post to dbus@lists.freedesktop.org announcing the release.
+ 
+
+After making a ".0" stable release
+===
+
+After releasing, when you increment the version number in git, also
+move the ChangeLog to ChangeLog.pre-X-Y where X-Y is what you just
+released, e.g. ChangeLog.pre-1-0. Then create and cvs add a new empty
+ChangeLog. The last entry in ChangeLog.pre-1-0 should be the one about
+"Released 1.0". 
+
+Add ChangeLog.pre-X-Y to EXTRA_DIST in Makefile.am.
+
+We create a branch for each stable release; sometimes the branch is
+not done immediately, instead it's possible to wait until someone has
+a not-suitable-for-stable change they want to make and then branch to
+allow committing that change.
+
+The branch name should be dbus-X.Y-branch which is a branch that has
+releases versioned X.Y.Z
+
+To branch:
+  git branch dbus-X.Y-branch
+and upload the branch tag to the server:
+  git-push origin dbus-X.Y-branch
+
+To develop in this branch:
+  git-checkout dbus-X.Y-branch
+
+Environment variables
+===
+
+These are the environment variables that are used by the D-Bus client library
+
+DBUS_VERBOSE=1
+Turns on printing verbose messages. This only works if D-Bus has been
+compiled with --enable-verbose-mode
+
+DBUS_MALLOC_FAIL_NTH=n
+Can be set to a number, causing every nth call to dbus_alloc or
+dbus_realloc to fail. This only works if D-Bus has been compiled with
+--enable-tests.
+
+DBUS_MALLOC_FAIL_GREATER_THAN=n
+Can be set to a number, causing every call to dbus_alloc or
+dbus_realloc to fail if the number of bytes to be allocated is greater
+than the specified number. This only works if D-Bus has been compiled with
+--enable-tests.
+
+DBUS_TEST_MALLOC_FAILURES=n
+Many of the D-Bus tests will run over and over, once for each malloc
+involved in the test. Each run will fail a different malloc, plus some
+number of mallocs following that malloc (because a fair number of bugs
+only happen if two or more mallocs fail in a row, e.g. error recovery
+that itself involves malloc).  This env variable sets the number of
+mallocs to fail.
+Here's why you care: If set to 0, then the malloc checking is skipped,
+which makes the test suite a heck of a lot faster. Just run with this
+env variable unset before you commit.
+
+Tests
+===
+
+These are the test programs that are built if dbus is compiled using
+--enable-tests.
+
+dbus/dbus-test
+This is the main unit test program that tests all aspects of the D-Bus
+client library.
+
+dbus/bus-test
+This it the unit test program for the message bus.
+
+test/break-loader
+A test that tries to break the message loader by passing it randomly
+created invalid messages.
+
+test/name-test/*
+This is a suite of programs which are run with a temporary session bus.
+If your test involves multiple processes communicating, your best bet
+is to add a test in here.
+
+"make check" runs all the deterministic test programs (i.e. not break-loader).
+
+"make check-coverage" is available if you configure with --enable-gcov and 
+gives a complete report on test suite coverage. You can also run 
+"test/decode-gcov foo.c" on any source file to get annotated source, 
+after running make check with a gcov-enabled tree.
+
+Patches
+===
+
+Please file them at http://bugzilla.freedesktop.org under component
+dbus, and also post to the mailing list for discussion.  The commit
+rules are:
+
+ - for fixes that don't affect API or protocol, they can be committed
+   if any one qualified reviewer other than patch author
+   reviews and approves
+
+ - for fixes that do affect API or protocol, two people
+   in the reviewer group have to review and approve the commit, and 
+   posting to the list is definitely mandatory
+
+ - if there's a live unresolved controversy about a change,
+   don't commit it while the argument is still raging.
+
+ - regardless of reviews, to commit a patch:
+    - make check must pass
+    - the test suite must be extended to cover the new code
+      as much as reasonably feasible (see Tests above)
+    - the patch has to follow the portability, security, and 
+      style guidelines
+    - the patch should as much as reasonable do one thing, 
+      not many unrelated changes
+   No reviewer should approve a patch without these attributes, and
+   failure on these points is grounds for reverting the patch.
+
+The reviewer group that can approve patches: Havoc Pennington, Michael
+Meeks, Alex Larsson, Zack Rusin, Joe Shaw, Mikael Hallendal, Richard
+Hult, Owen Fraser-Green, Olivier Andrieu, Colin Walters, Thiago
+Macieira, John Palmieri, Scott James Remnant.
+

@@ -1,0 +1,113 @@
+#ifndef __COMMON_IR_KEY_H__
+#define __COMMON_IR_KEY_H__
+
+/*
+ * IR key definition 
+ */
+typedef enum {
+	MV_IR_KEY_NULL = 0, /* no key */
+
+	MV_IR_KEY_POWER = 0x0200,
+	MV_IR_KEY_OPENCLOSE,
+
+	/* digital keys */
+	MV_IR_KEY_DIGIT_1 = 0x1000,
+	MV_IR_KEY_DIGIT_2,
+	MV_IR_KEY_DIGIT_3,
+	MV_IR_KEY_DIGIT_4,
+	MV_IR_KEY_DIGIT_5,
+	MV_IR_KEY_DIGIT_6,
+	MV_IR_KEY_DIGIT_7,
+	MV_IR_KEY_DIGIT_8,
+	MV_IR_KEY_DIGIT_9,
+	MV_IR_KEY_DIGIT_0,
+
+	/* for BD */
+	MV_IR_KEY_INFO = 0x2000,
+	MV_IR_KEY_SETUPMENU,
+	MV_IR_KEY_CANCEL, /* no key */
+
+	MV_IR_KEY_DISCMENU,
+	MV_IR_KEY_TITLEMENU,
+	MV_IR_KEY_SUBTITLE,
+	MV_IR_KEY_ANGLE,
+	MV_IR_KEY_AUDIO,
+	MV_IR_KEY_SEARCH,
+	MV_IR_KEY_ZOOM,
+	MV_IR_KEY_DISPLAY,
+
+	MV_IR_KEY_REPEAT,
+	MV_IR_KEY_REPEAT_AB,
+	MV_IR_KEY_PIP,
+	MV_IR_KEY_EXIT,
+	MV_IR_KEY_A,
+	MV_IR_KEY_B,
+	MV_IR_KEY_C,
+	MV_IR_KEY_D,
+
+	/* IR misc around ENTER */
+	MV_IR_KEY_CLEAR = 0x3000,
+	MV_IR_KEY_MEDIA_MODE,
+	MV_IR_KEY_STEP,
+	MV_IR_KEY_RETURN,
+
+	/* up down left right enter */
+	MV_IR_KEY_UP = 0x4000,
+	MV_IR_KEY_DOWN,
+	MV_IR_KEY_LEFT,
+	MV_IR_KEY_RIGHT,
+	MV_IR_KEY_ENTER,
+
+	/* for BD */
+	MV_IR_KEY_SLOW,
+	MV_IR_KEY_PAUSE,
+	MV_IR_KEY_PLAY,
+	MV_IR_KEY_STOP,
+	MV_IR_KEY_PLAY_PAUSE, /* no key */
+
+	MV_IR_KEY_SKIP_BACKWARD,
+	MV_IR_KEY_SKIP_FORWARD,
+	MV_IR_KEY_SLOW_BACKWARD, /* no key */
+	MV_IR_KEY_SLOW_FORWARD,  /* no key */
+	MV_IR_KEY_FAST_BACKWARD,
+	MV_IR_KEY_FAST_FORWARD,
+
+	/* bottom keys */
+	MV_IR_KEY_F1 = 0x5000,
+	MV_IR_KEY_F2,
+	MV_IR_KEY_F3,
+	MV_IR_KEY_F4,
+	MV_IR_KEY_F5,
+	MV_IR_KEY_F6,
+	MV_IR_KEY_F7,
+	MV_IR_KEY_F8,
+
+	/* for future */
+	MV_IR_KEY_VOL_PLUS = 0x6000, /* no key */
+	MV_IR_KEY_VOL_MINUS, /* no key */
+	MV_IR_KEY_VOL_MUTE, /* no key */
+	MV_IR_KEY_CHANNEL_PLUS, /* no key */
+	MV_IR_KEY_CHANNEL_MINUS, /* no key */
+	MV_IR_KEY_HOME, /* for some vendor */
+	MV_IR_KEY_MUSIC_ID, /* for some vendor */
+
+	/* obsoleted keys */
+	MV_IR_KEY_MENU,
+	MV_IR_KEY_INPUTSEL,
+	MV_IR_KEY_ANYNET,
+	MV_IR_KEY_TELEVISION,
+	MV_IR_KEY_CHANNEL_LIST,
+	MV_IR_KEY_TVPOWER,
+	MV_IR_KEY_MARKER,
+        MV_IR_KEY_VIDEO_FORMAT,
+
+} MV_IR_KEY_CODE_t;
+
+#define MV_IR_HOLDKEY_FLAG		(1 << 31)
+#define MV_IR_UPKEY_FLAG		(1<<27)
+#define MV_IR_KEY2UPKEY(key)		(key& (~MV_IR_HOLDKEY_FLAG) | MV_IR_UPKEY_FLAG)
+#define MV_IR_HOLDKEY_KEY(key)	(key | MV_IR_HOLDKEY_FLAG)
+#define MV_IR_HOLDKEY2KEY(key)	(key & (~MV_IR_HOLDKEY_FLAG))
+
+#endif
+

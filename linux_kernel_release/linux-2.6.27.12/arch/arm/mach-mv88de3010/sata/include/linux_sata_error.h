@@ -1,0 +1,22 @@
+#ifndef __LINUX_SATA_ERROR_H__
+#define __LINUX_SATA_ERROR_H__
+
+/*
+ * device state
+ */
+#define GALOIS_DEVICE_STATUS_INIT		0x1
+#define GALOIS_DEVICE_STATUS_DEAD		0x2
+#define GALOIS_DEVICE_STATUS_DONE		0x3
+#define GALOIS_DEVICE_STATUS_HANG		0x4
+#define GALOIS_DEVICE_STATUS_RESET		0x5
+#define GALOIS_DEVICE_STATUS_NULL		0xA
+
+/*
+ * ioctl cmd
+ */
+#define IOCTL_HOST_RESET	0x0001
+#define IOCTL_SW_RESET		0x0002
+#define IOCTL_DEVICE_STATUS	0x0003
+#define IOCTL_DISC_READY	0x0004
+
+#endif

@@ -1,0 +1,818 @@
+<html lang="en">
+<head>
+<title>Function Attributes - Using the GNU Compiler Collection (GCC)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using the GNU Compiler Collection (GCC)">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="C-Extensions.html#C-Extensions" title="C Extensions">
+<link rel="prev" href="Mixed-Declarations.html#Mixed-Declarations" title="Mixed Declarations">
+<link rel="next" href="Attribute-Syntax.html#Attribute-Syntax" title="Attribute Syntax">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'' and ``Funding
+Free Software'', the Front-Cover texts being (a) (see below), and with
+the Back-Cover Texts being (b) (see below).  A copy of the license is
+included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Front-Cover Text is:
+
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Function-Attributes"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Attribute-Syntax.html#Attribute-Syntax">Attribute Syntax</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Mixed-Declarations.html#Mixed-Declarations">Mixed Declarations</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="C-Extensions.html#C-Extensions">C Extensions</a>
+<hr>
+</div>
+
+<h3 class="section">5.24 Declaring Attributes of Functions</h3>
+
+<p><a name="index-function-attributes-1788"></a><a name="index-declaring-attributes-of-functions-1789"></a><a name="index-functions-that-never-return-1790"></a><a name="index-functions-that-return-more-than-once-1791"></a><a name="index-functions-that-have-no-side-effects-1792"></a><a name="index-functions-in-arbitrary-sections-1793"></a><a name="index-functions-that-behave-like-malloc-1794"></a><a name="index-g_t_0040code_007bvolatile_007d-applied-to-function-1795"></a><a name="index-g_t_0040code_007bconst_007d-applied-to-function-1796"></a><a name="index-functions-with-_0040code_007bprintf_007d_002c-_0040code_007bscanf_007d_002c-_0040code_007bstrftime_007d-or-_0040code_007bstrfmon_007d-style-arguments-1797"></a><a name="index-functions-with-non_002dnull-pointer-arguments-1798"></a><a name="index-functions-that-are-passed-arguments-in-registers-on-the-386-1799"></a><a name="index-functions-that-pop-the-argument-stack-on-the-386-1800"></a><a name="index-functions-that-do-not-pop-the-argument-stack-on-the-386-1801"></a>
+In GNU C, you declare certain things about functions called in your program
+which help the compiler optimize function calls and check your code more
+carefully.
+
+ <p>The keyword <code>__attribute__</code> allows you to specify special
+attributes when making a declaration.  This keyword is followed by an
+attribute specification inside double parentheses.  The following
+attributes are currently defined for functions on all targets:
+<code>noreturn</code>, <code>returns_twice</code>, <code>noinline</code>, <code>always_inline</code>,
+<code>flatten</code>, <code>pure</code>, <code>const</code>, <code>nothrow</code>, <code>sentinel</code>,
+<code>format</code>, <code>format_arg</code>, <code>no_instrument_function</code>,
+<code>section</code>, <code>constructor</code>, <code>destructor</code>, <code>used</code>,
+<code>unused</code>, <code>deprecated</code>, <code>weak</code>, <code>malloc</code>,
+<code>alias</code>, <code>warn_unused_result</code>, <code>nonnull</code>
+and <code>externally_visible</code>.  Several other
+attributes are defined for functions on particular target systems.  Other
+attributes, including <code>section</code> are supported for variables declarations
+(see <a href="Variable-Attributes.html#Variable-Attributes">Variable Attributes</a>) and for types (see <a href="Type-Attributes.html#Type-Attributes">Type Attributes</a>).
+
+ <p>You may also specify attributes with `<samp><span class="samp">__</span></samp>' preceding and following
+each keyword.  This allows you to use them in header files without
+being concerned about a possible macro of the same name.  For example,
+you may use <code>__noreturn__</code> instead of <code>noreturn</code>.
+
+ <p>See <a href="Attribute-Syntax.html#Attribute-Syntax">Attribute Syntax</a>, for details of the exact syntax for using
+attributes.
+
+     <dl>
+<!-- Keep this table alphabetized by attribute name.  Treat _ as space. -->
+
+     <dt><code>alias ("</code><var>target</var><code>")</code><dd><a name="index-g_t_0040code_007balias_007d-attribute-1802"></a>The <code>alias</code> attribute causes the declaration to be emitted as an
+alias for another symbol, which must be specified.  For instance,
+
+     <pre class="smallexample">          void __f () { /* <span class="roman">Do something.</span> */; }
+          void f () __attribute__ ((weak, alias ("__f")));
+     </pre>
+     <p>declares `<samp><span class="samp">f</span></samp>' to be a weak alias for `<samp><span class="samp">__f</span></samp>'.  In C++, the
+mangled name for the target must be used.  It is an error if `<samp><span class="samp">__f</span></samp>'
+is not defined in the same translation unit.
+
+     <p>Not all target machines support this attribute.
+
+     <br><dt><code>always_inline</code><dd><a name="index-g_t_0040code_007balways_005finline_007d-function-attribute-1803"></a>Generally, functions are not inlined unless optimization is specified. 
+For functions declared inline, this attribute inlines the function even
+if no optimization level was specified.
+
+     <p><a name="index-g_t_0040code_007bflatten_007d-function-attribute-1804"></a><br><dt><code>flatten</code><dd>Generally, inlining into a function is limited.  For a function marked with
+this attribute, every call inside this function will be inlined, if possible. 
+Whether the function itself is considered for inlining depends on its size and
+the current inlining parameters.  The <code>flatten</code> attribute only works
+reliably in unit-at-a-time mode.
+
+     <br><dt><code>cdecl</code><dd><a name="index-functions-that-do-pop-the-argument-stack-on-the-386-1805"></a><a name="index-mrtd-1806"></a>On the Intel 386, the <code>cdecl</code> attribute causes the compiler to
+assume that the calling function will pop off the stack space used to
+pass arguments.  This is
+useful to override the effects of the <samp><span class="option">-mrtd</span></samp> switch.
+
+     <br><dt><code>const</code><dd><a name="index-g_t_0040code_007bconst_007d-function-attribute-1807"></a>Many functions do not examine any values except their arguments, and
+have no effects except the return value.  Basically this is just slightly
+more strict class than the <code>pure</code> attribute below, since function is not
+allowed to read global memory.
+
+     <p><a name="index-pointer-arguments-1808"></a>Note that a function that has pointer arguments and examines the data
+pointed to must <em>not</em> be declared <code>const</code>.  Likewise, a
+function that calls a non-<code>const</code> function usually must not be
+<code>const</code>.  It does not make sense for a <code>const</code> function to
+return <code>void</code>.
+
+     <p>The attribute <code>const</code> is not implemented in GCC versions earlier
+than 2.5.  An alternative way to declare that a function has no side
+effects, which works in the current version and in some older versions,
+is as follows:
+
+     <pre class="smallexample">          typedef int intfn ();
+          
+          extern const intfn square;
+     </pre>
+     <p>This approach does not work in GNU C++ from 2.6.0 on, since the language
+specifies that the `<samp><span class="samp">const</span></samp>' must be attached to the return value.
+
+     <br><dt><code>constructor</code><dt><code>destructor</code><dd><a name="index-g_t_0040code_007bconstructor_007d-function-attribute-1809"></a><a name="index-g_t_0040code_007bdestructor_007d-function-attribute-1810"></a>The <code>constructor</code> attribute causes the function to be called
+automatically before execution enters <code>main ()</code>.  Similarly, the
+<code>destructor</code> attribute causes the function to be called
+automatically after <code>main ()</code> has completed or <code>exit ()</code> has
+been called.  Functions with these attributes are useful for
+initializing data that will be used implicitly during the execution of
+the program.
+
+     <p>These attributes are not currently implemented for Objective-C.
+
+     <br><dt><code>deprecated</code><dd><a name="index-g_t_0040code_007bdeprecated_007d-attribute_002e-1811"></a>The <code>deprecated</code> attribute results in a warning if the function
+is used anywhere in the source file.  This is useful when identifying
+functions that are expected to be removed in a future version of a
+program.  The warning also includes the location of the declaration
+of the deprecated function, to enable users to easily find further
+information about why the function is deprecated, or what they should
+do instead.  Note that the warnings only occurs for uses:
+
+     <pre class="smallexample">          int old_fn () __attribute__ ((deprecated));
+          int old_fn ();
+          int (*fn_ptr)() = old_fn;
+     </pre>
+     <p>results in a warning on line 3 but not line 2.
+
+     <p>The <code>deprecated</code> attribute can also be used for variables and
+types (see <a href="Variable-Attributes.html#Variable-Attributes">Variable Attributes</a>, see <a href="Type-Attributes.html#Type-Attributes">Type Attributes</a>.)
+
+     <br><dt><code>dllexport</code><dd><a name="index-g_t_0040code_007b_005f_005fdeclspec_0028dllexport_0029_007d-1812"></a>On Microsoft Windows targets and Symbian OS targets the
+<code>dllexport</code> attribute causes the compiler to provide a global
+pointer to a pointer in a DLL, so that it can be referenced with the
+<code>dllimport</code> attribute.  On Microsoft Windows targets, the pointer
+name is formed by combining <code>_imp__</code> and the function or variable
+name.
+
+     <p>You can use <code>__declspec(dllexport)</code> as a synonym for
+<code>__attribute__ ((dllexport))</code> for compatibility with other
+compilers.
+
+     <p>On systems that support the <code>visibility</code> attribute, this
+attribute also implies &ldquo;default&rdquo; visibility, unless a
+<code>visibility</code> attribute is explicitly specified.  You should avoid
+the use of <code>dllexport</code> with &ldquo;hidden&rdquo; or &ldquo;internal&rdquo;
+visibility; in the future GCC may issue an error for those cases.
+
+     <p>Currently, the <code>dllexport</code> attribute is ignored for inlined
+functions, unless the <samp><span class="option">-fkeep-inline-functions</span></samp> flag has been
+used.  The attribute is also ignored for undefined symbols.
+
+     <p>When applied to C++ classes, the attribute marks defined non-inlined
+member functions and static data members as exports.  Static consts
+initialized in-class are not marked unless they are also defined
+out-of-class.
+
+     <p>For Microsoft Windows targets there are alternative methods for
+including the symbol in the DLL's export table such as using a
+<samp><span class="file">.def</span></samp> file with an <code>EXPORTS</code> section or, with GNU ld, using
+the <samp><span class="option">--export-all</span></samp> linker flag.
+
+     <br><dt><code>dllimport</code><dd><a name="index-g_t_0040code_007b_005f_005fdeclspec_0028dllimport_0029_007d-1813"></a>On Microsoft Windows and Symbian OS targets, the <code>dllimport</code>
+attribute causes the compiler to reference a function or variable via
+a global pointer to a pointer that is set up by the DLL exporting the
+symbol.  The attribute implies <code>extern</code> storage.  On Microsoft
+Windows targets, the pointer name is formed by combining <code>_imp__</code>
+and the function or variable name.
+
+     <p>You can use <code>__declspec(dllimport)</code> as a synonym for
+<code>__attribute__ ((dllimport))</code> for compatibility with other
+compilers.
+
+     <p>Currently, the attribute is ignored for inlined functions.  If the
+attribute is applied to a symbol <em>definition</em>, an error is reported. 
+If a symbol previously declared <code>dllimport</code> is later defined, the
+attribute is ignored in subsequent references, and a warning is emitted. 
+The attribute is also overridden by a subsequent declaration as
+<code>dllexport</code>.
+
+     <p>When applied to C++ classes, the attribute marks non-inlined
+member functions and static data members as imports.  However, the
+attribute is ignored for virtual methods to allow creation of vtables
+using thunks.
+
+     <p>On the SH Symbian OS target the <code>dllimport</code> attribute also has
+another affect&mdash;it can cause the vtable and run-time type information
+for a class to be exported.  This happens when the class has a
+dllimport'ed constructor or a non-inline, non-pure virtual function
+and, for either of those two conditions, the class also has a inline
+constructor or destructor and has a key function that is defined in
+the current translation unit.
+
+     <p>For Microsoft Windows based targets the use of the <code>dllimport</code>
+attribute on functions is not necessary, but provides a small
+performance benefit by eliminating a thunk in the DLL.  The use of the
+<code>dllimport</code> attribute on imported variables was required on older
+versions of the GNU linker, but can now be avoided by passing the
+<samp><span class="option">--enable-auto-import</span></samp> switch to the GNU linker.  As with
+functions, using the attribute for a variable eliminates a thunk in
+the DLL.
+
+     <p>One drawback to using this attribute is that a pointer to a function
+or variable marked as <code>dllimport</code> cannot be used as a constant
+address.  On Microsoft Windows targets, the attribute can be disabled
+for functions by setting the <samp><span class="option">-mnop-fun-dllimport</span></samp> flag.
+
+     <br><dt><code>eightbit_data</code><dd><a name="index-eight-bit-data-on-the-H8_002f300_002c-H8_002f300H_002c-and-H8S-1814"></a>Use this attribute on the H8/300, H8/300H, and H8S to indicate that the specified
+variable should be placed into the eight bit data section. 
+The compiler will generate more efficient code for certain operations
+on data in the eight bit data area.  Note the eight bit data area is limited to
+256 bytes of data.
+
+     <p>You must use GAS and GLD from GNU binutils version 2.7 or later for
+this attribute to work correctly.
+
+     <br><dt><code>exception_handler</code><dd><a name="index-exception-handler-functions-on-the-Blackfin-processor-1815"></a>Use this attribute on the Blackfin to indicate that the specified function
+is an exception handler.  The compiler will generate function entry and
+exit sequences suitable for use in an exception handler when this
+attribute is present.
+
+     <br><dt><code>far</code><dd><a name="index-functions-which-handle-memory-bank-switching-1816"></a>On 68HC11 and 68HC12 the <code>far</code> attribute causes the compiler to
+use a calling convention that takes care of switching memory banks when
+entering and leaving a function.  This calling convention is also the
+default when using the <samp><span class="option">-mlong-calls</span></samp> option.
+
+     <p>On 68HC12 the compiler will use the <code>call</code> and <code>rtc</code> instructions
+to call and return from a function.
+
+     <p>On 68HC11 the compiler will generate a sequence of instructions
+to invoke a board-specific routine to switch the memory bank and call the
+real function.  The board-specific routine simulates a <code>call</code>. 
+At the end of a function, it will jump to a board-specific routine
+instead of using <code>rts</code>.  The board-specific return routine simulates
+the <code>rtc</code>.
+
+     <br><dt><code>fastcall</code><dd><a name="index-functions-that-pop-the-argument-stack-on-the-386-1817"></a>On the Intel 386, the <code>fastcall</code> attribute causes the compiler to
+pass the first argument (if of integral type) in the register ECX and
+the second argument (if of integral type) in the register EDX.  Subsequent
+and other typed arguments are passed on the stack.  The called function will
+pop the arguments off the stack.  If the number of arguments is variable all
+arguments are pushed on the stack.
+
+     <br><dt><code>format (</code><var>archetype</var><code>, </code><var>string-index</var><code>, </code><var>first-to-check</var><code>)</code><dd><a name="index-g_t_0040code_007bformat_007d-function-attribute-1818"></a><a name="index-Wformat-1819"></a>The <code>format</code> attribute specifies that a function takes <code>printf</code>,
+<code>scanf</code>, <code>strftime</code> or <code>strfmon</code> style arguments which
+should be type-checked against a format string.  For example, the
+declaration:
+
+     <pre class="smallexample">          extern int
+          my_printf (void *my_object, const char *my_format, ...)
+                __attribute__ ((format (printf, 2, 3)));
+     </pre>
+     <p class="noindent">causes the compiler to check the arguments in calls to <code>my_printf</code>
+for consistency with the <code>printf</code> style format string argument
+<code>my_format</code>.
+
+     <p>The parameter <var>archetype</var> determines how the format string is
+interpreted, and should be <code>printf</code>, <code>scanf</code>, <code>strftime</code>
+or <code>strfmon</code>.  (You can also use <code>__printf__</code>,
+<code>__scanf__</code>, <code>__strftime__</code> or <code>__strfmon__</code>.)  The
+parameter <var>string-index</var> specifies which argument is the format
+string argument (starting from 1), while <var>first-to-check</var> is the
+number of the first argument to check against the format string.  For
+functions where the arguments are not available to be checked (such as
+<code>vprintf</code>), specify the third parameter as zero.  In this case the
+compiler only checks the format string for consistency.  For
+<code>strftime</code> formats, the third parameter is required to be zero. 
+Since non-static C++ methods have an implicit <code>this</code> argument, the
+arguments of such methods should be counted from two, not one, when
+giving values for <var>string-index</var> and <var>first-to-check</var>.
+
+     <p>In the example above, the format string (<code>my_format</code>) is the second
+argument of the function <code>my_print</code>, and the arguments to check
+start with the third argument, so the correct parameters for the format
+attribute are 2 and 3.
+
+     <p><a name="index-ffreestanding-1820"></a><a name="index-fno_002dbuiltin-1821"></a>The <code>format</code> attribute allows you to identify your own functions
+which take format strings as arguments, so that GCC can check the
+calls to these functions for errors.  The compiler always (unless
+<samp><span class="option">-ffreestanding</span></samp> or <samp><span class="option">-fno-builtin</span></samp> is used) checks formats
+for the standard library functions <code>printf</code>, <code>fprintf</code>,
+<code>sprintf</code>, <code>scanf</code>, <code>fscanf</code>, <code>sscanf</code>, <code>strftime</code>,
+<code>vprintf</code>, <code>vfprintf</code> and <code>vsprintf</code> whenever such
+warnings are requested (using <samp><span class="option">-Wformat</span></samp>), so there is no need to
+modify the header file <samp><span class="file">stdio.h</span></samp>.  In C99 mode, the functions
+<code>snprintf</code>, <code>vsnprintf</code>, <code>vscanf</code>, <code>vfscanf</code> and
+<code>vsscanf</code> are also checked.  Except in strictly conforming C
+standard modes, the X/Open function <code>strfmon</code> is also checked as
+are <code>printf_unlocked</code> and <code>fprintf_unlocked</code>. 
+See <a href="C-Dialect-Options.html#C-Dialect-Options">Options Controlling C Dialect</a>.
+
+     <p>The target may provide additional types of format checks. 
+See <a href="Target-Format-Checks.html#Target-Format-Checks">Format Checks Specific to Particular Target Machines</a>.
+
+     <br><dt><code>format_arg (</code><var>string-index</var><code>)</code><dd><a name="index-g_t_0040code_007bformat_005farg_007d-function-attribute-1822"></a><a name="index-Wformat_002dnonliteral-1823"></a>The <code>format_arg</code> attribute specifies that a function takes a format
+string for a <code>printf</code>, <code>scanf</code>, <code>strftime</code> or
+<code>strfmon</code> style function and modifies it (for example, to translate
+it into another language), so the result can be passed to a
+<code>printf</code>, <code>scanf</code>, <code>strftime</code> or <code>strfmon</code> style
+function (with the remaining arguments to the format function the same
+as they would have been for the unmodified string).  For example, the
+declaration:
+
+     <pre class="smallexample">          extern char *
+          my_dgettext (char *my_domain, const char *my_format)
+                __attribute__ ((format_arg (2)));
+     </pre>
+     <p class="noindent">causes the compiler to check the arguments in calls to a <code>printf</code>,
+<code>scanf</code>, <code>strftime</code> or <code>strfmon</code> type function, whose
+format string argument is a call to the <code>my_dgettext</code> function, for
+consistency with the format string argument <code>my_format</code>.  If the
+<code>format_arg</code> attribute had not been specified, all the compiler
+could tell in such calls to format functions would be that the format
+string argument is not constant; this would generate a warning when
+<samp><span class="option">-Wformat-nonliteral</span></samp> is used, but the calls could not be checked
+without the attribute.
+
+     <p>The parameter <var>string-index</var> specifies which argument is the format
+string argument (starting from one).  Since non-static C++ methods have
+an implicit <code>this</code> argument, the arguments of such methods should
+be counted from two.
+
+     <p>The <code>format-arg</code> attribute allows you to identify your own
+functions which modify format strings, so that GCC can check the
+calls to <code>printf</code>, <code>scanf</code>, <code>strftime</code> or <code>strfmon</code>
+type function whose operands are a call to one of your own function. 
+The compiler always treats <code>gettext</code>, <code>dgettext</code>, and
+<code>dcgettext</code> in this manner except when strict ISO C support is
+requested by <samp><span class="option">-ansi</span></samp> or an appropriate <samp><span class="option">-std</span></samp> option, or
+<samp><span class="option">-ffreestanding</span></samp> or <samp><span class="option">-fno-builtin</span></samp>
+is used.  See <a href="C-Dialect-Options.html#C-Dialect-Options">Options Controlling C Dialect</a>.
+
+     <br><dt><code>function_vector</code><dd><a name="index-calling-functions-through-the-function-vector-on-the-H8_002f300-processors-1824"></a>Use this attribute on the H8/300, H8/300H, and H8S to indicate that the specified
+function should be called through the function vector.  Calling a
+function through the function vector will reduce code size, however;
+the function vector has a limited size (maximum 128 entries on the H8/300
+and 64 entries on the H8/300H and H8S) and shares space with the interrupt vector.
+
+     <p>You must use GAS and GLD from GNU binutils version 2.7 or later for
+this attribute to work correctly.
+
+     <br><dt><code>interrupt</code><dd><a name="index-interrupt-handler-functions-1825"></a>Use this attribute on the ARM, AVR, C4x, CRX, M32C, M32R/D, MS1, and Xstormy16
+ports to indicate that the specified function is an interrupt handler. 
+The compiler will generate function entry and exit sequences suitable
+for use in an interrupt handler when this attribute is present.
+
+     <p>Note, interrupt handlers for the Blackfin, m68k, H8/300, H8/300H, H8S, and
+SH processors can be specified via the <code>interrupt_handler</code> attribute.
+
+     <p>Note, on the AVR, interrupts will be enabled inside the function.
+
+     <p>Note, for the ARM, you can specify the kind of interrupt to be handled by
+adding an optional parameter to the interrupt attribute like this:
+
+     <pre class="smallexample">          void f () __attribute__ ((interrupt ("IRQ")));
+     </pre>
+     <p>Permissible values for this parameter are: IRQ, FIQ, SWI, ABORT and UNDEF.
+
+     <p>On ARMv7M the interrupt type is ignored, and the attibute means the function
+may be called with a word aligned stack pointer.
+
+     <br><dt><code>interrupt_handler</code><dd><a name="index-interrupt-handler-functions-on-the-Blackfin_002c-m68k_002c-H8_002f300-and-SH-processors-1826"></a>Use this attribute on the Blackfin, m68k, H8/300, H8/300H, H8S, and SH to
+indicate that the specified function is an interrupt handler.  The compiler
+will generate function entry and exit sequences suitable for use in an
+interrupt handler when this attribute is present.
+
+     <br><dt><code>kspisusp</code><dd><a name="index-User-stack-pointer-in-interrupts-on-the-Blackfin-1827"></a>When used together with <code>interrupt_handler</code>, <code>exception_handler</code>
+or <code>nmi_handler</code>, code will be generated to load the stack pointer
+from the USP register in the function prologue.
+
+     <br><dt><code>long_call/short_call</code><dd><a name="index-indirect-calls-on-ARM-1828"></a>This attribute specifies how a particular function is called on
+ARM.  Both attributes override the <samp><span class="option">-mlong-calls</span></samp> (see <a href="ARM-Options.html#ARM-Options">ARM Options</a>)
+command line switch and <code>#pragma long_calls</code> settings.  The
+<code>long_call</code> attribute causes the compiler to always call the
+function by first loading its address into a register and then using the
+contents of that register.   The <code>short_call</code> attribute always places
+the offset to the function from the call site into the `<samp><span class="samp">BL</span></samp>'
+instruction directly.
+
+     <br><dt><code>longcall/shortcall</code><dd><a name="index-functions-called-via-pointer-on-the-RS_002f6000-and-PowerPC-1829"></a>On the Blackfin, RS/6000 and PowerPC, the <code>longcall</code> attribute causes
+the compiler to always call this function via a pointer, just as it would if
+the <samp><span class="option">-mlongcall</span></samp> option had been specified.  The <code>shortcall</code>
+attribute causes the compiler not to do this.  These attributes override
+both the <samp><span class="option">-mlongcall</span></samp> switch and, on the RS/6000 and PowerPC, the
+<code>#pragma longcall</code> setting.
+
+     <p>See <a href="RS_002f6000-and-PowerPC-Options.html#RS_002f6000-and-PowerPC-Options">RS/6000 and PowerPC Options</a>, for more information on whether long
+calls are necessary.
+
+     <br><dt><code>long_call</code><dd><a name="index-indirect-calls-on-MIPS-1830"></a>This attribute specifies how a particular function is called on MIPS. 
+The attribute overrides the <samp><span class="option">-mlong-calls</span></samp> (see <a href="MIPS-Options.html#MIPS-Options">MIPS Options</a>)
+command line switch.  This attribute causes the compiler to always call
+the function by first loading its address into a register, and then using
+the contents of that register.
+
+     <br><dt><code>malloc</code><dd><a name="index-g_t_0040code_007bmalloc_007d-attribute-1831"></a>The <code>malloc</code> attribute is used to tell the compiler that a function
+may be treated as if any non-<code>NULL</code> pointer it returns cannot
+alias any other pointer valid when the function returns. 
+This will often improve optimization. 
+Standard functions with this property include <code>malloc</code> and
+<code>calloc</code>.  <code>realloc</code>-like functions have this property as
+long as the old pointer is never referred to (including comparing it
+to the new pointer) after the function returns a non-<code>NULL</code>
+value.
+
+     <br><dt><code>model (</code><var>model-name</var><code>)</code><dd><a name="index-function-addressability-on-the-M32R_002fD-1832"></a><a name="index-variable-addressability-on-the-IA_002d64-1833"></a>
+On the M32R/D, use this attribute to set the addressability of an
+object, and of the code generated for a function.  The identifier
+<var>model-name</var> is one of <code>small</code>, <code>medium</code>, or
+<code>large</code>, representing each of the code models.
+
+     <p>Small model objects live in the lower 16MB of memory (so that their
+addresses can be loaded with the <code>ld24</code> instruction), and are
+callable with the <code>bl</code> instruction.
+
+     <p>Medium model objects may live anywhere in the 32-bit address space (the
+compiler will generate <code>seth/add3</code> instructions to load their addresses),
+and are callable with the <code>bl</code> instruction.
+
+     <p>Large model objects may live anywhere in the 32-bit address space (the
+compiler will generate <code>seth/add3</code> instructions to load their addresses),
+and may not be reachable with the <code>bl</code> instruction (the compiler will
+generate the much slower <code>seth/add3/jl</code> instruction sequence).
+
+     <p>On IA-64, use this attribute to set the addressability of an object. 
+At present, the only supported identifier for <var>model-name</var> is
+<code>small</code>, indicating addressability via &ldquo;small&rdquo; (22-bit)
+addresses (so that their addresses can be loaded with the <code>addl</code>
+instruction).  Caveat: such addressing is by definition not position
+independent and hence this attribute must not be used for objects
+defined by shared libraries.
+
+     <br><dt><code>naked</code><dd><a name="index-function-without-a-prologue_002fepilogue-code-1834"></a>Use this attribute on the ARM, AVR, C4x and IP2K ports to indicate that the
+specified function does not need prologue/epilogue sequences generated by
+the compiler.  It is up to the programmer to provide these sequences.
+
+     <br><dt><code>near</code><dd><a name="index-functions-which-do-not-handle-memory-bank-switching-on-68HC11_002f68HC12-1835"></a>On 68HC11 and 68HC12 the <code>near</code> attribute causes the compiler to
+use the normal calling convention based on <code>jsr</code> and <code>rts</code>. 
+This attribute can be used to cancel the effect of the <samp><span class="option">-mlong-calls</span></samp>
+option.
+
+     <br><dt><code>nesting</code><dd><a name="index-Allow-nesting-in-an-interrupt-handler-on-the-Blackfin-processor_002e-1836"></a>Use this attribute together with <code>interrupt_handler</code>,
+<code>exception_handler</code> or <code>nmi_handler</code> to indicate that the function
+entry code should enable nested interrupts or exceptions.
+
+     <br><dt><code>nmi_handler</code><dd><a name="index-NMI-handler-functions-on-the-Blackfin-processor-1837"></a>Use this attribute on the Blackfin to indicate that the specified function
+is an NMI handler.  The compiler will generate function entry and
+exit sequences suitable for use in an NMI handler when this
+attribute is present.
+
+     <br><dt><code>no_instrument_function</code><dd><a name="index-g_t_0040code_007bno_005finstrument_005ffunction_007d-function-attribute-1838"></a><a name="index-finstrument_002dfunctions-1839"></a>If <samp><span class="option">-finstrument-functions</span></samp> is given, profiling function calls will
+be generated at entry and exit of most user-compiled functions. 
+Functions with this attribute will not be so instrumented.
+
+     <br><dt><code>noinline</code><dd><a name="index-g_t_0040code_007bnoinline_007d-function-attribute-1840"></a>This function attribute prevents a function from being considered for
+inlining.
+
+     <br><dt><code>nonnull (</code><var>arg-index</var><code>, ...)</code><dd><a name="index-g_t_0040code_007bnonnull_007d-function-attribute-1841"></a>The <code>nonnull</code> attribute specifies that some function parameters should
+be non-null pointers.  For instance, the declaration:
+
+     <pre class="smallexample">          extern void *
+          my_memcpy (void *dest, const void *src, size_t len)
+          	__attribute__((nonnull (1, 2)));
+     </pre>
+     <p class="noindent">causes the compiler to check that, in calls to <code>my_memcpy</code>,
+arguments <var>dest</var> and <var>src</var> are non-null.  If the compiler
+determines that a null pointer is passed in an argument slot marked
+as non-null, and the <samp><span class="option">-Wnonnull</span></samp> option is enabled, a warning
+is issued.  The compiler may also choose to make optimizations based
+on the knowledge that certain function arguments will not be null.
+
+     <p>If no argument index list is given to the <code>nonnull</code> attribute,
+all pointer arguments are marked as non-null.  To illustrate, the
+following declaration is equivalent to the previous example:
+
+     <pre class="smallexample">          extern void *
+          my_memcpy (void *dest, const void *src, size_t len)
+          	__attribute__((nonnull));
+     </pre>
+     <br><dt><code>noreturn</code><dd><a name="index-g_t_0040code_007bnoreturn_007d-function-attribute-1842"></a>A few standard library functions, such as <code>abort</code> and <code>exit</code>,
+cannot return.  GCC knows this automatically.  Some programs define
+their own functions that never return.  You can declare them
+<code>noreturn</code> to tell the compiler this fact.  For example,
+
+     <pre class="smallexample">          void fatal () __attribute__ ((noreturn));
+          
+          void
+          fatal (/* <span class="roman">...</span> */)
+          {
+            /* <span class="roman">...</span> */ /* <span class="roman">Print error message.</span> */ /* <span class="roman">...</span> */
+            exit (1);
+          }
+     </pre>
+     <p>The <code>noreturn</code> keyword tells the compiler to assume that
+<code>fatal</code> cannot return.  It can then optimize without regard to what
+would happen if <code>fatal</code> ever did return.  This makes slightly
+better code.  More importantly, it helps avoid spurious warnings of
+uninitialized variables.
+
+     <p>The <code>noreturn</code> keyword does not affect the exceptional path when that
+applies: a <code>noreturn</code>-marked function may still return to the caller
+by throwing an exception or calling <code>longjmp</code>.
+
+     <p>Do not assume that registers saved by the calling function are
+restored before calling the <code>noreturn</code> function.
+
+     <p>It does not make sense for a <code>noreturn</code> function to have a return
+type other than <code>void</code>.
+
+     <p>The attribute <code>noreturn</code> is not implemented in GCC versions
+earlier than 2.5.  An alternative way to declare that a function does
+not return, which works in the current version and in some older
+versions, is as follows:
+
+     <pre class="smallexample">          typedef void voidfn ();
+          
+          volatile voidfn fatal;
+     </pre>
+     <p>This approach does not work in GNU C++.
+
+     <br><dt><code>nothrow</code><dd><a name="index-g_t_0040code_007bnothrow_007d-function-attribute-1843"></a>The <code>nothrow</code> attribute is used to inform the compiler that a
+function cannot throw an exception.  For example, most functions in
+the standard C library can be guaranteed not to throw an exception
+with the notable exceptions of <code>qsort</code> and <code>bsearch</code> that
+take function pointer arguments.  The <code>nothrow</code> attribute is not
+implemented in GCC versions earlier than 3.3.
+
+     <br><dt><code>pure</code><dd><a name="index-g_t_0040code_007bpure_007d-function-attribute-1844"></a>Many functions have no effects except the return value and their
+return value depends only on the parameters and/or global variables. 
+Such a function can be subject
+to common subexpression elimination and loop optimization just as an
+arithmetic operator would be.  These functions should be declared
+with the attribute <code>pure</code>.  For example,
+
+     <pre class="smallexample">          int square (int) __attribute__ ((pure));
+     </pre>
+     <p class="noindent">says that the hypothetical function <code>square</code> is safe to call
+fewer times than the program says.
+
+     <p>Some of common examples of pure functions are <code>strlen</code> or <code>memcmp</code>. 
+Interesting non-pure functions are functions with infinite loops or those
+depending on volatile memory or other system resource, that may change between
+two consecutive calls (such as <code>feof</code> in a multithreading environment).
+
+     <p>The attribute <code>pure</code> is not implemented in GCC versions earlier
+than 2.96.
+
+     <br><dt><code>regparm (</code><var>number</var><code>)</code><dd><a name="index-g_t_0040code_007bregparm_007d-attribute-1845"></a><a name="index-functions-that-are-passed-arguments-in-registers-on-the-386-1846"></a>On the Intel 386, the <code>regparm</code> attribute causes the compiler to
+pass arguments number one to <var>number</var> if they are of integral type
+in registers EAX, EDX, and ECX instead of on the stack.  Functions that
+take a variable number of arguments will continue to be passed all of their
+arguments on the stack.
+
+     <p>Beware that on some ELF systems this attribute is unsuitable for
+global functions in shared libraries with lazy binding (which is the
+default).  Lazy binding will send the first call via resolving code in
+the loader, which might assume EAX, EDX and ECX can be clobbered, as
+per the standard calling conventions.  Solaris 8 is affected by this. 
+GNU systems with GLIBC 2.1 or higher, and FreeBSD, are believed to be
+safe since the loaders there save all registers.  (Lazy binding can be
+disabled with the linker or the loader if desired, to avoid the
+problem.)
+
+     <br><dt><code>sseregparm</code><dd><a name="index-g_t_0040code_007bsseregparm_007d-attribute-1847"></a>On the Intel 386 with SSE support, the <code>sseregparm</code> attribute
+causes the compiler to pass up to 8 floating point arguments in
+SSE registers instead of on the stack.  Functions that take a
+variable number of arguments will continue to pass all of their
+floating point arguments on the stack.
+
+     <br><dt><code>returns_twice</code><dd><a name="index-g_t_0040code_007breturns_005ftwice_007d-attribute-1848"></a>The <code>returns_twice</code> attribute tells the compiler that a function may
+return more than one time.  The compiler will ensure that all registers
+are dead before calling such a function and will emit a warning about
+the variables that may be clobbered after the second return from the
+function.  Examples of such functions are <code>setjmp</code> and <code>vfork</code>. 
+The <code>longjmp</code>-like counterpart of such function, if any, might need
+to be marked with the <code>noreturn</code> attribute.
+
+     <br><dt><code>saveall</code><dd><a name="index-save-all-registers-on-the-Blackfin_002c-H8_002f300_002c-H8_002f300H_002c-and-H8S-1849"></a>Use this attribute on the Blackfin, H8/300, H8/300H, and H8S to indicate that
+all registers except the stack pointer should be saved in the prologue
+regardless of whether they are used or not.
+
+     <br><dt><code>section ("</code><var>section-name</var><code>")</code><dd><a name="index-g_t_0040code_007bsection_007d-function-attribute-1850"></a>Normally, the compiler places the code it generates in the <code>text</code> section. 
+Sometimes, however, you need additional sections, or you need certain
+particular functions to appear in special sections.  The <code>section</code>
+attribute specifies that a function lives in a particular section. 
+For example, the declaration:
+
+     <pre class="smallexample">          extern void foobar (void) __attribute__ ((section ("bar")));
+     </pre>
+     <p class="noindent">puts the function <code>foobar</code> in the <code>bar</code> section.
+
+     <p>Some file formats do not support arbitrary sections so the <code>section</code>
+attribute is not available on all platforms. 
+If you need to map the entire contents of a module to a particular
+section, consider using the facilities of the linker instead.
+
+     <br><dt><code>sentinel</code><dd><a name="index-g_t_0040code_007bsentinel_007d-function-attribute-1851"></a>This function attribute ensures that a parameter in a function call is
+an explicit <code>NULL</code>.  The attribute is only valid on variadic
+functions.  By default, the sentinel is located at position zero, the
+last parameter of the function call.  If an optional integer position
+argument P is supplied to the attribute, the sentinel must be located at
+position P counting backwards from the end of the argument list.
+
+     <pre class="smallexample">          __attribute__ ((sentinel))
+          is equivalent to
+          __attribute__ ((sentinel(0)))
+     </pre>
+     <p>The attribute is automatically set with a position of 0 for the built-in
+functions <code>execl</code> and <code>execlp</code>.  The built-in function
+<code>execle</code> has the attribute set with a position of 1.
+
+     <p>A valid <code>NULL</code> in this context is defined as zero with any pointer
+type.  If your system defines the <code>NULL</code> macro with an integer type
+then you need to add an explicit cast.  GCC replaces <code>stddef.h</code>
+with a copy that redefines NULL appropriately.
+
+     <p>The warnings for missing or incorrect sentinels are enabled with
+<samp><span class="option">-Wformat</span></samp>.
+
+     <br><dt><code>short_call</code><dd>See long_call/short_call.
+
+     <br><dt><code>shortcall</code><dd>See longcall/shortcall.
+
+     <br><dt><code>signal</code><dd><a name="index-signal-handler-functions-on-the-AVR-processors-1852"></a>Use this attribute on the AVR to indicate that the specified
+function is a signal handler.  The compiler will generate function
+entry and exit sequences suitable for use in a signal handler when this
+attribute is present.  Interrupts will be disabled inside the function.
+
+     <br><dt><code>sp_switch</code><dd>Use this attribute on the SH to indicate an <code>interrupt_handler</code>
+function should switch to an alternate stack.  It expects a string
+argument that names a global variable holding the address of the
+alternate stack.
+
+     <pre class="smallexample">          void *alt_stack;
+          void f () __attribute__ ((interrupt_handler,
+                                    sp_switch ("alt_stack")));
+     </pre>
+     <br><dt><code>stdcall</code><dd><a name="index-functions-that-pop-the-argument-stack-on-the-386-1853"></a>On the Intel 386, the <code>stdcall</code> attribute causes the compiler to
+assume that the called function will pop off the stack space used to
+pass arguments, unless it takes a variable number of arguments.
+
+     <br><dt><code>tiny_data</code><dd><a name="index-tiny-data-section-on-the-H8_002f300H-and-H8S-1854"></a>Use this attribute on the H8/300H and H8S to indicate that the specified
+variable should be placed into the tiny data section. 
+The compiler will generate more efficient code for loads and stores
+on data in the tiny data section.  Note the tiny data area is limited to
+slightly under 32kbytes of data.
+
+     <br><dt><code>trap_exit</code><dd>Use this attribute on the SH for an <code>interrupt_handler</code> to return using
+<code>trapa</code> instead of <code>rte</code>.  This attribute expects an integer
+argument specifying the trap number to be used.
+
+     <br><dt><code>unused</code><dd><a name="index-g_t_0040code_007bunused_007d-attribute_002e-1855"></a>This attribute, attached to a function, means that the function is meant
+to be possibly unused.  GCC will not produce a warning for this
+function.
+
+     <br><dt><code>used</code><dd><a name="index-g_t_0040code_007bused_007d-attribute_002e-1856"></a>This attribute, attached to a function, means that code must be emitted
+for the function even if it appears that the function is not referenced. 
+This is useful, for example, when the function is referenced only in
+inline assembly.
+
+     <br><dt><code>visibility ("</code><var>visibility_type</var><code>")</code><dd><a name="index-g_t_0040code_007bvisibility_007d-attribute-1857"></a>The <code>visibility</code> attribute on ELF targets causes the declaration
+to be emitted with default, hidden, protected or internal visibility.
+
+     <pre class="smallexample">          void __attribute__ ((visibility ("protected")))
+          f () { /* <span class="roman">Do something.</span> */; }
+          int i __attribute__ ((visibility ("hidden")));
+     </pre>
+     <p>See the ELF gABI for complete details, but the short story is:
+
+          <dl>
+<!-- keep this list of visibilities in alphabetical order. -->
+
+          <dt><dfn>default</dfn><dd>Default visibility is the normal case for ELF.  This value is
+available for the visibility attribute to override other options
+that may change the assumed visibility of symbols.
+
+          <br><dt><dfn>hidden</dfn><dd>Hidden visibility indicates that the symbol will not be placed into
+the dynamic symbol table, so no other <dfn>module</dfn> (executable or
+shared library) can reference it directly.
+
+          <br><dt><dfn>internal</dfn><dd>Internal visibility is like hidden visibility, but with additional
+processor specific semantics.  Unless otherwise specified by the psABI,
+GCC defines internal visibility to mean that the function is <em>never</em>
+called from another module.  Note that hidden symbols, while they cannot
+be referenced directly by other modules, can be referenced indirectly via
+function pointers.  By indicating that a symbol cannot be called from
+outside the module, GCC may for instance omit the load of a PIC register
+since it is known that the calling function loaded the correct value.
+
+          <br><dt><dfn>protected</dfn><dd>Protected visibility indicates that the symbol will be placed in the
+dynamic symbol table, but that references within the defining module
+will bind to the local symbol.  That is, the symbol cannot be overridden
+by another module.
+
+     </dl>
+
+     <p>Not all ELF targets support this attribute.
+
+     <br><dt><code>warn_unused_result</code><dd><a name="index-g_t_0040code_007bwarn_005funused_005fresult_007d-attribute-1858"></a>The <code>warn_unused_result</code> attribute causes a warning to be emitted
+if a caller of the function with this attribute does not use its
+return value.  This is useful for functions where not checking
+the result is either a security problem or always a bug, such as
+<code>realloc</code>.
+
+     <pre class="smallexample">          int fn () __attribute__ ((warn_unused_result));
+          int foo ()
+          {
+            if (fn () &lt; 0) return -1;
+            fn ();
+            return 0;
+          }
+     </pre>
+     <p>results in warning on line 5.
+
+     <br><dt><code>weak</code><dd><a name="index-g_t_0040code_007bweak_007d-attribute-1859"></a>The <code>weak</code> attribute causes the declaration to be emitted as a weak
+symbol rather than a global.  This is primarily useful in defining
+library functions which can be overridden in user code, though it can
+also be used with non-function declarations.  Weak symbols are supported
+for ELF targets, and also for a.out targets when using the GNU assembler
+and linker.
+
+     <br><dt><code>weakref</code><dt><code>weakref ("</code><var>target</var><code>")</code><dd><a name="index-g_t_0040code_007bweakref_007d-attribute-1860"></a>The <code>weakref</code> attribute marks a declaration as a weak reference. 
+Without arguments, it should be accompanied by an <code>alias</code> attribute
+naming the target symbol.  Optionally, the <var>target</var> may be given as
+an argument to <code>weakref</code> itself.  In either case, <code>weakref</code>
+implicitly marks the declaration as <code>weak</code>.  Without a
+<var>target</var>, given as an argument to <code>weakref</code> or to <code>alias</code>,
+<code>weakref</code> is equivalent to <code>weak</code>.
+
+     <pre class="smallexample">          extern int x() __attribute__ ((weakref ("y")));
+          /* is equivalent to... */
+          extern int x() __attribute__ ((weak, weakref, alias ("y")));
+          /* and to... */
+          extern int x() __attribute__ ((weakref));
+          extern int x() __attribute__ ((alias ("y")));
+     </pre>
+     <p>A weak reference is an alias that does not by itself require a
+definition to be given for the target symbol.  If the target symbol is
+only referenced through weak references, then the becomes a <code>weak</code>
+undefined symbol.  If it is directly referenced, however, then such
+strong references prevail, and a definition will be required for the
+symbol, not necessarily in the same translation unit.
+
+     <p>The effect is equivalent to moving all references to the alias to a
+separate translation unit, renaming the alias to the aliased symbol,
+declaring it as weak, compiling the two separate translation units and
+performing a reloadable link on them.
+
+     <br><dt><code>externally_visible</code><dd><a name="index-g_t_0040code_007bexternally_005fvisible_007d-attribute_002e-1861"></a>This attribute, attached to a global variable or function nullify
+effect of <samp><span class="option">-fwhole-program</span></samp> command line option, so the object
+remain visible outside the current compilation unit
+
+ </dl>
+
+ <p>You can specify multiple attributes in a declaration by separating them
+by commas within the double parentheses or by immediately following an
+attribute declaration with another attribute declaration.
+
+ <p><a name="index-g_t_0040code_007b_0023pragma_007d_002c-reason-for-not-using-1862"></a><a name="index-pragma_002c-reason-for-not-using-1863"></a>Some people object to the <code>__attribute__</code> feature, suggesting that
+ISO C's <code>#pragma</code> should be used instead.  At the time
+<code>__attribute__</code> was designed, there were two reasons for not doing
+this.
+
+     <ol type=1 start=1>
+<li>It is impossible to generate <code>#pragma</code> commands from a macro.
+
+     <li>There is no telling what the same <code>#pragma</code> might mean in another
+compiler.
+      </ol>
+
+ <p>These two reasons applied to almost any application that might have been
+proposed for <code>#pragma</code>.  It was basically a mistake to use
+<code>#pragma</code> for <em>anything</em>.
+
+ <p>The ISO C99 standard includes <code>_Pragma</code>, which now allows pragmas
+to be generated from macros.  In addition, a <code>#pragma GCC</code>
+namespace is now in use for GCC-specific pragmas.  However, it has been
+found convenient to use <code>__attribute__</code> to achieve a natural
+attachment of attributes to their corresponding declarations, whereas
+<code>#pragma GCC</code> is of use for constructs that do not naturally form
+part of the grammar.  See <a href="../cpp/Other-Directives.html#Other-Directives">Miscellaneous Preprocessing Directives</a>.
+
+ </body></html>
+

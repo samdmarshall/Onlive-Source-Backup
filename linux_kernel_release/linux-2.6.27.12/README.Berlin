@@ -1,0 +1,31 @@
+#
+# arch/arm/mach-mv88de3010/ is mv88de3010 soc dir.
+# 
+
+for Berlin ASIC:
+
+0. Please be sure that you have such a directory tree: 
+	ls -F arch/arm/mach-mv88de3010/GaloisSoftware
+   	Common  Drivers  OSAL
+
+1. Generate .config, following are some default config
+   for B0:  cp config-2.6.27.12.asic.b0 .config
+   for DTV: cp config-2.6.27.12.asic.X0.dtv .config
+
+2. run "make uImage" and "make modules" to build images and modules
+   arch/arm/boot/uImage is the generated kernel image loaded by u-boot
+   arch/arm/boot/Image is raw uncompressed linux image.
+   for modules, refer to #3
+
+3. copy modules to specific directory XXX_DIR 
+   make INSTALL_MOD_PATH=XXX_DIR modules_install
+   e.g. make INSTALL_MOD_PATH=/home/galois/galois-rootfs/home/galois/linux_modules modules_install
+   NOTE: If XXX_DIR is not linux_modules, please copy XXX_DIR/lib to linux_module
+
+NOTE: when upgrade linux kernel, following stuffs need to be synced up.
+	/tftpboot/uImage.asic.b0
+	/tftpboot/uImage.asic.b0.linux.bin
+	/home/galois/galois-rootfs/home/galois/linux_modules/
+	OS/Linux/ARM/linux_kernel/uImage.asic.b0
+	OS/Linux/ARM/linux_kernel/uImage.asic.b0.linux.bin
+	OS/Linux/ARM/linux_kernel/linux_modules.b0

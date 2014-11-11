@@ -1,0 +1,25 @@
+The following list is a short summary of user experiences with certain
+network drivers.
+
+The version prefixed with k is the driver version of the specific
+kernel, the version prefixed with d is the driver version. Versions
+suffixed with p are patched with a patch supplied with ifplugd.
+
+Driver   | Version              | Support
+---------+----------------------+------------------------------------------------
+eepro100 | k2.4.19              | works fine, even with -a
+e100	 | k2.4.20		| works fine, even with -a
+8139too  | k2.4.19              | the machine may lock up, doesn't work with -a
+8139too  | k2.4.20 or d0.9.26   | works, doesn't work with -a   
+8139too  | k2.4.20p or d0.9.26p | works, even with -a
+de4x5    | k2.4.18              | Fails completely
+tulip    | k2.4.18              | works; does it work with -a???
+3c59x    | k2.4.19 and .20	| Works, even with -a
+hostap   | d0.0.3               | Works, even with -a
+b44	 | k2.6.3-rc2           | Works
+
+Please help me to extend this list and send me
+(mzvscyhtq (at) 0pointer (dot) de) more information about your
+experience with drivers not included in the list above yet.
+
+$Id: SUPPORTED_DRIVERS 103 2004-03-06 20:33:42Z lennart $

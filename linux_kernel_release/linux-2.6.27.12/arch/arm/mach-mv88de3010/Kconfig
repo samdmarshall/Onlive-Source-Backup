@@ -1,0 +1,523 @@
+if ARCH_MV88DE3010
+
+menu "MV88DE3010 features"
+
+menu "MV88DE3010 hardware platform"
+config MV88DE3010_PLT_DISABLE2SATA
+	bool "Disable 2nd SATA port"
+	default n
+	help
+	  Disable 2nd SATA1 for DMA platform.
+
+config MV88DE3010_PM_DISABLE_PCIE
+	bool "Turn off PCIE"
+	default n
+	help
+	  Turn off PCIE
+
+config MV88DE3010_PM_DISABLE_USB1
+	bool "Turn off USB1"
+	default n
+	help
+	  Turn off USB1
+
+config MV88DE3010_PM_DISABLE_ETH
+	bool "Turn off Ethernet"
+	default n
+	help
+	  Turn off ethernet
+
+config MV88DE3010_PM_DISABLE_SDIO
+	bool "Turn off SDIO"
+	default n
+	help
+	  Turn off SDIO
+
+config MV88DE3010_PM_DISABLE_SPI_TWSI
+	bool "Turn off SPI&TWSI"
+	default n
+	help
+	  Turn off SPI&TWSI
+
+endmenu
+
+config MV88DE3010_STANDALONE
+	bool "Support standalone linux boot off"
+	default y
+	help
+	  Linux doesnt need u-boot and decompression process with this 
+	  enabled, but some boot loader need to prepare boot parameters 
+	  at 0x100 offset in memory, and vmlinux should be used as image.
+	  Say Y by default.
+
+config MV88DE3010_LINUX_SETPINMUX
+	bool "Support setup pinmux in Linux kernel code"
+	default y
+	help
+	  Set to Y to do pinmux setup in CPU0 Linux kernel, if PINMUX has
+	  been done at bootloader, then set to N.
+
+config MV88DE3010_CPU0MEM_START
+	hex "Physical start of CPU0 memory(running Linux)"
+	default 0x16000000
+	help
+	  The physical start of CPU0 memory(running Linux), in bytes.
+
+config MV88DE3010_CPU0MEM_START_PLUS0x8000
+	hex "MV88DE3010_CPU0MEM_START, plus 0x8000"
+	default 0x16008000
+	help
+	  The physical start of CPU0 memory(running Linux), plus 0x8000.
+
+config MV88DE3010_CPU0MEM_SIZE
+	hex "Physical size of CPU0 memory(running Linux)"
+	default 0x06000000
+	help
+	  The physical size of CPU0 memory(running Linux), in bytes.
+
+config MV88DE3010_SHMMEM_START
+	hex "Physical start of cross-CPU shared memory"
+	default 0x1c000000
+	help
+	  The physical start of cross-CPU shared memory, in bytes.
+
+config MV88DE3010_SHMMEM_VIRTSTART
+	hex "Virtual start of cross-CPU shared memory"
+	default 0xF9000000
+	help
+	  The physical start of cross-CPU shared memory, in bytes.
+
+config MV88DE3010_SHMMEM_SIZE
+	hex "Physical size of cross-CPU shared memory"
+	default 0x04000000
+	help
+	  The physical size of cross-CPU shared memory, in bytes.
+
+config MV88DE3010_MTD_SPEEDUP
+	bool "Speedup NAND flash bootup init."
+	default y
+	help 
+	  Only check bad blocks of rootfs partition when bootup, i.e. #1st 
+	  partition of NAND flash. Say Y by default.
+
+config MV88DE3010_BERLIN_UDF_SPEEDUP
+	bool "Speedup udf mounting"
+	default n
+	help
+	speedup mounting process
+
+config MV88DE3010_BERLIN_UDF_SPEEDUP_TRACK_SEEKING
+	bool "Speedup track seeking for udf lseek"
+	default n
+	help
+	speedup track seeking for udf lseek on Spruce loader
+
+config MV88DE3010_BERLIN_UDF_SPEEDUP_CACHE_METADATA
+	bool "Improve UDF performance when need to read metafile"
+	default n
+	help
+	to cache more metafile data when need to read metafile
+
+config MV88DE3010_BERLIN_UDF_READ12
+    bool "use read12 to read m2ts file"
+    default n
+    help
+    use read12 to read m2ts file
+
+config MV88DE3010_BOOTTIMER
+	bool "Enable timer 7 from kernel decompressing"
+	default n
+	help 
+	  enable measure bootup timing when kernel decompress.
+
+config LZO_BOOTING
+	bool "LZO algorithms to compress/decompress kernel image"
+	select LZO
+	help
+	  Marvell experiments of lzo booting kernel
+
+config MV88DE3010_ASIC
+	bool "Support Galois/Berlin ASIC version"
+	default y
+	help 
+	  Galois/Berlin has FPGA and ASIC version. Say Y to support ASIC version.
+
+config MV88DE3010_DYNAMIC_FREQ
+	bool "Configure linux timer frequency dynamically"
+	depends on MV88DE3010_ASIC
+	default y
+	help
+	  Read timer frequency from SOC register and set linux's timer frequency dynamically.
+	  Maybe deprecated when all mv88de3010 boards use the same timer frequency.
+
+config MV88DE3010_BERLIN
+	bool "Support Berlin (Galois's next generation chip)"
+	default y
+	help 
+	  Berlin is different with Galois. Say Y to support Berlin.
+
+config MV88DE3010_BERLIN_C0
+	bool "Support Berlin C0 version, which includes BERLIN_B0"
+	depends on MV88DE3010_BERLIN
+	select MV88DE3010_BERLIN_B0
+	help
+	  no help.
+
+config MV88DE3010_BERLIN_B0
+	bool "Support Berlin B0 version"
+	depends on MV88DE3010_BERLIN
+	help
+	  no help.
+
+config MV88DE3010_BERLIN_CPU1
+	bool "Build Linux For Berlin CPU1"
+	depends on MV88DE3010_BERLIN
+	default n
+	help
+	  Build Linux Image for Berlin CPU1, default off. 
+
+config MV88DE3010_BERLIN_UARTBUG
+	bool "Work around Berlin A0 UART bug, there's no UART interrupt line."
+	depends on MV88DE3010_BERLIN
+	help 
+	  no help.
+
+config MV88DE3010_BERLIN_A0
+	bool "Work around Berlin A0 Ethernet bug..."
+	depends on MV88DE3010_BERLIN
+	help 
+	  no help.
+
+config MV88DE3010_BERLIN_A0BTIA
+	bool "Work around Berlin A0 Branch_To_Illegal_Address bug..."
+	depends on MV88DE3010_BERLIN
+	help 
+	  no help.
+
+config MV88DE3010_USB_EHCI_DELAY_WORKAROUND
+	bool "Work around for USB EHCI reset issue by adding 1us delay"
+	default n
+	depends on (USB_EHCI_HCD || MV88DE3010_BERLIN)
+	help
+	  USB EHCI reset issue always occurs when HCD wrongly writes next qTD pointer(with T bit set) of QH overlay area. By adding delay patch, HCD could read the data correctly when DDR traffic is not busy.
+
+config MV88DE3010_USB_EHCI_WATCHDOG_WORKAROUND
+	bool "Work around for USB EHCI reset issue by resuming ehci_watchdog after QH re-linked"
+	default y
+	depends on (USB_EHCI_HCD || MV88DE3010_BERLIN)
+	help
+	  USB EHCI reset issue always occurs when HCD wrongly writes next qTD pointer(with T bit set) of QH overlay area. By applying this patch, HCD driver still can fix the problem in silicon quirk code called by ehci_watchdog.
+
+config MV88DE3010_AVOID_ROOT_ACCESS_RDONLY
+	bool "avoid root to write/delete readonly files"
+	default y
+	help
+	  avoid root to write/delete readonly files
+
+endmenu
+
+
+menu "MV88DE3010 modules"
+
+config MV88DE3010_ETHERNET
+	tristate "Support 10/100Mbps Ethernet controller in Galois SoC"
+	default y
+	select MII
+    help
+	  If unsure, please say Yes here.
+
+config MV88DE3010_CC_MODULE
+	tristate "Support Common Communication(CC) between CPUs (for Multi CPU)"
+	default y
+    help
+	  Marvell MV88DE3010 Multimedia SoC contains two CPUs, this module
+	  implements the interCPU communication. Say Y here if you want to
+	  compile it into Linux kernel, say M here to compile it as a module.
+	  	  
+config MV88DE3010_SHM
+	tristate "Support Shared Memory(SHM) in Single CPU Mode"
+	default m
+    help
+	  Marvell MV88DE3010 BG2 Multimedia SoC contains single CPU, this module
+	  implements the shared memory access. Say Y here if you want to
+	  compile it into Linux kernel, say M here to compile it as a module.
+
+config MV88DE3010_SHM_DEBUG
+	bool "Debug Shared memory(SHM) driver"
+	default n
+	depends on (MV88DE3010_SHM)
+	help
+	  Turn on SHM debug information output.
+
+config MV88DE3010_CC
+	tristate "Support Common Communication(CC) between CPUs (for Single CPU)"
+	default n
+	depends on (MV88DE3010_SHM)
+    help
+	  Marvell MV88DE3010 Multimedia SoC contains two CPUs, this module
+	  implements the interCPU communication. Say Y here if you want to
+	  compile it into Linux kernel, say M here to compile it as a module.
+	  To compile this module, please disable MV88DE3010_CC_MODULE.
+
+config MV88DE3010_CC_DEBUG
+	bool "Debug Common Communication(CC) between CPUs (for Single CPU)"
+	default n
+	depends on (MV88DE3010_CC)
+	help
+	  Turn on CC debug information output.
+
+config MV88DE3010_PE_MODULE
+	tristate "Support PE Module (PEM) in Single CPU Mode"
+	default m
+    help
+	  Marvell MV88DE3010 BG2 Multimedia SoC contains single CPU, this module
+	  implements the shared memory access. Say Y here if you want to
+	  compile it into Linux kernel, say M here to compile it as a module
+config MV88DE3010_PFTIMER_MODULE
+	bool "Support performance timer."
+	default y
+	help
+	  TImer 7 is used as performance timer.
+
+config MV88DE3010_GPU
+	tristate "gfx gpu driver in Single CPU Mode"
+	default m
+    help
+	  Marvell MV88DE3010 BG2 Multimedia SoC contains single CPU, this module
+	  implements the gpu kernel mode driver. Say Y here if you want to
+	  compile it into Linux kernel, say M here to compile it as a module
+
+config MV88DE3010_REGMAP
+	tristate "Support direct access to Galois register space from user space."
+	default n
+	help
+	  It's dangerous, you're not suggested to do so.
+
+config MV88DE3010_MTD_NAND
+	tristate "Support NAND flash controller in Galois SoC"
+	default y
+	depends on MTD_NAND
+	help
+		Provides support for Marvell NAND flash controller.
+
+config MTD_NAND_MARVELL_DMA
+	bool "support DMA for Marvell Flash Controller"
+	depends on MTD_NAND && MV88DE3010_MTD_NAND && MV88DE3010_BERLIN_B0
+	help
+
+config MV88DE3010_SDHC
+	tristate "Support SDHC controller in Galois SoC"
+	depends on MMC_SDHCI
+	help
+		SDHC support
+
+config MV88DE3010_BERLIN_SDHS
+	bool "Support SD HighSpeed mode(be careful to enable it)" 
+	default n
+	depends on MV88DE3010_SDHC
+	help
+		SD High Speed mode support, don't enable it on B0, can only be 
+		enable on C0 and later versions.
+
+config MV88DE3010_BERLIN_SD_NO_CARDDETECT
+	bool "Support identify device even there's no CD signal" 
+	default n
+	depends on MV88DE3010_SDHC
+	help
+		At some system design, device is mounted at the main board, and
+		connect to SD host without CD signal. Say Y here to identify this 
+		configuration.
+
+config MV_SATA_THOR
+	tristate "Support Marvell SATA Controller in Galois SoC"
+	default y
+	depends on SCSI && BLK_DEV_SD
+	help
+		Provides support for Marvell thor Storage Controller series.
+
+config MV88DE3010_PWM
+	tristate "Support PWM channels"
+	default y
+	help
+	  PWM channel supports.
+
+config MV88DE3010_I2C
+	tristate "Support I2C bus"
+	default y
+	help
+	  I2C bus on Galois, I2C bus can operate on serveral modes(XD mode:-), 
+	  User space must set these mode and i2c-bus config to kernel.
+
+config MV88DE3010_SPI
+	tristate "Support SPI bus"
+	default y
+	help
+	  SPI bus on Galois.
+
+config MV88DE3010_IOMAPPER
+	tristate "Support FPGA IO-mapper over SPI bus 0"
+	default n
+	depends on MV88DE3010_SPI
+	help
+	  FPGA IO-mapper
+
+config MV88DE3010_IR
+	tristate "Support Infra-Red remote controller through GPIO"
+	default y
+	#depends on MV88DE3010_PFTIMER_MODULE
+	help
+	  IR driver. it needs pftimer to get timing information and iomapper
+	  to program GPIO. By-default, it's from SoC GPIO and the driver handles
+	  the IR signal protocol directly.
+
+config MV88DE3010_IR_MOUSE
+	bool "Emulate Mouse via IR"
+	default n
+	depends on MV88DE3010_IR && INPUT
+	help
+	  Emulate a simple mouse via IR.
+
+config MV88DE3010_SM
+	tristate "Support SM bus"
+	default y
+	depends on MV88DE3010_BERLIN
+	help 
+	  SM bus driver, connect to SM device.
+
+config MV88DE3010_IR_SM
+	bool "IR is from SM, instead from SoC GPIO"
+	default y
+	depends on MV88DE3010_IR
+	depends on MV88DE3010_SM
+	help 
+	  IR driver, but ir keys come from SM which handles the IR signal protocol.
+
+config MV88DE3010_IR_SM_INT
+	bool "IR key is received in interrupt handler"
+	default y
+	depends on MV88DE3010_IR_SM
+	help
+	  user IR thread is waked up from IR interrupt handler.
+	  if says "No", a kernel IR thread will poll IR key per 100ms and if there's
+	  key received, it will wake up user IR thread.
+
+config MV88DE3010_SOFTKEYBOARD
+	tristate "Support SOFTKEYBOARD"
+	default n
+	help
+	  soft keyboard module is to simulate key inputs from application.
+
+config MV88DE3010_GPIO
+	tristate "Support GPIO ports operations from user space"
+	default y
+	help
+	  GPIO.
+
+config MV88DE3010_BERLIN_USB
+	bool "Support EHCI Host Controller for Berlin"
+	default y
+	select USB_ARCH_HAS_EHCI
+	help 
+	  EHCI Host Controller driver. Please do enable USB and USB_EHCI_HCD, 
+	  and disable PCI.
+
+config MV88DE3010_EHSET
+	bool "Support Embedded Host Hi-Speed Electrical Tests"
+	default n
+	depends on MV88DE3010_BERLIN_USB
+	help
+	  Embedded Host Hi-Speed Electrical Tests Support for Berlin EHCI Host Controller. 
+	  Test procedure includes: TEST_SE0_NAK(0x0101), TEST_J(0x0102), TEST_K(0x0103),
+	  TEST_PACKET(0x0104), TEST_FORCE_ENABLE(0x0105), TEST_SUSPEND_RESUME(0x0106),
+	  TEST_SINGLE_STEP_GET_DESC(0x0107), TEST_SINGLE_STEP_SET_FEATURE(0x0108).
+
+config MV88DE3010_USB_NOGPIO
+	bool "Don't config power supply to USB device via GPIO pins(12,13,14,15)"
+	default n
+	depends on MV88DE3010_BERLIN_USB
+	depends on MV88DE3010_GPIO
+	help 
+	  For some applications, e.g. DTV, these GPIO pins are pinmux used by TS port.
+
+config MV88DE3010_USB_WLAN_8682
+	tristate "USB Wlan (IEEE802.11 B|G) driver for wlan8682 module"
+	default n
+	depends on USB
+	help 
+	  This is the wifi module for Berlin. Please try build it for module only.
+
+config MV88DE3010_USB_WLAN_8786
+	tristate "USB Wlan (IEEE802.11 B|G|N) driver for wlan8786 module"
+	default n
+	depends on USB
+	help 
+	  This is the wifi module for Berlin. Please try build it for module only.
+
+config MV88DE3010_SDIO_WLAN_8786
+	tristate "SDIO Wlan (IEEE802.11 B|G|N) driver for wlan8786 module"
+	default n
+	depends on MV88DE3010_SDHC
+	help 
+	  This is the wifi module for Berlin. Please try build it for module only.
+
+config MV88DE3010_SDIO_WLAN_8787
+	tristate "SDIO Wlan (IEEE802.11 B|G|N) driver for wlan8787 module"
+	default n
+	depends on MV88DE3010_SDHC
+	help 
+	  This is the wifi module for Berlin. Please try build it for module only.
+
+config MV88DE3010_USB_WLAN_REASSOCIATION
+	bool "Auto reassociation support for usb8682 module"
+	default y
+	depends on (MV88DE3010_USB_WLAN_8682 || MV88DE3010_USB_WLAN_8786)
+	help 
+	  This feature turn on the usb8xxx's reassociation feature.
+
+config MV88DE3010_USB_WLAN_DEBUG
+	bool "Debug output of usb8682 for USB Wlan driver"
+	default n
+	depends on (MV88DE3010_USB_WLAN_8682 || MV88DE3010_USB_WLAN_8786)
+	help
+	  Turn on UART debug information output.
+
+config MV88DE3010_DIRECTFB_FUSION
+	tristate "Fusion driver 8.1.1 for DirectFB support"
+	default m
+	help 
+	  This is just simply copying the original linux-fusion-8.0.3
+
+config MV88DE3010_MVPM
+	tristate "Power Management Module,Such as Standby mode"
+	default y
+	help 
+	  This is power management module for Berlin.
+
+config MV88DE3010_UART0
+	bool "Enable UART0"
+	default y
+	help 
+	  Set to y to set pinmux of UART signals and enable s/w driver.
+
+config MV88DE3010_UART1
+	bool "Enable UART1"
+	default n
+	help 
+	  Set to y to set pinmux of UART signals and enable s/w driver.
+
+config MV88DE3010_UART2
+	bool "Enable UART2"
+	default n
+	help 
+	  Set to y to set pinmux of UART signals and enable s/w driver.
+
+config MV88DE3010_PCIE
+	bool "PCI Express Support"
+	default y
+	select PCI
+	help
+	  "PCIe Host Driver for MV88DE3010"
+
+endmenu
+
+endif

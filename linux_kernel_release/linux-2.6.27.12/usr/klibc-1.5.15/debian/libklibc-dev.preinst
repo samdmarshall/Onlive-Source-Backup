@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+BASEDIR=/usr/lib/klibc/include
+SYMLINKDIRS="asm asm-generic asm-i386 asm-ia64 asm-parisc asm-ppc asm-ppc64 asm-sparc asm-sparc64 asm-x86_64 linux"
+
+for x in ${SYMLINKDIRS}; do
+	if [ -L ${BASEDIR}/${x} ]; then
+		rm ${BASEDIR}/${x}
+	fi
+done

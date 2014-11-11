@@ -1,0 +1,53 @@
+#!/bin/sh
+module="mrvlsdio"
+device="mrvlsdio"
+mode="664"
+par1="sdio_voltage=0xE8"
+par2="clock_speed=0"
+par3="bus_width=1"
+par4="bus_type=1"
+par5="debug_flags=0x0000030C"
+par6="intmode=1"
+par7="gpiopin=0"
+
+par1=`cat ./FpgaConfig.xml | awk -F"<|>" '/sdio_voltage/{print $2"=0x"$3}'`
+par2=`cat ./FpgaConfig.xml | awk -F"<|>" '/clock_speed/{print $2"="$3}'`
+par3=`cat ./FpgaConfig.xml | awk -F"<|>" '/bus_width/{print $2"="$3}'`
+par4=`cat ./FpgaConfig.xml | awk -F"<|>" '/bus_type/{print $2"="$3}'`
+par4=`cat ./FpgaConfig.xml | awk -F"<|>" '/dma_support/{print $2"="$3}'`
+#par5=`cat ./FpgaConfig.xml | awk -F"<|>" '/debug_flags/{print $2"=0x"$3}'`
+par6=`cat ./FpgaConfig.xml | awk -F"<|>" '/intmode/{print $2"="$3}'`
+par7=`cat ./FpgaConfig.xml | awk -F"<|>" '/gpiopin/{print $2"="$3}'`
+
+# Group: since distributions do it differently, look for wheel or use staff
+if grep '^staff:' /etc/group > /dev/null; then
+    group="staff"
+else
+    group="wheel"
+fi
+
+# remove stale nodes
+rm -f /dev/${device}? 
+
+# invoke insmod with all arguments we got
+# and use a pathname, as newer modutils don't look in . by default
+#/sbin/insmod ./io/sdio/syskt/$module.o $* || exit 1
+
+if !(lsmod | grep mrvlsdio > /dev/null); then  
+/sbin/insmod ./$module.ko $par1 $par2 $par3 $par4 $par5 $par6 $par7 || exit 1
+fi
+
+major=`cat /proc/devices | awk "\\$2==\"$module\" {print \\$1}"`
+
+# Remove stale nodes and replace them, then give gid and perms
+# Usually the script is shorter, it's scull that has several devices in it.
+
+mknod /dev/${device}0 c $major 0
+
+# give appropriate group/permissions 
+chgrp $group /dev/${device}0 
+chmod $mode  /dev/${device}0
+
+
+
+ 

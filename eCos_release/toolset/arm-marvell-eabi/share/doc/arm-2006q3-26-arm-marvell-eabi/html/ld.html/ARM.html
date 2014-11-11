@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+<title>ARM - Untitled</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Untitled">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Machine-Dependent.html#Machine-Dependent" title="Machine Dependent">
+<link rel="prev" href="i960.html#i960" title="i960">
+<link rel="next" href="HPPA-ELF32.html#HPPA-ELF32" title="HPPA ELF32">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="ARM"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="HPPA-ELF32.html#HPPA-ELF32">HPPA ELF32</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="i960.html#i960">i960</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Machine-Dependent.html#Machine-Dependent">Machine Dependent</a>
+<hr>
+</div>
+
+<h3 class="section">4.3 <samp><span class="command">ld</span></samp> and the ARM family</h3>
+
+<p><a name="index-ARM-interworking-support-506"></a><a name="index-g_t_002d_002dsupport_002dold_002dcode-507"></a>For the ARM, <samp><span class="command">ld</span></samp> will generate code stubs to allow functions calls
+betweem ARM and Thumb code.  These stubs only work with code that has
+been compiled and assembled with the `<samp><span class="samp">-mthumb-interwork</span></samp>' command
+line option.  If it is necessary to link with old ARM object files or
+libraries, which have not been compiled with the -mthumb-interwork
+option then the `<samp><span class="samp">--support-old-code</span></samp>' command line switch should be
+given to the linker.  This will make it generate larger stub functions
+which will work with non-interworking aware ARM code.  Note, however,
+the linker does not support generating stubs for function calls to
+non-interworking aware Thumb code.
+
+   <p><a name="index-thumb-entry-point-508"></a><a name="index-entry-point_002c-thumb-509"></a><a name="index-g_t_002d_002dthumb_002dentry_003d_0040var_007bentry_007d-510"></a>The `<samp><span class="samp">--thumb-entry</span></samp>' switch is a duplicate of the generic
+`<samp><span class="samp">--entry</span></samp>' switch, in that it sets the program's starting address. 
+But it also sets the bottom bit of the address, so that it can be
+branched to using a BX instruction, and the program will start
+executing in Thumb mode straight away.
+
+   <p><a name="index-BE8-511"></a><a name="index-g_t_002d_002dbe8-512"></a>The `<samp><span class="samp">--be8</span></samp>' switch instructs <samp><span class="command">ld</span></samp> to generate BE8 format
+executables.  This option is only valid when linking big-endian objects. 
+The resulting image will contain big-endian data and little-endian code.
+
+   <p><a name="index-TARGET1-513"></a><a name="index-g_t_002d_002dtarget1_002drel-514"></a><a name="index-g_t_002d_002dtarget1_002dabs-515"></a>The `<samp><span class="samp">R_ARM_TARGET1</span></samp>' relocation is typically used for entries in the
+`<samp><span class="samp">.init_array</span></samp>' section.  It is interpreted as either `<samp><span class="samp">R_ARM_REL32</span></samp>'
+or `<samp><span class="samp">R_ARM_ABS32</span></samp>', depending on the target.  The `<samp><span class="samp">--target1-rel</span></samp>'
+and `<samp><span class="samp">--target1-abs</span></samp>' switches override the default.
+
+   <p><a name="index-TARGET2-516"></a><a name="index-g_t_002d_002dtarget2_003d_0040var_007btype_007d-517"></a>The `<samp><span class="samp">--target2=type</span></samp>' switch overrides the default definition of the
+`<samp><span class="samp">R_ARM_TARGET2</span></samp>' relocation.  Valid values for `<samp><span class="samp">type</span></samp>', their
+meanings, and target defaults are as follows:
+     <dl>
+<dt>`<samp><span class="samp">rel</span></samp>'<dd>`<samp><span class="samp">R_ARM_REL32</span></samp>' (arm*-*-elf, arm*-*-eabi)
+<br><dt>`<samp><span class="samp">abs</span></samp>'<dd>`<samp><span class="samp">R_ARM_ABS32</span></samp>' (arm*-*-symbianelf)
+<br><dt>`<samp><span class="samp">got-rel</span></samp>'<dd>`<samp><span class="samp">R_ARM_GOT_PREL</span></samp>' (arm*-*-linux, arm*-*-*bsd)
+</dl>
+
+   <p><a name="index-FIX_005fV4BX-518"></a><a name="index-g_t_002d_002dfix_002dv4bx-519"></a>The `<samp><span class="samp">R_ARM_V4BX</span></samp>' relocation (defined by the ARM AAELF
+specification) enables objects compiled for the ARMv4 architecture to be
+interworking-safe when linked with other objects compiled for ARMv4t, but
+also allows pure ARMv4 binaries to be built from the same ARMv4 objects.
+
+   <p>In the latter case, the switch <samp><span class="option">--fix-v4bx</span></samp> must be passed to the
+linker, which causes v4t <code>BX rM</code> instructions to be rewritten as
+<code>MOV PC,rM</code>, since v4 processors do not have a <code>BX</code> instruction.
+
+   <p>In the former case, the switch should not be used, and `<samp><span class="samp">R_ARM_V4BX</span></samp>'
+relocations are ignored.
+
+   <p><a name="index-USE_005fBLX-520"></a><a name="index-g_t_002d_002duse_002dblx-521"></a>The `<samp><span class="samp">--use-blx</span></samp>' switch enables the linker to use ARM/Thumb
+BLX instructions (available on ARMv5t and above) in various
+situations. Currently it is used to perform calls via the PLT from Thumb
+code using BLX rather than using BX and a mode-switching stub before
+each PLT entry. This should lead to such calls executing slightly faster.
+
+   <p>This option is enabled implicitly for SymbianOS, so there is no need to
+specify it if you are using that target.
+
+   </body></html>
+

@@ -1,0 +1,26 @@
+/s_asinh.c/1.2/Thu May 23 23:07:47 2002//
+/s_atan.c/1.6/Thu May 23 23:07:47 2002//
+/s_cbrt.c/1.2/Thu May 23 23:07:47 2002//
+/s_ceil.c/1.6/Thu May 23 23:07:47 2002//
+/s_copysign.c/1.6/Thu May 23 23:07:47 2002//
+/s_cos.c/1.6/Thu May 23 23:07:48 2002//
+/s_erf.c/1.2/Thu May 23 23:07:49 2002//
+/s_expm1.c/1.8/Thu May 23 23:07:50 2002//
+/s_fabs.c/1.6/Thu May 23 23:07:50 2002//
+/s_finite.c/1.6/Thu May 23 23:07:50 2002//
+/s_floor.c/1.6/Thu May 23 23:07:50 2002//
+/s_frexp.c/1.6/Thu May 23 23:07:51 2002//
+/s_ilogb.c/1.2/Thu May 23 23:07:51 2002//
+/s_isnan.c/1.6/Thu May 23 23:07:51 2002//
+/s_ldexp.c/1.6/Thu May 23 23:07:51 2002//
+/s_log1p.c/1.2/Thu May 23 23:07:51 2002//
+/s_logb.c/1.2/Thu May 23 23:07:51 2002//
+/s_modf.c/1.6/Thu May 23 23:07:51 2002//
+/s_nextafter.c/1.2/Thu May 23 23:07:51 2002//
+/s_rint.c/1.6/Thu May 23 23:07:51 2002//
+/s_scalbn.c/1.6/Thu May 23 23:07:51 2002//
+/s_significand.c/1.2/Thu May 23 23:07:51 2002//
+/s_sin.c/1.6/Thu May 23 23:07:51 2002//
+/s_tan.c/1.6/Thu May 23 23:07:51 2002//
+/s_tanh.c/1.6/Thu May 23 23:07:51 2002//
+D

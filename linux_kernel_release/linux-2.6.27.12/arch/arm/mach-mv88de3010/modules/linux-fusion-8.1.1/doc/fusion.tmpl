@@ -1,0 +1,1475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+	"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" []>
+
+
+
+<book id="DirectFBFusion">
+ <bookinfo>
+  <title>DirectFB Fusion kernel module: introduction and API</title>
+  
+  <authorgroup>
+   <author>
+    <firstname>Niels</firstname>
+    <surname>Roest</surname>
+    <affiliation>
+     <address>
+      <email>niels@directfb.org</email>
+     </address>
+    </affiliation>
+   </author>
+  </authorgroup>
+
+  <copyright>
+   <year>2009</year>
+   <holder>Niels Roest</holder>
+  </copyright>
+
+  <legalnotice>
+
+     <para>This documentation is free software; you can redistribute
+     it and/or modify it under the terms of the GNU General Public
+     License as published by the Free Software Foundation; either
+     version 2 of the License, or (at your option) any later
+     version.</para>
+
+     <para>This program is distributed in the hope that it will be
+     useful, but WITHOUT ANY WARRANTY; without even the implied
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+     See the GNU General Public License for more details.</para>
+
+     <para>You should have received a copy of the GNU General Public
+     License along with this program; if not, write to the Free
+     Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+     MA 02111-1307 USA</para>
+
+     <para>For more details see the file COPYING in the source
+     distribution of Linux.</para>
+
+  </legalnotice>
+ </bookinfo>
+
+<toc></toc>
+
+<chapter id="intro">
+<title>Introduction</title>
+
+     <para>Fusion is a Inter-Process-Communication (IPC) kernel module with
+     a high level of abstraction. It offers primitives like skirmishes (locks),
+     calls, properties and shared memory pools. You can query the status
+     of the primitives via an entry in the /proc filesystem.</para>
+
+     <para>This chapter aims at giving you an overview about what Fusion is,
+     so that the dry API listing in the following chapters makes sense as a whole.</para>
+
+     <para>Fusion is the central spider in the web of IPC. In the Fusion philosophy,
+     processes can 'speak' to each other through Fusion only. They speak to each
+     other by using <emphasis>Fusion primitives</emphasis>. Any process can request Fusion
+     to create a primitive instance, which can then be accessed and used by all
+     connected Fusion processes through a simple ID. Refer to the API chapter
+     for explanation of each primitive type in more detail.</para>
+
+     <para>The primivites are in short:
+     <emphasis>call</emphasis>: to perform (a)synchronous calls to other processes;
+     <emphasis>ref</emphasis>: reference counter with watch functionality;
+     <emphasis>reactor</emphasis>: asynchronous event distribution with reception confirmation;
+     <emphasis>skirmish</emphasis>: counting lock;
+     <emphasis>property</emphasis>: multi-level locking;
+     <emphasis>shmpool</emphasis>: shared memory usage arbitration.     
+     </para>
+
+     <para>You can use the primitives with the ioctl() API as described in this
+     document, but within the DirectFB project (www.directfb.org) a wrapper
+     has been written which can be used as an entry point instead.
+     This library is simply called Fusion too. In some cases the wrapper adds extra
+     abstraction, for instance: if you do a synchronous call to another process
+     you need to have a dispatcher thread running in that process; the fusion
+     library creates this thread and offers a callback handler subscription.</para>
+
+     <para>Fusion relies for a large part on shared memory to not hamper the
+     speed of data transmission. For instance, with DirectFB (build on top of Fusion)
+     processes are allowed to write to the display buffer themselves,
+     where Fusion takes care of arbitrating access and sharing information.</para>
+
+     <para>Fusion has the concept of <emphasis>World</emphasis>. A world is the
+     environment in which fusion users operate and communicate; it provides
+     the plaform for clients to discover each other. For example, 
+     Fusion primitives are identified and used with a Worldwide ID.
+     Each World has its own filesystem node.
+     Fusion allows multiple worlds to run at the same time, separate from each other.
+     This makes it possible to have multiple Fusion-based protocols running
+     alongside.</para>
+
+     <para>A participant in a world is called a <emphasis>fusionee</emphasis>.
+     Every user-space application that opens and enters a World will obtain
+     a unique Fusion ID. Note that it is therefore possible, but unusual, for
+     an application to get multiple Fusion IDs. The Fusion ID is used as a
+     handle to target other fusionees. To simplify the implementation of
+     single-acces hardware, every world has at most one fusionee which
+     is also Master, the others being Slave fusionees.</para>
+
+</chapter>
+  
+<chapter id="design">
+<title>Internal design</title>
+  <para>
+     ..todo..
+  </para>
+  <sect1 id="blabla">
+     <title>...</title>
+  <para>
+     ...
+  </para>
+  </sect1>
+  
+</chapter>
+
+<chapter id="API">
+<title>API: Application Programming Interface</title>
+  
+     <para>This section describes how to use the Fusion kernel module. It mainly
+     lists all ioctls of Fusion.</para>
+
+<sect1><title>Opening the node</title>
+
+     <para>All Fusion communication is done via /dev nodes.
+     In the current installment, Fusion uses a "char" node with major 250.
+     By convention, the nodes are called
+     /dev/fusion0, /dev/fusion1, etc. with minor 0,1, etc. for a total of 8 nodes.
+     Each separate node is a separate, independent Fusion World.
+     All applications wishing to IPC with each other shall open the same node.</para>
+
+<simplesect>
+<title>synopsis</title>
+
+     <para>To open a Fusion node:</para>
+
+<screen>
+     int fd;
+     fd = open( "/dev/fusion/0", flags );
+</screen>
+</simplesect>
+<simplesect>
+<title>description</title>
+<literallayout>The <function>flags</function> argument has the following meaning:
+<function>flags  = O_RDWR;</function> default value.
+<function>flags |= O_NONBLOCK;</function> add this for a non-blocking read call.
+<function>flags |= O_EXCL;</function> add this to be the Fusion Master of this World.
+<function>flags |= O_APPEND;</function> add this to be a Fusion Slave in this World.
+</literallayout>
+
+     <para><emphasis>Master</emphasis> is the other word for being the first Fusionee.
+     You can use the special open call to make sure you are Master.
+     If you happen to be the first to open a World, you will be its Master as well.
+     If you wish to be a Fusion Slave, but the World is still to be opened, a 
+     subsequent ioctl to enter the world will block until the Master has 'unblocked'
+     the World. These ioctls are explained further on.
+     Please note that Fusion does not safeguard the Master role after the open call!
+     The role is only fixed after the World enter ioctl. There are two options
+     to protect the Master role: either unify the open-enter pair in your code,
+     or make sure that all intended Slaves will use the slave open call variant.</para>
+
+     <para>The terms Master and Slave have no significance other than startup-behaviour
+     and World-wide initialization calls (so noted where applicable).
+     In DirectFB context, the Master role is generally reserved for the process
+     that controls the graphic hardware: communication to the graphic's card
+     IO-space is handled with Fusion calls towards the Fusion Master process,
+     which will simplify to regular C-calls if initiated by the Master itself.</para>
+
+</simplesect>
+<simplesect>
+<title>return values</title>
+<literallayout><function>EBUSY</function> request to be Master, but this world already has a Fusion Master.
+<function>EINTR</function> an interrupt occurred. No changes were made.
+<function>ENOMEM</function> insufficient kernel memory.
+</literallayout>
+</simplesect>
+</sect1>
+
+<sect1><title>Other file operations</title>
+
+     <para>If your process has successfully opened the fusion node, the following
+     operations can be performed additionally.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     int close( int fd );
+     ssize_t read( int fd, void *buf, size_t count );
+     int ioctl( int fd, int request, ... ); 
+     void *mmap( void *start, size_t length, int prot, int flags, int fd, off_t offset );
+</screen>
+
+     <para>There is no write call. In tandem with the read call, if it is non-blocking,
+     you should use the select call to implement non-busy waiting.
+     The parameters for these functions are all standard and are not further explained.</para>
+
+</simplesect>
+<simplesect>
+<title>description</title>
+
+     <para>The close call will leave the World and close the node for this Fusionee.
+     If all Fusionees in a World have left, the World will be closed and cleaned-up.
+     A left Fusion Master will not be replaced, not even by a new open call.</para>
+
+     <para>The read call will try to read as many complete messages (in order) as will
+     fit in the provided buffer. Messages are always 4-byte aligned
+     (see example below) so you may find stuff bytes between consecutive messages.
+     The return value is the byte size of the returned messages (including stuffing).
+     It is not possible to write messages.
+     All messages are created as a result of ioctl calls.
+     The receivable messages are defined together with the corresponding ioctl
+     description, but follow the following basic structure:</para>
+
+<screen>
+typedef struct {
+     FusionMessageType   msg_type;
+     int                 msg_id;
+     int                 msg_size;
+     int                 msg_channel;
+
+     /* message data follows */
+} FusionReadMessage;
+</screen>
+
+     <para><function>msg_type</function> is one of <function>FMT_CALL</function>,
+     <function>FMT_REACTOR</function>, <function>FMT_SHMPOOL</function> or
+     <function>FMT_SEND</function>, which means that this message is 
+     due to activity from call, reactor or shared memory handling, or as the
+     result of a SEND_MESSAGE ioctl. <function>msg_id</function> is the free
+     format message identifier (for FMT_SEND) or the call, reactor or pool ID.
+     <function>msg_size</function> is the payload size.
+     <function>msg_channel</function> is the optional or reactor channel.
+     The payload data is located immediately after the header.</para>
+
+     <para>The following simplified example reads messages:</para>
+
+<screen>
+    char  buf[BUF_SIZE]
+    char *buf_p = buf;
+    int   fd    = open("/dev/fusion/0", O_RDWR | O_NONBLOCK );
+    int   len   = read( fd, buf, BUF_SIZE );
+    while (buf_p &lt; buf + len)
+    {
+        FusionReadMessage *header = (FusionReadMessage*) buf_p;
+        void              *data   = buf_p + sizeof(FusionReadMessage);
+        ...handle message...
+        buf_p = data + ((header->msg_size + 3) & ~3);
+    }   
+</screen>
+
+     <para>The ioctl calls are described in more detail in the following sections.
+     Basically, the Fusion ioctls accept 1 argument, which is normally a 
+     pointer to a struct that can hold input and output parameters.
+     For example, if the synopsis is
+     <function>ioctl( fd, FUSION_ENTER, FusionEnter )</function> then
+     you can use something like this:</para>
+
+<screen>
+    #include &lt;fusion.h&gt;
+    int fd = open("/dev/fusion/0", O_RDWR | O_NONBLOCK );
+    FusionEnter enter;
+    ...init enter.api...
+    ret = ioctl( fd, FUSION_ENTER, &amp;enter );
+    ...store fusion_id...
+</screen>
+
+     <para>With the mmap call a shared area is created. This is a small area of memory,
+     the provided size may not be over a kernel page size (commonly minimally 4KB).
+     The same memory area will be mapped for all Fusionees of the same World,
+     so it is possible to share a World global data.
+     The first mmap call must be done by the Fusion Master, this reserves
+     the kernel memory.</para>
+
+</simplesect>
+<simplesect>
+<title>return values</title>
+<literallayout>The following can be returned by any of the functions:
+    <function>0</function> on success.
+    <function>EINVAL</function> Input parameter out-of-range.
+    <function>EFAULT</function> Kernel memory fault.
+    <function>EINTR</function> an interrupt occurred. No changes were made.
+The following are additional return values of the read call:
+    <function>EMSGSIZE</function> If the first message does not fit in the buffer.
+    <function>EAGAIN</function> For a non-blocking read: no messages available.
+The following are aditional return values of the mmap call:
+    <function>EPERM</function> First mmap not performed by Fusion Master.
+    <function>ENOMEM</function> No kernel memory left.
+</literallayout>
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: Global fusion commands</title>
+
+     <para>Described are the basic ioctl operations.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_ENTER           , FusionEnter       )
+     ioctl( fd, FUSION_UNBLOCK                             )
+     ioctl( fd, FUSION_KILL            , FusionKill        )
+     ioctl( fd, FUSION_ENTRY_SET_INFO  , FusionEntryInfo   )
+     ioctl( fd, FUSION_ENTRY_GET_INFO  , FusionEntryInfo   )
+     ioctl( fd, FUSION_FORK            , FusionFork        )
+     ioctl( fd, FUSION_SEND_MESSAGE    , FusionSendMessage )
+</screen>
+</simplesect>
+
+<simplesect>
+<title>FUSION_ENTER</title>
+<screen>
+typedef struct {
+     struct {
+          int            major;         /* [in] */
+          int            minor;         /* [in] */
+     } api;
+
+     FusionID            fusion_id;     /* [out] */
+} FusionEnter;
+</screen>
+
+     <para>Enter this Fusion World. You must enter the World after opening the Fusion
+     node. Only then, you will be assigned a unique communication handle:
+     your Fusion ID. For all Slaves, this ioctl will block until the Master has
+     'unblocked' the World with <function>FUSION_UNBLOCK</function>.</para>
+
+     <para><function>major</function> and <function>minor</function> must be filled with the
+     requested API. Supported are 3.x, 4.x and 8.x, which correspond to
+     DirectFB 1.0, 1.1 and >= 1.2 respectively. This document only describes 8.x,
+     which is recommended for new development. The Master will determine the API.
+     The Slaves must be in the interval [major.0, major.minor].
+     The <function>fusion_id</function> is returned on successful completion.
+     This is <function>FUSION_ID_MASTER</function> for the Master.</para>
+
+<literallayout>Return values (besides 0, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOPROTOOPT</function> Unsupported API version, or Master has selected a non-compatible API version.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_UNBLOCK</title>
+     <para>Unblocks the Fusion World. Must be called by the Fusion Master to
+     allow Slaves in this World.</para>
+
+<literallayout>Return values (besides 0, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EPERM</function> Not called by Fusion Master.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_KILL</title>
+<screen>
+typedef struct {
+     FusionID            fusion_id;
+     int                 signal;
+     int                 timeout_ms;
+} FusionKill;
+</screen>
+
+     <para>Send a signal to other fusionees, corresponding to the 'kill' program.
+     <function>fusion_id</function> is the target fusionee, 0  means
+     all but ourself. The ioctl will return success if there is no such fusionee.
+     <function>signal</function> is the signal to be delivered,
+     e.g. <function>SIGTERM</function>. <function>timeout_ms</function>
+     is the requested time-out in milliseconds, -1 means no timeout, 0 means
+     infinite, otherwise the maximum time to wait until at least one fusionee
+     is terminated. This means that if you send a non-terminating signal with a
+     specified timeout this ioctl will not return.</para>
+
+<literallayout>Return values (besides 0, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ETIMEDOUT</function> Timeout expired.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_ENTRY_SET_INFO and FUSION_ENTRY_GET_INFO</title>
+<screen>
+typedef struct {
+     FusionType          type;
+     int                 id;
+     char                name[FUSION_ENTRY_INFO_NAME_LENGTH]; /* [in] or [out] */
+} FusionEntryInfo;
+</screen>
+
+     <para>Store or read a human readable name to a Skirmish, Property, Reactor,
+     Ref or Shmpool. This name is only used for these ioctls and in the
+     <function>/proc</function> filesystem. <function>type</function> is one
+     of <function>FT_REF</function>, <function>FT_SKIRMISH</function>,
+     <function>FT_PROPERTY</function>, <function>FT_REACTOR</function> or
+     <function>FT_SHMPOOL</function>, for respectively reference, skirmish,
+     property, reactor and shared memory pool. <function>id</function> is
+     the object identifier. <function>name</function> is the name of the object.</para>
+
+     <para>Return values are <function>ENOSYS</function>,
+     <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_FORK</title>
+<screen>
+typedef struct {
+	FusionID fusion_id;
+} FusionFork;
+</screen>
+     
+     <para>Perform a 'fork' of shared memory pools, reactors and local references.
+     This will copy these entities from fusiuonee <function>fusion_id</function>
+     to the calling fusionee. Upon return, <function>fusion_id</function>
+     holds the calling fusionee ID.</para>
+
+     <para>Return values are <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SEND_MESSAGE</title>
+<screen>
+typedef struct {
+     FusionID            fusion_id;
+     int                 msg_id;
+     int                 msg_channel;
+     int                 msg_size;
+     const void         *msg_data;
+} FusionSendMessage;
+</screen>
+
+     <para>Send a Fusion message. The receiver will call <function>read()</function>
+     to receive the message. A fusion message is simply a packet of data
+     which is send from one fusionee (the one calling this ioctl) to another
+     (the one calling <function>read()</function>. The sender specifies
+     the receiver by fusion ID, the receiver can extract the sender ID from
+     the received mesage. Check the description of <function>read()</function>
+     for additional info.</para>
+
+     <para><function>fusion_id</function> is the ID of the fusionee to receive the
+     message. <function>msg_id</function> is a free-format message identifier.
+     <function>msg_channel</function> is an optional channel number.
+     <function>msg_size</function> is the message payload size, which lies
+     in the range [0,65536] inclusive. <function>msg_data</function>
+     points to the payload data. must not be NULL.</para>
+
+<literallayout>Return values (besides 0, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EINVAL</function> msg_size too small (below 0).
+    <function>EMSGSIZE</function> msg_size too big (above 65536).
+    <function>ENOMEM</function> out of kernel memory. Try a smaller msg_size.
+</literallayout>
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: CALL primitive</title>
+
+     <para>Describes the CALL primitive related ioctls.
+     Use this to make a syncronous call to another fusionee.
+     A Fusion call can be compared to an RPC (Remote Procedure Call).
+     First, the receiving fusionee creates the call. Then,
+     any fusionee can 'execute' it - this will block the calling thread until
+     the receiver has 'returned' it.
+     The receiver has to poll/select the <function>read()</function>
+     function to wait for an incoming call. Since this is hardly how a 
+     proper call would work, the Fusion user-space library has abstraction
+     code that allows the receiver to register a handler function, so
+     the whole 'execute' - 'return' path is hidden and the primitive
+     acts like a call proper.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_CALL_NEW        , FusionCallNew     )
+     ioctl( fd, FUSION_CALL_EXECUTE    , FusionCallExecute )
+     ioctl( fd, FUSION_CALL_RETURN     , FusionCallReturn  )
+     ioctl( fd, FUSION_CALL_DESTROY    , int               )
+</screen>
+</simplesect>
+
+<simplesect>
+<title>FUSION_CALL_NEW</title>
+<screen>
+typedef struct {
+     int                 call_id;       /* [out] */
+     void               *handler;       /* [in]  */
+     void               *ctx;           /* [in]  */
+} FusionCallNew;
+</screen>
+
+     <para>Create a new Fusion call primitive. This will return a unique call ID.
+     A user of the call primitive can use this call ID to perform
+     (or 'execute') a call with some arguments. Fusion will switch context,
+     if needed, to the creator of the call; it will then receive a fusion message,
+     perform the call and send back the return value with FUSION_CALL_RETURN.
+     With this ioctl you specify a call handler (a.k.a. callback function)
+     and a call context. Both are opaque to Fusion, and are simply passed
+     back when a call is executed.</para>
+
+     <para>Fusion CALLs are synchronous or, optionally, one-way only.
+     If synchronous, the execute will block until the call has been completed
+     with FUSION_CALL_RETURN. If one-way, the execute will return immediately,
+     and a FUSION_CALL_RETURN should not be send.</para>
+
+     <para><function>call_id</function> is the returned unique call ID.
+     <function>handler</function> and <function>ctx</function> are opaque handles,
+     which are intended for the callback function. This will be passed
+     in every message that results from an execute.</para>
+
+<literallayout>Return values (besides 0, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOMEM</function> Out of kernel memory.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_CALL_EXECUTE</title>
+<screen>
+typedef struct {
+     int                 ret_val;       /* [out] */
+     int                 call_id;       /* [in]  */
+     int                 call_arg;      /* [in]  */
+     void               *call_ptr;      /* [in]  */
+     FusionCallExecFlags flags;         /* [in]  */
+} FusionCallExecute;
+</screen>
+
+     <para>Execute a call on an existing Fusion call primitive.
+     This will send a Fusion message to the owner/creator of the call ID.
+     This means that the receiving end has the responsability to listen to
+     this message, and to call FUSION_CALL_RETURN.</para>
+
+     <para>In <function>ret_val</function> the return value is returned.
+     <function>call_id</function> is the target call ID.
+     <function>call_arg</function> and <function>call_ptr</function> are optional
+     arguments that will be passed to the receiver inside the message.
+     <function>flags</function> is <function>FCEF_NONE</function> for
+     a synchronous or <function>FCEF_ALL</function> for an asynchronous call.</para>
+
+     <para>The Fusion message that is send consists of the following two structures,
+     send back-to-back.
+     The total message size is thus <function>sizeof(FusionReadMessage) +
+     sizeof(FusionCallMessage)</function> rounded up for 4-byte alignment.</para>
+
+<screen>
+typedef struct {
+     FusionMessageType   msg_type;
+     int                 msg_id;
+     int                 msg_size;
+     int                 msg_channel;
+} FusionReadMessage;
+typedef struct {
+    void               *handler;
+    void               *ctx;
+    int                 caller;
+    int                 call_arg;
+    void               *call_ptr;
+    unsigned int        serial;
+} FusionCallMessage;
+</screen>
+
+     <para>The first 4 elements have already been described by
+     <function>read()</function>, but notice that <function>msg_type</function> is FMT_CALL.
+     <function>handler</function> and <function>ctx</function> are the parameters
+     that were provided with FUSION_CALL_NEW. <function>caller</function> is 
+     the fusion ID of the caller. Note that Fusion internally also generates
+     calls (e.g. for reactors), in which case this is 0.
+     <function>call_arg</function> and <function>call_ptr</function> are provided
+     with FUSION_CALL_EXECUTE. <function>serial</function> is the call serial
+     which is to be used for FUSION_CALL_RETURN.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOMEM</function> Out of kernel memory.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_CALL_RETURN</title>
+<screen>
+typedef struct {
+     int                 call_id;
+     int                 val;
+     unsigned int        serial;        
+} FusionCallReturn;
+</screen>
+
+     <para>Return the return value to the caller. This will unblock the caller.
+     Only to be called on a synchronous call.</para>
+
+     <para><function>call_id</function> is the call ID you want to return.
+     <function>val</function> is the return value.
+     <function>serial</function>, as received from FUSION_CALL_EXECUTE.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EOPNOTSUPP</function> Trying to return a one-way call.
+    <function>EIDRM</function> Caller was already unblocked due to a signal. Return value lost.
+    <function>ENOMSG</function> No waiter found. Can point to halted waiting fusionee.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_CALL_DESTROY</title>
+
+     <para>Destroys this call primitive.
+     This will destroy the call, and unlock any pending execute.
+     This can be done only by the same fusionee that created the call primitive.
+     The passed <function>int</function> is the call ID.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> We didn't create the call.
+</literallayout>
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: REF primitive</title>
+
+     <para>Describes the reference primitive related ioctls. A reference
+     simply implements reference counting. Each instance has
+     a global count and for each fusionee a local count. These counts can
+     be adjusted, tested and watched.
+     Counts must be 0 or higher.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd,  FUSION_REF_NEW         , int )
+     ioctl( fd,  FUSION_REF_UP          , int )
+     ioctl( fd,  FUSION_REF_UP_GLOBAL   , int )
+     ioctl( fd,  FUSION_REF_DOWN        , int )
+     ioctl( fd,  FUSION_REF_DOWN_GLOBAL , int )
+     ioctl( fd,  FUSION_REF_ZERO_LOCK   , int )
+     ioctl( fd,  FUSION_REF_ZERO_TRYLOCK, int )
+     ioctl( fd,  FUSION_REF_UNLOCK      , int )
+     ioctl( fd,  FUSION_REF_STAT        , int )
+     ioctl( fd,  FUSION_REF_WATCH       , FusionRefWatch )
+     ioctl( fd,  FUSION_REF_INHERIT     , FusionRefInherit )
+     ioctl( fd,  FUSION_REF_DESTROY     , int )
+</screen>
+</simplesect>
+
+
+<simplesect>
+<title>FUSION_REF_NEW</title>
+
+     <para>Create a new reference primitive. The <function>int</function>
+     contains the created reference ID.
+     The reference's global and local counts are set to 0.
+     Return values are <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_UP_GLOBAL and FUSION_REF_DOWN_GLOBAL</title>
+
+     <para>Increase or decrease the global count of this reference by 1.
+     The <function>int</function> contains the reference ID.
+     The reference shall not be in a locked state.
+     </para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EAGAIN</function> Reference is locked.
+    <function>EIO</function> Count is 0, cannot be decreased further.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_UP and FUSION_REF_DOWN</title>
+
+     <para>Increase or decrease the local count of this reference by 1.
+     A reference has, besides a single global count, for every fusionee
+     a local count, which is only visible that fusionee.
+     The <function>int</function> contains the reference ID.
+     The reference shall not be in a locked state.
+     </para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOMEM</function> No kernel memory left.
+    <function>EAGAIN</function> Reference is locked.
+    <function>EIO</function> Count is 0, cannot be decreased further.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_ZERO_LOCK and FUSION_REF_ZERO_TRYLOCK</title>
+
+     <para>Lock a reference to zero. The total count (the global count and
+     all local counts) must be zero. On success, the counts are not modifiable
+     anymore. If the total count is not zero yet, LOCK will wait indefinately,
+     while TRYLOCK will return an error code.
+     The <function>int</function> contains the reference ID.
+     The reference shall not be in a locked or, for LOCK, watched state.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> You already locked this reference.
+    <function>EAGAIN</function> Reference is locked by another fusionee.
+    <function>EACCES</function> LOCK is tried, but the reference is being watched.
+    <function>ETOOMANYREFS</function> TRYLOCK is tried, but the total count is not 0.
+    <function>EIDRM</function> Internal error.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_UNLOCK</title>
+
+     <para>Unlock the reference.
+     The <function>int</function> contains the reference ID.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> Not the lock owner, or not locked.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_STAT</title>
+
+     <para>Return the total count of this reference (the global count and
+     all local counts).
+     The <function>int</function> contains the reference ID.
+     Return values are <function>EINVAL</function>, <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_WATCH</title>
+
+<screen>
+typedef struct {
+     int                 id;
+     int                 call_id;
+     int                 call_arg;
+} FusionRefWatch;
+</screen>
+
+     <para>Watch a reference. If the total count drops to 0, a call will
+     be executed.</para>
+     
+     <para><function>id</function> contains the reference ID.
+     <function>call_id</function> is the call ID that will be executed.
+     <function>call_arg</function> is an optional parameter that will be part
+     of the call message. The call message is scheduled below:</para>
+
+<screen>
+typedef struct {
+     FusionMessageType   msg_type;
+     int                 msg_id;
+     int                 msg_size;
+     int                 msg_channel;
+} FusionReadMessage;
+typedef struct {
+    void               *handler;
+    void               *ctx;
+    int                 caller;
+    int                 call_arg;
+    void               *call_ptr;
+    unsigned int        serial;
+} FusionCallMessage;
+</screen>
+
+     <para><function>caller</function> is 0.
+     <function>call_arg</function> is provided by this ioctl.
+     <function>call_ptr</function> is set to NULL.
+     <function>serial</function> is not used.
+     The call is send asynchronously, so do not send a FUSION_CALL_RETURN.
+     For an explanation of the other fields inside the call message,
+     check FUSION_CALL_EXECUTE.</para>
+
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EACCES</function> Current process ID is not the creating process ID.
+    <function>EIO</function> The total count is already 0. No watch installed.
+    <function>EBUSY</function> Reference is already being watched.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_INHERIT</title>
+<screen>
+typedef struct {
+     int                 id;
+     int                 from;
+} FusionRefInherit;
+</screen>
+
+     <para>Inherit the local count from another reference.
+     <function>id</function> is the own ID, <function>from</function>
+     is the ID to inherit from.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EBUSY</function> Reference is already inherited.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REF_UNLOCK</title>
+
+     <para>Unlock the reference.
+     The <function>int</function> contains the reference ID.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> Not the lock owner, or not locked.
+</literallayout>
+
+</simplesect>
+
+
+
+</sect1>
+
+<sect1><title>IOCTL: SKIRMISH primitive</title>
+
+     <para>Describes the skirmish primitive related ioctls.
+     A skirmish can be seen as a counting lock.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_SKIRMISH_NEW        , int )
+     ioctl( fd, FUSION_SKIRMISH_PREVAIL    , int )
+     ioctl( fd, FUSION_SKIRMISH_SWOOP      , int )
+     ioctl( fd, FUSION_SKIRMISH_DISMISS    , int )
+     ioctl( fd, FUSION_SKIRMISH_DESTROY    , int )
+     ioctl( fd, FUSION_SKIRMISH_LOCK_COUNT , int[2] )
+     ioctl( fd, FUSION_SKIRMISH_WAIT       , FusionSkirmishWait )
+     ioctl( fd, FUSION_SKIRMISH_NOTIFY     , int )
+</screen>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_NEW</title>
+
+     <para>Create a new skirmish primitive. The <function>int</function>
+     contains the created skirmish ID. Return values are
+     <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_PREVAIL and FUSION_SKIRMISH_SWOOP</title>
+
+     <para>Tries to take the skirmish.
+     The <function>int</function> contains the reference ID.
+     If the skirmish is already taken, PREVAIL will wait forever until
+     it is dismissed, SWOOP will always return directly with an error.
+     If the call is successful, the skirmish count will be
+     increased by 1.</para>
+     
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EAGAIN</function> returned by SWOOP: reference is locked by another fusionee.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_DISMISS</title>
+
+     <para>Releases the skirmish.
+     The <function>int</function> contains the reference ID.
+     PREVAIL will wait forever, SWOOP will always return directly.
+     If the call is successful, the skirmish count will be
+     decreased by 1. If the count is 0, a skirmish notification is send.</para>
+     
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> The skirmish is not taken, or not taken by this fusionee.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_DESTROY</title>
+
+     <para>Destroys a skirmish primitive. The <function>int</function>
+     contains the skirmish ID. Return values are
+     <function>EINVAL</function>, <function>EFAULT</function>
+     or <function>EINTR</function> for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_LOCK_COUNT</title>
+
+     <para>Returns the skirmish count. <function>int[0]</function>
+     contains the skirmish ID. On output, <function>int[1]</function>
+     contains the skirmish count for this fusionee only. This means
+     that if you were not the fusionee that did PREVAIL or SWOOP,
+     the count will be 0. Return values are
+     <function>EINVAL</function>, <function>EFAULT</function>
+     or <function>EINTR</function> for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_WAIT</title>
+<screen>
+typedef struct {
+     int                 id;
+     unsigned int        timeout;
+     unsigned int        lock_count;
+     unsigned int        notify_count;
+} FusionSkirmishWait;
+</screen>
+
+     <para>Wait for somebody else to take, and subsequently release,
+     the skirmish. You must first take the skirmish yourself with either
+     PREVAIL or SWOOP. Then you can call WAIT. This will release the skimish,
+     and wait for another fusionee to take it, NOTIFY, and release it. Then
+     the skirmish will be taken again. It is possible that the skirmish is
+     taken and released more than once during one WAIT.</para>
+     
+     <para><function>id</function> contains the skirmish ID.
+     <function>timeout</function> is a timeout in milliseconds. 0 means forever.
+     <function>lock_count</function> and <function>notify_count</function> are
+     required for interrupt handling. You must initialize both with 0.
+     When the WAIT returns with <function>EINTR</function>, you must not touch
+     these fields, and simply call the ioctl again.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> You did not take this skirmish.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SKIRMISH_NOTIFY</title>
+
+     <para>Notify waiting skirmishes. As soon as you release the skirmish,
+     any fusionees having performed a WAIT will be allowed to continue.
+     The int <function>id</function> is the skirmish ID. Return values are
+     <function>EINVAL</function>, <function>EFAULT</function> or
+     <function>EINTR</function> for failure, 0 for success.</para>
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: PROPERTY primitive</title>
+
+     <para>Describes the property primitive related ioctls.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_PROPERTY_NEW      , int)
+     ioctl( fd, FUSION_PROPERTY_LEASE    , int)
+     ioctl( fd, FUSION_PROPERTY_PURCHASE , int)
+     ioctl( fd, FUSION_PROPERTY_CEDE     , int)
+     ioctl( fd, FUSION_PROPERTY_HOLDUP   , int)
+     ioctl( fd, FUSION_PROPERTY_DESTROY  , int)
+</screen>
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: REACTOR primitive</title>
+
+     <para>Describes the reactor primitive related ioctls.
+     A reactor is used to distribute events. If a fusionee uses
+     the DISPATCH ioctl, all attached fusionees will receive a
+     call message. It is possible to fine-grain the target audience
+     by using channels: each reactor supports 1024 channels,
+     and each channel can be independantly attached, detached, or
+     dispatched to.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_REACTOR_NEW                   , int)
+     ioctl( fd, FUSION_REACTOR_ATTACH                , FusionReactorAttach)
+     ioctl( fd, FUSION_REACTOR_DETACH                , FusionReactorDetach)
+     ioctl( fd, FUSION_REACTOR_DISPATCH              , FusionReactorDispatch)
+     ioctl( fd, FUSION_REACTOR_DESTROY               , int)
+     ioctl( fd, FUSION_REACTOR_SET_DISPATCH_CALLBACK , FusionReactorSetCallback)
+</screen>
+</simplesect>
+
+<simplesect>
+<title>FUSION_REACTOR_NEW</title>
+
+     <para>Create a new reactor primitive. The <function>int</function>
+     contains the created reactor ID.
+     Return values are <function>EFAULT</function> or <function>EINTR</function>
+     for failure, 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_REACTOR_ATTACH and FUSION_REACTOR_DETACH</title>
+
+<screen>
+typedef struct {
+     int                 reactor_id;
+     int                 channel;
+} FusionReactorAttach;
+
+typedef struct {
+     int                 reactor_id;
+     int                 channel;
+} FusionReactorDetach;
+</screen>
+
+     <para>Attach or detach a fusionee to a reactor.
+     Both are counting, so the amount of attaching must match the amount
+     of detaching to be completely detached.
+     <function>reactor_id</function> is the reactor ID,
+     <function>channel</function> is the selected reactor channel number.
+     This number can range from 0 to 1023, inclusive.
+     Note that the current implementation uses less memory if you
+     avoid high channel numbers.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> for DETACH: not attached.
+    <function>ENOMEM</function> No more kernel memory.
+    <function>EIDRM</function> Reactor destruction is pending.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REACTOR_DISPATCH</title>
+
+<screen>
+typedef struct {
+     int                 reactor_id;
+     int                 channel;
+     int                 self;
+     int                 msg_size;
+     const void         *msg_data;
+} FusionReactorDispatch;
+</screen>
+
+     <para>Dispatch a message in a reactor. All attached fusionees will 
+     receive this message, and optionally the sender as well, if attached.
+     <function>reactor_id</function> is the reactor ID.
+     <function>channel</function> is channel number.
+     <function>self</function> (boolean) 0 means the sending fusionee will
+     not receive the message. <function>msg_size</function> is the size of
+     the message data. <function>msg_data</function> is a pointer to the message
+     data. The message data will be copied for each attached fusionee.
+     Note that in the current implementation, when copying the message data,
+     an out-of-kernel-memory error will be discarded (not reported).
+     The message header has the following layout (check
+     <function>read()</function> for more info):</para>
+
+<screen>
+typedef struct {
+     FusionMessageType   msg_type;
+     int                 msg_id;
+     int                 msg_size;
+     int                 msg_channel;
+} FusionReadMessage;
+</screen>
+
+     <para><function>msg_type</function> is FMT_REACTOR.
+     <function>msg_id</function> is the reactor ID.
+     <function>msg_size</function> is the total message size, inclusive payload.
+     <function>msg_channel</function> is the channel number.
+     The message data itself will be send directly after this header.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOMEM</function> Out of kernel memory.
+    <function>EIDRM</function> Reactor is pending destruction.
+    <function>EMSGSIZE</function> Message size exceeds 65536 bytes.
+</literallayout>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REACTOR_DESTROY</title>
+
+     <para>Destroys the reactor. If there are still fusionees
+     attached, the destruction will be delayed until the last fusionee
+     detaches itself. The provided <function>int</function> is
+     the reactor ID. Return values are <function>EINVAL</function>, <function>EFAULT</function>
+     or <function>EINTR</function> for failure, 0 for success.</para>
+
+</simplesect>
+
+<simplesect>
+<title>FUSION_REACTOR_SET_DISPATCH_CALLBACK</title>
+
+<screen>
+typedef struct {
+     int                 reactor_id;
+     int                 call_id;
+     int                *call_ptr;
+} FusionReactorSetCallback;
+</screen>
+
+     <para>Install a callback handler on dispatch.
+     This will execute a single call after a dispatch has been performed
+     on this reactor and all attached fusionees have read the messages
+     (via <function>read()</function>). The call will always execute,
+     also when nobody has attached to the reactor's channel of the dispatch.
+     <function>reactor_id</function> is the reactor ID to watch.
+     <function>call_id</function> is the call ID to send the call to.
+     <function>call_ptr</function> is an optional parameter that will be passed
+     back in the call. The call execute will result in the following message:
+     </para>
+
+<screen>
+typedef struct {
+     FusionMessageType   msg_type;
+     int                 msg_id;
+     int                 msg_size;
+     int                 msg_channel;
+} FusionReadMessage;
+typedef struct {
+    void               *handler;
+    void               *ctx;
+    int                 caller;
+    int                 call_arg;
+    void               *call_ptr;
+    unsigned int        serial;
+} FusionCallMessage;
+</screen>
+
+     <para>The first 4 elements have already been described by
+     <function>read()</function>, but notice that <function>msg_type</function> is FMT_CALL.
+     <function>handler</function> and <function>ctx</function> are the parameters
+     that were provided with FUSION_CALL_NEW. <function>caller</function> is 0.
+     <function>call_arg</function> is the reactor's channel number.
+     <function>call_ptr</function> is the <function>call_ptr</function> provided
+     above. <function>serial</function> is 0. The call is asynchronous
+     so you must not do a CALL_RETURN.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIDRM</function> Reactor is pending destruction.
+</literallayout>
+
+</simplesect>
+
+</sect1>
+
+<sect1><title>IOCTL: SHMPOOL primitive</title>
+
+     <para>Describes the shared memory pool primitive related ioctls.
+     Fusion provides the means to share memory areas, but does not implement
+     the necessary mapping. Conceptually, Fusion controls a single
+     contiguous memory area, and each request for a pool will reserve a
+     chunk from this area. In principle, the location of this area in
+     real memory is up to the application.
+     An easy implementation will be to follow the
+     address suggestions done by Fusion and perform a fixed mapping
+     (mmap with MAP_FIXED); the suggested addresses are normally located
+     in non-occupied virtual memory space.
+     This memory mapping abstraction, as well as an implementation for
+     memory allocation handling (malloc family)
+     is already included in the user-space Fusion library.</para>
+
+<simplesect>
+<title>synopsis</title>
+<screen>
+     ioctl( fd, FUSION_SHMPOOL_NEW      , FusionSHMPoolNew)
+     ioctl( fd, FUSION_SHMPOOL_ATTACH   , FusionSHMPoolAttach)
+     ioctl( fd, FUSION_SHMPOOL_DETACH   , int)
+     ioctl( fd, FUSION_SHMPOOL_DISPATCH , FusionSHMPoolDispatch)
+     ioctl( fd, FUSION_SHMPOOL_DESTROY  , int)
+</screen>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SHMPOOL_NEW</title>
+<screen>
+typedef struct {
+     int                 max_size;      /* [in]  */
+     int                 pool_id;       /* [out] */
+     void               *addr_base;     /* [out] */
+} FusionSHMPoolNew;
+</screen>
+
+     <para>Create a new shared memory pool primitive. This will reserve an
+     area of memory, and link it to the returned pool ID. After creating the pool,
+     you still have to ATTACH to it, and possibly DISPATCH it, since the
+     size after creation is always 0.
+     The client is responsible for making sure that the returned memory address
+     and will be mapped in the application space.</para>
+
+     <para><function>max_size</function> is the maximum pool size. The current
+     size after creation is always 0.
+     <function>pool_id</function> is the pool ID of the created pool.
+     <function>addr_base</function> is the suggested memory location of the
+     pool. This is a page aligned address.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOSPC</function> Out of virtual memory.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SHMPOOL_ATTACH</title>
+<screen>
+typedef struct {
+     int                 pool_id;       /* [in]  */
+     void               *addr_base;     /* [out] */
+     int                 size;          /* [out] */
+} FusionSHMPoolAttach;
+</screen>
+
+     <para>Attach this fusionee to a shared memory pool. This will increase
+     a counting reference of this fusionee to this pool. You need this
+     to inform yourself about size changes, see DISPATCH.
+     <function>pool_id</function> is the pool ID.
+     <function>addr_base</function> is the suggested memory location of the pool.
+     <function>size</function> is the current size.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>ENOMEM</function> Out of kernel memory.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SHMPOOL_DETACH</title>
+
+     <para>Detach the calling fusionee from the pool. Since it is a counting
+     reference, you need to call DISPATCH an equal amount of times as
+     ATTACH. The provided <function>int</function> is the pool ID.</para>
+
+<literallayout>Return values (besides 0, <function>EINVAL</function>, <function>EFAULT</function> and <function>EINTR</function>):
+    <function>EIO</function> You did not attach to this pool.
+</literallayout>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SHMPOOL_DISPATCH</title>
+<screen>
+typedef struct {
+     int                 pool_id;
+     int                 size;
+} FusionSHMPoolDispatch;
+</screen>
+
+     <para>Change the size of the shared memory pool.
+     <function>pool_id</function> is the pool ID.
+     <function>size</function> is the new requested size.
+     DISPATCH will send a message to all attached fusionees
+     (except the DISPATCH caller) to inform them about the new size.
+     The message has te following layout (check
+     <function>read()</function> for more info):</para>
+
+<screen>
+typedef struct {
+     FusionMessageType        msg_type;
+     int                      msg_id;
+     int                      msg_size;
+     int                      msg_channel;
+} FusionReadMessage;
+typedef struct {
+     FusionSHMPoolMessageType type;
+     int                      size;
+} FusionSHMPoolMessage;
+</screen>
+
+     <para><function>msg_type</function> is FMT_SHMPOOL.
+     <function>msg_id</function> is the pool ID.
+     <function>msg_size</function> is the size of the message.
+     <function>msg_channel</function> is 0.
+     <function>type</function> is FSMT_REMAP.
+     <function>size</function> is the new size of the pool.
+     The message is send asynchronously and must not get a reply.</para>
+
+     <para>Return values are <function>EINVAL</function>,
+     <function>EFAULT</function> and <function>EINTR</function>) for failure
+     and 0 for success.</para>
+</simplesect>
+
+<simplesect>
+<title>FUSION_SHMPOOL_DESTROY</title>
+
+     <para>Destroy the pool. The provided <function>int</function> is the
+     pool ID. Return values are <function>EINVAL</function>,
+     <function>EFAULT</function> and <function>EINTR</function>) for failure,
+     and 0 for success.</para>
+
+</simplesect>
+
+</sect1>
+
+</chapter>
+
+<chapter id="statistics">
+  <title>Information from /proc/fusion</title>
+
+     <para>If your application has opened a Fusion node, Fusion will
+     populate the /proc tree with information files. If you opened
+     <filename>/dev/fusion0</filename>,
+     the corresponding files can be found in <filename>/proc/fusion/0/</filename>.
+     These files will be removed when the last file handler to
+     <filename>/dev/fusion0</filename> is closed.</para>
+
+     <para>You can simply cat all these files, it will always contain the current
+     state of Fusion. This can be very practical to see for instance the
+     reason of a process being blocked in a Fusion primitive. The files
+     follow a simple convention: each info element occupies a single line,
+     so e.g. <filename>cat reactors | wc -l</filename> will list the number of reactors.
+     The entries are generally listed in the order they were last accessed,
+     so last executed = shown first.</para>
+
+  <sect1 id="fusionees">
+     <title>fusionees</title>
+
+     <para>The file <filename>fusionees</filename> shows information about
+     all the connected processes. Each process with an opened filehandle
+     is called a <emphasis>fusionee</emphasis>. The first fusionee is sometimes
+     called the Master. This abstraction is carried by the Fusion library,
+     but is not further important in the kernel context.
+     The following lists the output:</para>
+
+<screen>
+     /proc/fusion/0$ cat fusionees 
+     ( 8635) 0x00000001 (   0 messages waiting,      20 received,       0 sent)
+     ( 8640) 0x00000002 (   0 messages waiting,       0 received,      20 sent)
+</screen>
+
+     <para>Each line gives information about a fusionee in the following format:
+     <function>(linux process ID) Fusion ID ( messages waiting, received and send )</function>.
+     The fusionee with Fusion ID of 0x01 is also known as the Fusion Master.
+     The messages are a total of primitive messages send, such as is done
+     with calls, reactors, shared memory pools or generic fusion messages.</para>
+
+  </sect1>
+
+  <sect1 id="calls">
+     <title>calls</title>
+
+     <para>The file <filename>calls</filename> shows information about
+     all the call primitives. The following shows an example output:</para>
+
+<screen>
+     /proc/fusion/0$ cat calls
+     1.2 s  (10352) 0x00000001               (1 calls) idle
+     1.2 s  (10352) 0x00000004               (5 calls) idle
+     1.2 s  (10352) 0x00000002               (1 calls) idle
+     1.3 s  (10352) 0x00000006               (1556 calls) idle
+     -.-    (10352) 0x00000007               (0 calls) idle
+     -.-    (10352) 0x00000005               (0 calls) idle
+     -.-    (10352) 0x00000003               (0 calls) idle
+</screen>
+
+     <para>Each line gives information about a call in the following format:
+     <function>last access time (linux process ID) Call ID
+     ( calls performed so far ) call state</function>.
+     The Call ID is a sequence number to identify each call, counting from 1.
+     The call count is increased when the call has been received by the 
+     target fusionee. The state can be <function>idle</function> or
+     <function>executing [ Fusionee ID ]</function>.
+     It is in the executing state when the call is waiting for
+     the return value from the mentioned (target) fusionee.</para>
+
+  </sect1>
+  
+  <sect1 id="properties">
+     <title>properties</title>
+
+     <para>The file <filename>properties</filename> shows information about
+     the instantiated properties. The following shows an example output:</para>
+
+<screen>
+     /proc/fusion/0$ cat properties 
+     -.-    ( 8635) 0x00000001             
+</screen>
+
+     <para>Each line gives information about a property in the following format:
+     <function>last access time (linux process ID) Property ID state</function>.
+     Last access time is -.- if the primitive has not yet been accessed.
+     The Property ID is a sequence number to identify each call, counting from 1.
+     The state is empty if this property is still available, otherwise it is:
+     <function>leased/purchased by Fusionee ID ( lock PID ) lock count</function>.
+     For further information check out the properties API.</para>
+
+  </sect1>
+
+  <sect1 id="reactors">
+     <title>reactors</title>
+
+     <para>The file <filename>reactors</filename> shows information about
+     the active reactors in the system. The following shows an example output:</para>
+
+<screen>
+     /proc/fusion/0$ cat reactors 
+     1.1 s  ( 8635) 0x00000002  X11 Input                11x dispatch, 0 nodes
+     0.5 h  ( 8635) 0x00000005  Surface Pool              2x dispatch, 1 nodes
+     0.5 h  ( 8635) 0x00000004  Layer Region Pool         0x dispatch, 0 nodes
+     0.5 h  ( 8635) 0x00000003  Layer Context Pool        0x dispatch, 0 nodes
+     0.5 h  ( 8635) 0x00000001  Virtual Input             0x dispatch, 0 nodes
+</screen>
+
+     <para>...</para>
+
+  </sect1>
+
+  <sect1 id="refs">
+     <title>refs</title>
+
+     <para>The file <filename>refs</filename> shows information about
+     the reference primitives. The following shows an example output:</para>
+
+<screen>
+     /proc/fusion/0$ cat refs
+     2.6 s  ( 8635) 0x00000003  Layer Context Pool         1  4
+     2.6 s  ( 8635) 0x00000004  Layer Region Pool          1  3
+     0.5 h  ( 8635) 0x00000005  Surface 800x600 RGB16      1  3
+     0.5 h  ( 8640) 0x00000006  SaWMan Process             0  1
+     0.5 h  ( 8635) 0x00000001  Arena 'DirectFB/Core'      0  2
+     0.5 h  ( 8635) 0x00000002  SaWMan Process             0  1
+</screen>
+
+     <para>...</para>
+
+  </sect1>
+
+  <sect1 id="shmpools">
+     <title>shmpools</title>
+
+     <para>The file <filename>shmpools</filename> shows information about
+     the Shared Memory Pools currently running in this world.
+     The following shows an example output:</para>
+
+<screen>
+/proc/fusion/0$ cat shmpools 
+0.5 h ( 8635) 0x00000005  SaWMan Pool         0x00005230055c0000 [0x103000] - 0x0, 0x dispatch, 2 nodes
+0.5 h ( 8635) 0x00000004  Surface Memory Pool 0x0000523001550000 [0x4061000] - 0x0, 0x dispatch, 2 nodes
+0.5 h ( 8635) 0x00000003  DirectFB Data Pool  0x0000523000530000 [0x1019000] - 0x0, 0x dispatch, 2 nodes
+0.5 h ( 8635) 0x00000002  DirectFB Main Pool  0x0000523000120000 [0x407000] - 0x0, 0x dispatch, 2 nodes
+0.5 h ( 8635) 0x00000001  Fusion Main Pool    0x0000523000010000 [0x103000] - 0x0, 0x dispatch, 2 nodes
+</screen>
+     <para>...</para>
+
+  </sect1>
+
+  <sect1 id="skirmishs">
+     <title>skirmishs</title>
+
+     <para>The file <filename>skirmishs</filename> shows information about
+     the Skirmish primitives currently running in this World.
+     The following shows part of an example output:</para>
+
+<screen>
+     /proc/fusion/0$ cat skirmishs 
+     726  ms  ( 8635) 0x0000001d  Layer Region
+     726  ms  ( 8635) 0x0000001e  Surface 800x600 RGB16
+       3.1 s  ( 8635) 0x00000016  X11 Input
+       3.1 s  ( 8635) 0x0000001c  Layer Context
+       3.1 s  ( 8635) 0x0000001a  SaWMan
+       3.7 s  ( 8635) 0x00000018  Display Layer 0
+       0.5 h  ( 8635) 0x00000010  X11 Shm Images
+</screen>
+     <para>...</para>
+
+  </sect1>
+
+  <sect1 id="stat">
+     <title>stat</title>
+
+     <para>The file <filename>stat</filename> shows a summary of what
+     is happening in this World. Each field shows a total count of events since
+     creation. It also shows the currently selected
+     API version of this World. The following is an example output:</para>
+
+<screen>
+/proc/fusion/0$ cat stat
+Fusion API:8.0
+lease/purchase  cede  attach  detach  dispatch  ref up  ref down  prevail/swoop dismiss
+         0         0       1       0        22     149       132       17759      17759
+</screen>
+  </sect1>
+
+</chapter>
+
+</book>

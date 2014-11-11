@@ -1,0 +1,189 @@
+#!/bin/bash
+
+ORI_PWD=`pwd`
+CPU_TYPE=$1
+MEMORY_MAP=$2
+LINUX_KERNEL_DIR=$3
+KERNEL_TYPE=$4
+
+if [ $# != 3 -a $# != 4 ]; then
+	echo "$0 <CPU_TYPE> <MEMORY_MAP> <LINUX_KERNEL_DIR> [android|mk1|mk2|mk2hualu|mk3dma]"
+	echo "Example: $0 C 96_352_64 . [android]"
+	echo "Example: $0 B 96_352_64 . [android]"
+	echo "Example: $0 C 208_208_96 Linux/linux_kernel/linux-2.6.27.12 [android]"
+	echo "Example: $0 C 160_288_64 . [android]"
+	echo "Example: $0 C 138_288_86 . [android]"
+	echo "Example: $0 C 44_200_12 . [android]"
+	echo "Example: $0 C 88_68_356 . [android]"
+	echo "Example: $0 C 138_68_306 . [android]"
+	echo "Example: $0 C 248_68_196 . [android]"
+	echo "Example: $0 C 56_60_140 . [android]"
+	exit 1
+fi
+
+cd $LINUX_KERNEL_DIR
+LINUX_KERNEL_ABS_DIR=`pwd`
+cp config-2.6.27.12.asic.c0 .config
+
+if [ "$MEMORY_MAP" == 208_208_96 ]; then
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x0d000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x0d008000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x0d000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x1a000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x06000000' .config
+elif [ "$MEMORY_MAP" == 96_352_64 ]; then
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x16000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x16008000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x06000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x1c000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x04000000' .config
+elif [ "$MEMORY_MAP" == 160_288_64 ]; then
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x12000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x12008000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x0A000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x1C000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x04000000' .config
+elif [ "$MEMORY_MAP" == 138_288_86 ]; then
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x12000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x12008000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x08a00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x1aa00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x05600000' .config
+elif [ "$MEMORY_MAP" == 44_200_12 ]; then
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x0C800000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x0C808000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x02C00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x0F400000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x00C00000' .config
+elif [ "$MEMORY_MAP" == 88_68_356 ]; then
+	# Linux BDP with 3D
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x04400000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x04408000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x05800000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x09C00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x16400000' .config
+elif [ "$MEMORY_MAP" == 138_68_306 ]; then
+	# Android BDP with partial 3D
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x04400000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x04408000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x08A00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x0CE00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x13200000' .config
+elif [ "$MEMORY_MAP" == 248_68_196 ]; then
+	# Android DMP with full HD
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x04400000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x04408000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x0F800000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x13C00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x0C400000' .config
+elif [ "$MEMORY_MAP" == 56_60_140 ]; then
+	# Linux DMP
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START=0x03C00000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_START_PLUS0x8000=0x03C08000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_CPU0MEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_CPU0MEM_SIZE=0x03800000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_START[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_START=0x07400000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_VIRTSTART[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_VIRTSTART=0xD8000000' .config
+	sed -i '/^[ \t]*CONFIG_MV88DE3010_SHMMEM_SIZE[ \t]*=/c\CONFIG_MV88DE3010_SHMMEM_SIZE=0x08C00000' .config
+else
+	echo "memory partition is not supported(default setting is 96_352_64)"
+	cd $PARENT_PWD
+	exit 1
+fi
+
+# C or B Berlin chip
+if [ "$CPU_TYPE" == C ]; then
+	sed -i '/CONFIG_MV88DE3010_BERLIN_C0/d' .config
+	echo "CONFIG_MV88DE3010_BERLIN_C0=y" >> .config
+elif [ "$CPU_TYPE" == B ]; then
+	sed -i '/CONFIG_MV88DE3010_BERLIN_C0/d' .config
+	echo "# CONFIG_MV88DE3010_BERLIN_C0 is not set" >> .config
+else
+	echo "CPU type is not supported(default setting is C)"
+	cd $PARENT_PWD
+	exit 1
+fi
+
+# Specifc options for Android
+if [ "$KERNEL_TYPE" == android -o "$KERNEL_TYPE" == Android ]; then
+	sed -i '/CONFIG_SYSFS_DEPRECATED/d' .config
+	sed -i '/CONFIG_SYSFS_DEPRECATED_V2/d' .config
+	sed -i '/CONFIG_MV88DE3010_AVOID_ROOT_ACCESS_RDONLY/d' .config
+	sed -i '/CONFIG_MV88DE3010_DIRECTFB_FUSION/d' .config
+	sed -i '/# CONFIG_ANDROID is not set/d' .config
+	sed -i '/# CONFIG_MV88DE3010_IR_MOUSE is not set/d' .config
+	sed -i '/# CONFIG_RTC_CLASS is not set/d' .config
+
+	echo "# CONFIG_SYSFS_DEPRECATED_V2 is not set" >> .config
+	echo "# CONFIG_MV88DE3010_AVOID_ROOT_ACCESS_RDONLY is not set" >> .config
+	echo "# CONFIG_MV88DE3010_DIRECTFB_FUSION is not set" >> .config
+	echo "CONFIG_ANDROID=y" >> .config
+	echo "CONFIG_ANDROID_BINDER_IPC=y" >> .config
+	echo "CONFIG_ANDROID_LOGGER=y" >> .config
+	echo "CONFIG_LOW_MEMORY_KILLER=y" >> .config
+	echo "# CONFIG_ANDROID_RAM_CONSOLE is not set" >> .config
+	echo "CONFIG_MV88DE3010_IR_MOUSE=y" >> .config
+	echo -e "CONFIG_RTC_CLASS=y
+CONFIG_RTC_INTF_ALARM=y
+# CONFIG_RTC_HCTOSYS is not set
+# CONFIG_RTC_DEBUG is not set
+# CONFIG_RTC_INTF_SYSFS is not set
+# CONFIG_RTC_INTF_PROC is not set
+# CONFIG_RTC_INTF_DEV is not set
+# CONFIG_RTC_DRV_TEST is not set
+# CONFIG_RTC_DRV_CMOS is not set
+# CONFIG_RTC_DRV_DS1511 is not set
+# CONFIG_RTC_DRV_DS1553 is not set
+# CONFIG_RTC_DRV_DS1742 is not set
+# CONFIG_RTC_DRV_STK17TA8 is not set
+# CONFIG_RTC_DRV_M48T86 is not set
+# CONFIG_RTC_DRV_M48T59 is not set
+# CONFIG_RTC_DRV_V3020 is not set" >> .config
+elif [ "$KERNEL_TYPE" == mk3dma ]; then
+	sed -i '/CONFIG_MV88DE3010_PLT_DISABLE2SATA/d' .config
+	sed -i '/CONFIG_MV88DE3010_PCIE/d' .config
+
+	#disable 2nd sata and pcie	
+	echo "# CONFIG_MV88DE3010_PCIE is not set" >> .config
+	echo "CONFIG_MV88DE3010_PLT_DISABLE2SATA=y" >> .config
+fi
+
+# Create GaloisSoftware link
+rm -rf arch/arm/mach-mv88de3010/GaloisSoftware
+ln -s $LINUX_KERNEL_ABS_DIR/../MV88DE3010_lowlevel_code/GaloisSoftware \
+	  arch/arm/mach-mv88de3010/GaloisSoftware || {
+	  		echo "can't link MV88DE3010_lowlevel_code"; exit 1;
+  		}
+
+# build initramfs
+cd $LINUX_KERNEL_ABS_DIR/usr/klibc-1.5.15
+rm -rf ./linux ./GaloisSoftware
+ln -sf $LINUX_KERNEL_ABS_DIR linux && \
+ln -sf $LINUX_KERNEL_ABS_DIR/../MV88DE3010_lowlevel_code/GaloisSoftware ./GaloisSoftware && \
+cp -f defconfig .config && make && \
+cp -f usr/kinit/kinit ../kinit/init && \
+cp -f usr/gzip/gzip ../kinit/bin/ && \
+cp -f usr/utils/static/cpio ../kinit/bin || {
+	echo "fail to generate initramfs"; exit 1;
+}
+cd - > /dev/null
+
+# Build image
+make uImage -j4 && cp arch/arm/boot/uImage BERLIN_FILES/uImage \
+	&& cp arch/arm/boot/Image BERLIN_FILES/linux.bin \
+	&& cp arch/arm/boot/Image BERLIN_FILES/Image || {
+			echo "can't generate uImage"; exit 1;
+		}
+
+make modules && make INSTALL_MOD_PATH=BERLIN_FILES modules_install || {
+		echo "can't generate modules"; exit 1;
+	}
+
+cd $ORI_PWD

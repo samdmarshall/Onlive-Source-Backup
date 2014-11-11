@@ -1,0 +1,1920 @@
+commit 383d2e6325ab9f00259f54a84c50f0956c7bee3d
+Author: Niels Roest <niels@directfb.org>
+Date:   Tue Mar 31 12:22:39 2009 +0200
+
+    [shm] 32-bit changes; changed address from ulong to pointer
+
+commit 83b2354860febdcb470267045faebbf1c4b2cdb5
+Author: Niels Roest <niels@directfb.org>
+Date:   Thu Mar 12 20:53:08 2009 +0100
+
+    [release] linux-fusion 8.1.0
+    
+    hybrid fusion: support for API 3.x, 4.x and 8.x simultaneously.
+    Primarily, FusionEnter now accepts more inputs.
+    FUSION_API_MAJOR/MINOR is now fixed on API 3.3,
+    so user space apps that require 4.x or 8.x should specify the
+    required version instead of using the FUSION_API_... defines.
+    /proc filesystem: improve safety by using seq_file instead of sprintf.
+    formatting: now uses Linux kernel formatting rules.
+    documentation: add API/ioctl interface docs.
+
+commit 6bbcaec59842c010034e6931a4c7f0e584079168
+Author: Niels Roest <niels@directfb.org>
+Date:   Thu Mar 12 20:42:28 2009 +0100
+
+    [doc] Add API doc fusion.pdf. Rename fusion.texi to libfusion.texi.
+
+commit 1261554d83945fc69c8e2701d3da35563f082e63
+Author: Niels Roest <niels@directfb.org>
+Date:   Thu Mar 12 20:00:44 2009 +0100
+
+    [api] upgrade provided API to 8.1.0
+
+commit 85770dfb2368d4450e05348d4e6a3e011c47c75f
+Author: Niels Roest <niels@directfb.org>
+Date:   Mon Mar 9 14:59:33 2009 +0100
+
+    [API] call_return: check serial only for API >= 4.0
+    (and: remove /proc/fusion/0/call duplicates)
+
+commit d4e69697d57beea233267db7f9976e34039c1acc
+Author: Niels Roest <niels@directfb.org>
+Date:   Tue Mar 3 19:58:19 2009 +0100
+
+    [32/64bit] make macros less arch-dependent
+
+commit b12d9159b94ec45b28857e39b011822cab2eb9f8
+Author: Niels Roest <niels@directfb.org>
+Date:   Tue Mar 3 19:03:37 2009 +0100
+
+    [formatting] Lindent to match Linux kernel style
+
+commit e1b9ae9723753c621c54ce94b2e06bab2d3d1fe5
+Author: Niels Roest <niels@directfb.org>
+Date:   Mon Mar 2 21:21:10 2009 +0100
+
+    rewrite towards mainlining
+    
+    all: use seq_file for safe /proc output
+    call: use FusionEntry to align with other fusion objects
+    call: fix for bug in DirectFB 1.0.x when using one-way calls
+
+commit 45c17fe5daa80900b0b3eafe8a1e6ab561dfe2a2
+Author: Niels Roest <niels@directfb.org>
+Date:   Fri Feb 27 16:37:35 2009 +0100
+
+    [API] preliminary support for API 3.x, 4.x and 8.x
+    
+    3.x for DirectFB 1.0
+    4.x for DirectFB 1.1
+    8.x for DirectFB 1.2 and later
+    
+    In Fusion Enter the master passes the requested APIs,
+    the slaves have to match (allowed is smaller minor).
+    
+    For 1.0 compatibility, the macros FUSION_API_MAJOR
+    and _MINOR default to API 3.3.
+
+commit 5f69dd97bc1c73935f8bd5da6ce1800c7a8e6be6
+Author: Niels Roest <niels@directfb.org>
+Date:   Fri Feb 6 15:56:32 2009 +0100
+
+    [release] linux-fusion 8.0.3
+    
+    fixes for 2.6.27 kernel
+    call: fixed possible deadlock at shutdown
+    call: extra checks for call with/without return:
+      Return EOPNOTSUP if FUSION_CALL_RETURN is attempted with a zero serial
+      Return ENOMSG if serial number has not been found
+    fusionee: Flush previous messages before waiting for new ones which only applies to the unused blocking mode
+
+commit 9ef27337f4ab671b6d863beb5f3ea493eb5332fa
+Author: Niels Roest <niels@directfb.org>
+Date:   Mon Jan 19 16:30:58 2009 +0100
+
+    [call] small change on advise of dok, fixes other cases too.
+
+commit 6ca69c003cff627c04c04012baaaa0b92628fc86
+Author: Niels Roest <niels@directfb.org>
+Date:   Tue Jan 13 18:57:02 2009 +0100
+
+    [call] fixes forever-wait in ioctl shutdown + small fix for interrupted shutdown
+
+commit 28550540dfc76601288b8ec06403a036e0e6f46e
+Merge: 4319618... db9bfae...
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Oct 18 03:14:45 2008 +0200
+
+    Merge branch 'master' of git+ssh://git.directfb.org/git/directfb/core/linux-fusion
+
+commit 43196188dcbab64e3c3adefd1feb60d48821b9c7
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Oct 18 03:11:48 2008 +0200
+
+    [call] Use zero serial number to indicate call without return. Fail upon invalid return again.
+    
+    Return EOPNOTSUP if FUSION_CALL_RETURN is attempted with a zero serial.
+    
+    Return ENOMSG if serial number has not been found.
+
+commit 33a29f995614bd68db7802c57580f876d8609ae6
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Oct 18 02:48:06 2008 +0200
+
+    [fusionee] Flush previous messages before waiting for new ones which only applies to the unused blocking mode.
+
+commit ca246664364600b422d3e5550f64240604be06d8
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Oct 18 02:47:01 2008 +0200
+
+    [fifo] Remove obsolete proto type.
+
+commit db9bfaea729d0013d0631da03badd98249bced71
+Author: Niels Roest <niels@directfb.org>
+Date:   Fri Oct 10 15:45:29 2008 +0200
+
+    [fusion] changes for 2.6.27-rc8 kernel
+
+commit 675c45e0d957518c5ae2321893cccf50c18f170e
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Mon Sep 29 12:20:22 2008 +0200
+
+    Updated ChangeLog
+
+commit 174daaf1df8a693101be64a941188c5f23e14f54
+Merge: 566a807... d61ea53...
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Mon Sep 29 12:20:06 2008 +0200
+
+    Merge branch 'master' of git+ssh://git.directfb.org/git/directfb/core/linux-fusion
+
+commit 566a8070584aefe7aa058b8d8a5cadaab1b78a32
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Mon Sep 29 12:19:47 2008 +0200
+
+    Updated ChangeLog
+
+commit d61ea53415720bd07838aaba40dffca5c5878e81
+Author: Niels Roest <niels@directfb.org>
+Date:   Thu Sep 18 10:52:53 2008 +0200
+
+    [fusion] new feature: automatically unlock transferred skirmishes
+    If you expect that a callee will lock a skirmish, call you and thereby
+    transferring that skirmish to you, you may already lock it; it will
+    be unlocked automatically when the call is due.
+
+commit 65d1b30f089509d98dd00fcc5519644da3a513c1
+Author: Niels Roest <niels@directfb.org>
+Date:   Mon Sep 15 15:22:46 2008 +0200
+
+    [fusion] made include order consistent. Was needed for new 2.6.26.5 kernel.
+
+commit fa3c697fc3d31958c27bf4dbaaa2a31b00d8b22f
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sun Sep 14 02:52:21 2008 +0200
+
+    [calls] Fixed dead lock in fusion_call_destroy() leading to unkillable process.
+    
+    There was a typo that caused the call to be unlocked instead of the list.
+    
+    Furthermore, there were two places without checking for a pending signal after
+    calling fusion_sleep_on().
+
+commit 0353c456668028cd658b5a95f8a44e1d5e89ff4e
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Wed Sep 10 18:25:15 2008 +0200
+
+    [README] Some initial cross build notes...
+
+commit 597949f214df557d3c5b77c7ba2ec7ffe90cffd7
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Wed Sep 10 18:21:59 2008 +0200
+
+    [shm] Align pool base on a 64K boundary.
+
+commit 0323ca485081e86000bba37e5ffc17b6a3d9c3de
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Wed Sep 10 18:16:30 2008 +0200
+
+    [Makefile] Allow SYSROOT variable to resolve absolute symbolic links relative to it.
+
+commit ecb399e30402798059f4378a66d22221512261cd
+Author: Denis Oliver Kropp <dok@debian.(none)>
+Date:   Wed Sep 3 00:45:43 2008 +0900
+
+    [types] Changed maximum version for bool definition to 2.6.18 to make it build on such kernels.
+
+commit f8a74066663849a94ee967efc1130d49b76ce730
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Tue Aug 12 14:50:54 2008 +0200
+
+    updated
+
+commit b26593de0f879ee57ee5bf5c5ad64fd543306c34
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Tue Aug 12 14:49:54 2008 +0200
+
+    [skirmish] Replaced bad debugging printk by new FUSION_SKIRMISH_LOG macro (no-op).
+
+commit 2889e1738d5e8b39987a40de39eac994d2c15389
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Jul 19 18:15:25 2008 +0200
+
+    [calls] Fixed FUSION_CALL_RETURN errors with destroyed calls during shutdown.
+    
+    When a FusionCall is destroyed via FUSION_CALL_DESTROY, it waits for all pending
+    execution requests to be processed (synchronous or asynchronous) and waits for
+    the results to be sent back for synchronous calls in case they get defered...
+    
+    Added fusionee_wait_processing() to wait for processing of all pending messages
+    with a certain type and ID.
+
+commit 86c1cadd7d62e4d4c759c94941a41172044187b1
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Jul 19 18:13:20 2008 +0200
+
+    [tests] Change calls test to use asynchronous (FCEF_ONEWAY) calls, more output.
+
+commit 23605c744abcccbd911ab7cf3185d2bf86c1e355
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Sat Jul 19 18:12:23 2008 +0200
+
+    [entries] Include <linux/mutex.h> instead of <linux/semaphore.h>, probably not working with all kernels...
+
+commit a7aa6226c4f2c67d093a92e09118f86efb6d7254
+Author: Denis Oliver Kropp <dok@cyto.(none)>
+Date:   Mon Jun 2 16:40:35 2008 +0200
+
+    updated ChangeLog
+
+commit 392ec5afbc51af64505321922d3283ecfa82d328
+Author: Denis Oliver Kropp <dok@shark.directfb.home>
+Date:   Sat May 31 17:01:51 2008 +0200
+
+    Fixes for 2.6.26.
+
+commit c53d14b217900928f13269ec1e11b009cc8a5913
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Wed Mar 26 11:37:10 2008 +0100
+
+    REACTOR: Fixed call to memset() in reactor_attach(). Thanks to Peter Deckmyn!
+
+commit 40f4adbcaf0bf9cb016d478a89e156a06cb04466
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Tue Feb 19 15:29:05 2008 +0100
+
+    [skirmish] Support resume of interrupted wait and regain lock after timeout.
+    
+    This is compatible with mutex/condition, except for expected errors.
+    
+    Requires user space changes.
+
+commit d57e856bad14cf2fc84eff0a62375ceba5ae5c13
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Mon Feb 18 22:36:44 2008 +0100
+
+    [Makefile] Don't override KERNEL_VERSION and other variables if they're set in the environment.
+
+commit 196b44e17fa2bb73c284284758c23675cb6c5c7d
+Author: Ville Syrjala <syrjala@sci.fi>
+Date:   Fri Feb 22 00:00:26 2008 +0200
+
+    Add a Kconfig file.
+
+commit 5c7f24e59db5709ef95c5db0c20054ee12352253
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Sat Jan 26 07:47:09 2008 +0100
+
+    ignore
+
+commit 0f3a13ced72bd467ae68de06e8d74e6926a2c7d0
+Merge: 0ed6741... a3de178...
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Sat Jan 26 05:15:51 2008 +0100
+
+    Merge branch 'master' of git+ssh://git.directfb.org/git/directfb/core/linux-fusion
+
+commit 0ed6741a2a8e1a366c813d6243248373f66c2c61
+Author: Denis Oliver Kropp <dok@shizo.directfb.home>
+Date:   Sat Jan 26 03:04:38 2008 +0100
+
+    REACTOR: Added missing memset() and kfree() in reactor_attach(). Thanks to Amit Mahajan and Niels Roest!
+    
+    Without memset() the new counters for the channels are not initialized.
+    
+    The kfree() was missing in the code that reallocated the array for more channels.
+
+commit ceabe82a1024e4cea518b10d1301a3d0fe41e96a
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Thu Oct 11 11:59:22 2007 +0200
+
+    Don't build with yield() by default, but require FUSION_SKIRMISH_YIELD to be defined.
+
+commit a3de17819d39a23199d7b1c6f606d70c0d7580db
+Author: Ville Syrjala <syrjala@sci.fi>
+Date:   Sat Dec 1 21:18:59 2007 +0200
+
+    Use current_kernel_time() instead of xtime
+    
+    xtime is no longer exported in 2.6.24 so use current_kernel_time() instead.
+
+commit a31196f97f2bc93db11b3ce435d7cfb105490ec9
+Author: Ville Syrjala <syrjala@sci.fi>
+Date:   Sat Dec 1 21:15:18 2007 +0200
+
+    Fix Makefile for 2.6.24
+    
+    2.6.24 top-level Makefile no longer accepts CPPFLAGS. KCPPFLAGS must be
+    used instead and it is combined with the normal kernel CPPFLAGS.
+
+commit 767e7e2e7c49b4e9981704254bcc813ace4f927e
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Oct 9 04:06:08 2007 +0200
+
+    Implemented lock transfer (halfway) during execution of synchronous calls.
+    
+    When process A calls process B, the locks held by A are unlocked
+    and reserved for B's dispatcher thread to lock it. Other threads
+    would block as if it's still locked.
+    
+    When B returns the call, the locks are reclaimed. A FUSION_ASSUME will
+    fail if B did not unlock properly and the lock is hauled to A again.
+
+commit 349b9c20fcfd76f842c648a45afa07050948aa56
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Oct 9 03:55:07 2007 +0200
+
+    Added fusionee_dispatcher_pid( fusion_id ) to look up the pid of the (last) thread reading from the device.
+    
+    There should always be only one thread reading, but for safety there's a FUSION_ASSUME failing if the pid changes.
+
+commit 346fe2b0d6c395adc384d938237d98beba0ef0db
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Oct 9 03:51:41 2007 +0200
+
+    Fix missing cleanup of execution entry if caller receives a signal while waiting for the execution.
+
+commit db58a75995528bb1afb049822e7a6385028eb580
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Oct 9 03:47:31 2007 +0200
+
+    Added missing do {} while (0) around FUSION_ASSERT and FUSION_ASSUME.
+
+commit 071679df51b424eed8bd9f276fb45287396e52c9
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Oct 9 00:48:43 2007 +0200
+
+    Changed version check for bool from <= 2.6.18 to < 2.6.18.
+
+commit 43a0afce0e61c8548e4045186b15b945a1f0368b
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue Aug 14 03:30:12 2007 +0200
+
+    Align each on a 4 byte boundary if multiple messages are read at once.
+
+commit 960ea01f754d7ac49fb543685e0c8ff6be2dcb71
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Mon Aug 13 20:59:07 2007 +0200
+
+    Kill all threads when killing Fusionees.
+
+commit 4eda904239946f6728694123e42b243f034e9a22
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Sun Aug 12 23:25:50 2007 +0200
+
+    Change maximum number of pre-acquisitions to remember from 32 to 256.
+
+commit 8316621e8657423fc98ef82df123a89be462b701
+Merge: 0d36d9a... 559d701...
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Sun Aug 12 16:46:46 2007 +0200
+
+    Merge branch 'master' of git+ssh://git.directfb.org/git/directfb/core/linux-fusion
+
+commit 0d36d9a8b7654597d465cc6c5ef73da116f92e6a
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Sun Aug 12 16:46:30 2007 +0200
+
+    Changed major id to 250. Dynamic majors please.
+
+commit 45746f501feb31d11d57d5bd1095782f9208deeb
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Sun Aug 12 16:45:40 2007 +0200
+
+    Show total number of dispatches in stat.
+
+commit 559d7011ce70b8f1b5a897e3da2244a4a46c8408
+Author: Denis Oliver Kropp <dok@halblang.zion.home>
+Date:   Sat Aug 11 10:50:46 2007 -0700
+
+    Build without signal blocking unless FUSION_BLOCK_SIGNALS is defined.
+    
+    Define PID_MAX_DEFAULT to PID_MAX if undefined.
+
+commit d1530c06e206d39eabd2cf3cc24bde21c1eda8c7
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Sun Jun 3 19:11:53 2007 +0200
+
+    Send proper channel number in reactor message.
+
+commit 00bda99ecce8784820404f59418401bffb33b8fe
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Sun Jun 3 16:27:14 2007 +0200
+
+    Signal blocking #2
+    
+    Only block SIGSTOP, SIGTTIN, SIGTERM and SIGINT.
+    
+    Better cleanup of killed threads.
+
+commit f636045b5cef8556b7bc256244feb624f202ef58
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Fri Jun 1 09:54:18 2007 +0200
+
+    Added optional timeout to FUSION_SKIRMISH_WAIT.
+
+commit 568e9042a78e2596304d3a2d60d06a78e8b12603
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Wed May 30 16:53:12 2007 +0200
+
+    Well, ~16k GB was a bit too much. Changed size to ~64 GB starting at 0x523000010000.
+
+commit 65161b89c918ae092debc69ea9fb9d0b49e15f79
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Wed May 30 16:44:34 2007 +0200
+
+    Start using architecture dependent SHM virtual address area.
+    User space still uses 0x20000000 for a few root pages though.
+    
+    For x86_64 (address space!) use 0x500000010000 with length 0x0FFFFFFEF000.
+    
+    For mips use 0x50010000 and others 0x20010000 as before, length 0x1FFEF000.
+    
+    If there are conflicts on other platforms, please add an elsif :)
+
+commit e6a752730968e94487c6b0a2070793fa200fcf1d
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Wed May 30 16:27:55 2007 +0200
+
+    Fix typo in address range check.
+
+commit e7898b414eee6009f71175231df921a01ea2553f
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue May 29 20:01:01 2007 +0200
+
+    Revert "Defer signals until all locks are dismissed."
+    
+    Causing problems on exit...
+    
+    This reverts commit eeea7577d29255beb9b31f26ae0e5ce6e322c1fb.
+
+commit 2e27256be550b18dbe96cf5bcc4f1bbdc245704c
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Tue May 29 17:05:01 2007 +0200
+
+    FusionReactorDispatchCallback: If call_ptr is NULL and the dispatched message is of (void*) size and its content points to shared memory, then pass that into the dispatch callback's call_ptr rather than NULL.
+
+commit eeea7577d29255beb9b31f26ae0e5ce6e322c1fb
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Tue May 29 13:55:36 2007 +0200
+
+    Defer signals until all locks are dismissed.
+
+commit ce344a8d5b5dd70913faf546f1054e5509a13fa8
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Mon May 28 19:48:23 2007 +0200
+
+    Added FUSION_SKIRMISH_WAIT and FUSION_SKIRMISH_NOTIFY.
+    
+    When you hold the lock you can wait until you get notified,
+    where others can get the lock while you're waiting.
+    
+    At the moment it requires the notifier to acquire the lock.
+
+commit bfba2c7a09a52c7d7ddc0b8f451547cc13f35046
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Mon May 28 17:03:19 2007 +0200
+
+    API break!
+    
+    Added channel parameter to low level messages and reactors.
+    
+    Attach, detach, dispatch of reactor require
+    additional channel number specification now!
+
+commit 51b9cfafcc587b1099bc14c949301d4ad3c075aa
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Mon May 28 14:36:55 2007 +0200
+
+    Removed call_arg option from dispatch callback. It will be used for something else.
+    
+    Fixed missing dispatch callback if there were no recipients.
+
+commit a8eebd851409f7faf5e25a42f281d605f7d13fc0
+Author: Denis Oliver Kropp <dok@shizo.(none)>
+Date:   Mon May 28 10:50:44 2007 +0200
+
+    API break!
+    
+    Added serial value to call messages.
+    
+    Need to specify that serial when returning calls!
+    
+    +
+    +     unsigned int        serial;
+     } FusionCallReturn;
+    
+    +
+    +     unsigned int        serial;
+     } FusionCallMessage;
+
+commit ee4c73c060fc15d0f6ec5fe1f822ba63b4ccfdaf
+Author: Denis Oliver Kropp <dok@shizo.zion.home>
+Date:   Sat May 26 20:39:30 2007 +0200
+
+    Implemented a callback mechanism to get notified when all
+    recipients have processed the dispatched message.
+    
+    Added FUSION_REACTOR_SET_DISPATCH_CALLBACK ioctl to bind a
+    FusionCall to a reactor.
+
+commit 487286a21a1055340249577a812b0c4a13ea40cd
+Author: Claudio Ciccani <klan@directfb.org>
+Date:   Tue May 15 21:21:50 2007 +0200
+
+    Workaround to make forked processes work with fusion:
+    reference local refs on fork() instead of duplicating them.
+
+commit af37c4a7772d26711efecac0c8be8c977fbbbc04
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Mar 8 14:30:37 2007 +0000
+
+    updated
+
+commit adac43cbf3cc7dd88d941541f70c01171e83fa80
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Mar 8 13:10:10 2007 +0000
+
+    another update
+
+commit f286bdd8a7f99858367793b15b9fbde06f1182a4
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Mar 8 13:02:47 2007 +0000
+
+    Fix fusion_sleep_on() for 2.6 kernels, using prepare_to_wait() and finish_wait() etc.
+
+commit 49909476fc22f54d433577227c4214b25c405df3
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Mar 8 13:02:04 2007 +0000
+
+    In fusion_entry_wait() after calling fusion_sleep_on() first check for
+    signals, then check for timeout.
+    
+    In fusion_entry_notify() don't rely on valid "waiters" counter, but always
+    do the wake up on the queue.
+
+commit 9fe70f78fc378dc66ad2a4dcd43c1035a30f6af1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Mar 3 23:40:22 2007 +0000
+
+    updated
+
+commit f0946d0028d3bf025396c5dffd4e26a18ee67845
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Feb 17 14:17:36 2007 +0000
+
+    Pass kernel version to depmod. Get the kernel patchlevel from the build kernel, not the currently running kernel.
+
+commit ada4168a91e0569083bf49a962800f1a3d5b0e93
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jan 29 00:43:50 2007 +0000
+
+    Don't include <asm/types.h>.
+
+commit a61bc37a5320522c79e2f84695871cae9ed03e5c
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sun Jan 28 23:31:00 2007 +0000
+
+    Make fusionee_poll() return POLLERR on error. The return value is a
+    bitmask so returning the negative return value from lock_fusionee()
+    doesn't seem like good idea.
+
+commit e23eb0cd8d2c5e367916c38b6795f2923eea673b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jan 26 22:21:24 2007 +0000
+
+    Added "-I$(KERNEL_BUILD)/include".
+    
+    Had to do this for building on a freshly installed Ubuntu Feisty (AMD64).
+
+commit 60761ebd6ff10db95c326ac11e4762e05b638da7
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jan 23 21:19:25 2007 +0000
+
+    Don't use interruptible locking in fusionee_destroy() called by fusiondev_release(),
+    which must complete.
+    
+    This should fix left over ghost fusionees which required reloading the module,
+    causing some badness messages in the proc file system.
+
+commit bb2eb4968758b58fb8b504c102f8e331d790f134
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Jan 20 04:16:22 2007 +0000
+
+    Fixed O_EXCL (master) with slaves already waiting.
+
+commit 4b67e870218621c628653383e8564014a62c422e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Jan 20 04:03:01 2007 +0000
+
+    Implemented waiting for master when entering a world as a slave
+    by setting the O_APPEND flag during open().
+    
+    Some restructuring was necessary to delay allocation of FusionIDs
+    until the world is really entered.
+
+commit 3175a8ec99931abcddd015273c29a6a20fe403e5
+Author: Marcel Siegert <mws@directfb.org>
+Date:   Thu Jan 11 18:08:22 2007 +0000
+
+    fix mentioned compile errors for kernel 2.6.20
+    i took 2.6.20 as the minimum kernel version for the additional includes
+    maybe that appeared already at 2.6.19
+    
+    linux-fusion/linux/drivers/char/fusion/fusiondev.c: In function 'fusiondev_deinit':
+    linux-fusion/linux/drivers/char/fusion/fusiondev.c:253: warning: implicit declaration of function 'ClearPageReserved'
+    linux-fusion/linux/drivers/char/fusion/fusiondev.c:253: error: invalid use of undefined type 'struct page'
+    linux-fusion/linux/drivers/char/fusion/fusiondev.c: In function 'fusion_mmap':
+    linux-fusion/linux/drivers/char/fusion/fusiondev.c:1011: error: dereferencing pointer to incomplete type
+
+commit 5a3281b423576cd9122721e0ea62a1ada5dca6f9
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Jan 6 13:36:58 2007 +0000
+
+    Don't allow fusion_release() to fail. I'm not sure if it's a good idea
+    but at least keeps my console working when XDirectFB crashes.
+
+commit 43ae8f628bc5051c888b19081f3de41d506ea75e
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Jan 6 13:26:36 2007 +0000
+
+    Fix a potential double up() on dev->fusionee.lock.
+
+commit 691b48aae9b6082589e8e28288fa2216a21b4c4d
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Jan 6 13:19:37 2007 +0000
+
+    lookup_fusionee() can't return a NULL fusionee on success.
+
+commit ddf29fa6f36bc73a24c4d23ba5c9723c32d21882
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Jan 6 13:09:45 2007 +0000
+
+    linux/config.h is no more.
+
+commit 13135b6f123ec049254c2acc906396b5cd897d3b
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sat Jan 6 13:03:48 2007 +0000
+
+    Fix bool redefinition. Patch from Daniel Laird.
+
+commit c17e0d0a85fdac33104f5c98a26b38879e47465c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Sep 26 07:12:36 2006 +0000
+
+    updated
+
+commit def00ab31b41098063d87fcf294b2f239029e45e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Sep 26 07:10:44 2006 +0000
+
+    Guess we can really remove it now.
+
+commit a5defb1b50c69c6fe264b4e6f13cbf9fbbf8a4ac
+Author: Marcel Siegert <mws@directfb.org>
+Date:   Mon Sep 25 20:55:27 2006 +0000
+
+    fix 64-bit compile warnings "casting from pointer to integer of different size"
+
+commit 99a74d5f79d4b3dea55620397e41abb261dd2b2f
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Sep 15 08:25:11 2006 +0000
+
+    Specify full path to include.
+
+commit a90b486793ba9cd8f0a9814dbe8c6f39c214e5e1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Sep 14 20:48:01 2006 +0000
+
+    Just add include/linux/autoconf.h if it exists, no version checking or other magic :)
+
+commit 2bf2a0643895acd4c034325d3003d3944df0945b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Sep 14 19:20:31 2006 +0000
+
+    Only add the include of autoconf.h if building for 2.6.
+
+commit 4017fdf8c1dcba3b55a7c4497f70f29cc545714b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Sep 13 13:02:23 2006 +0000
+
+    Unlock entry before freeing it, thanks to Maxim Syrchin <syrchin@dev.rtsoft.ru>!
+
+commit 63e33f4ba2b9c6b7d9127a410cbf286649ffa88f
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sun Sep 3 13:40:34 2006 +0000
+
+    Fix compilation with linux-2.6.18.
+
+commit 8a0107b86f914ddd785965db6127bac85515becf
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Sep 3 11:50:55 2006 +0000
+
+    Only mark reactors as being destroyed, but actually destroy/remove them
+    when the last node detached. No more attach or dispatch is allowed though.
+
+commit 6a5f2fdaedbfba3be26d032da45cec71353ba69c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Aug 14 09:16:54 2006 +0000
+
+    Added new ioctl FUSION_FORK to be used whenever a Fusionee has fork()ed and
+    wants to stay in the world, i.e. without doing exec or similar...
+    
+    It doubles all local references, reactor and shmpool attach's and gives
+    the forked Fusionee its own Fusion ID.
+
+commit 43f5e224307316228661abfada9596233fb7d3b6
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Aug 4 16:28:01 2006 +0000
+
+    FusionRef is also based on FusionEntry as most of the others are already.
+
+commit 67942e80dd14257b9dbc18abaf7c01f7e752dc43
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jun 30 08:54:55 2006 +0000
+
+    New ioctl FUSION_SKIRMISH_LOCK_COUNT to query the lock counter of the
+    calling thread. If it's locked by a different thread, it simply returns
+    a zero count.
+
+commit e8eab5976f31b866827aee25a477d0a0dce92e83
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Sun Apr 30 11:33:39 2006 +0000
+
+    Made depmod respect $(DESTDIR).
+    Thanks to Mark Pustjens <pustjens@dds.nl> for the idea.
+
+commit 37a6ec7126729e3f29e11aee42c3625ecd3979e0
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Apr 26 11:48:24 2006 +0000
+
+    Some fixes to the Makefile.
+    
+    Thanks to Alex Lau <alex@avengergear.com>!
+
+commit 387dff127a6d69225cab5187a61c2f180d9218fe
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Apr 20 09:42:56 2006 +0000
+
+    Fix memory leak in remove_node().
+    
+    Thanks to caizhihua@radio-tel.com!
+
+commit c1ca520ccbccaf8874811875f8d88e1d234bda21
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Mar 26 18:44:19 2006 +0000
+
+    Implemented detection of *potential* dead locks by remembering which locks
+    are already acquired when another one is being acquired. As soon as a twist
+    is detected, a warning will be printed.
+    
+    The procfs entry for each skirmish shows a list of skirmishs that had ever
+    been acquired while itself was being acquired (the pre-acquisition list).
+    
+    Needs to be enabled by setting DEBUG=yes, e.g. "DEBUG=yes sudo make install".
+    
+    This does not detect dead locks right before they occur. It finds any
+    theoretically possible future dead lock situation due to lock order switches!
+
+commit bf6e6b3d24228093281f561a24e13adc43e84cc8
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Mar 1 04:16:37 2006 +0000
+
+    Added FusionCallExecFlags featuring FCEF_ONEWAY which makes the caller
+    return immediately after queueing the messages, not waiting for any response,
+    making the call asynchronous, like a dispatch via a reactor.
+
+commit 2de5da7c70441553632495389b7e440f65bf9714
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Mar 1 00:47:21 2006 +0000
+
+    Show callers and number of waiters in proc.
+
+commit 36dc6e07af70a02ce3a1af538e7f46f070bef405
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Feb 1 12:03:54 2006 +0000
+
+    Applied patch from Tilman Sauerbeck <tilman@code-monkey.de>
+    that adds DESTDIR support and updates the README, thanks!
+
+commit 33cc70ec4dbe9c36499ea20f6b7bc87063ff7bac
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Dec 29 22:57:58 2005 +0000
+
+    Made compilation happen before installation again :)
+
+commit d8bd8db20004c7efd1855e3624595d6701f47912
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Dec 29 22:57:08 2005 +0000
+
+    Builds with 2.6.15 now.
+
+commit e64c3cd492a76e073cc21c4d07fbedce69e4dbb1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Dec 27 07:21:13 2005 +0000
+
+    Fixed deadlock in fusionee_send_message() by replacing the
+    "listlock-item1lock-listunlock-listlock-item2lock-listunlock" sequence by
+    "listlock-item1lock-item2lock-listunlock".
+    
+    Deadlock occured with concurrent fusionee_get_message() or fusionee_poll()
+    doing a "listlock-item1lock-listunlock".
+    
+    Thanks to Hyperthreading for digging this one up :)
+
+commit 0219da55c109ab2f1d5099b8dbbd5be04708f058
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Fri Dec 9 14:26:37 2005 +0000
+
+    Fixed a typo.
+
+commit 41c2ee1cbf0022de3a61066a447e2b7475b4f8bf
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Wed Nov 9 14:17:20 2005 +0000
+
+    Made all targets phony.
+
+commit 5bbf7f95f572ea96f3895bd33da9c6a341a07ab5
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Wed Nov 9 14:14:06 2005 +0000
+
+    Remove fusion.[k]o from the old install location.
+
+commit 8889c26a2fd63c03ca61be2241e724c0a1bf8829
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Tue Nov 8 15:34:41 2005 +0000
+
+    Install fusion.h. Changed module install path.
+
+commit fc5e1a7760a8a73f0c1eb66f038fe1b68c44fb4c
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Wed Nov 2 11:30:56 2005 +0000
+
+    Updated udev instructions.
+
+commit 1f66f6f4d564079f5b99b0a04d5d27a3d21dd22d
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Wed Nov 2 11:23:28 2005 +0000
+
+    Made fusion_entry_wait() clear entry->lock_pid before calling
+    fusion_sleep_on() thus making FUSION_ASSUME() happy.
+
+commit f1c27f42b5344a932a202370bd2ecf782ab7b71d
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Wed Nov 2 10:31:42 2005 +0000
+
+    Clear the reserved bit from shared_area before freeing it. Otherwise the
+    kernel will complain and become tainted.
+
+commit ad897de4b09dc56396e3a3a8cb6c36b7ac0d54bb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Oct 29 05:11:10 2005 +0000
+
+    Added .tmp_versions.
+
+commit ec73cac144a6d8f2c78a2959f497cdb416d508e3
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Oct 29 05:10:43 2005 +0000
+
+    Make it build on 2.4, let's see if it works, too :)
+
+commit 5d1199a92d98d1793bcc38b4670a7c18a19f257d
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Oct 29 00:38:05 2005 +0000
+
+    Fusion Kernel API 2.0
+    
+    
+    Added management of shared memory pools
+    - register pools with a specified maximum possible size
+    - manage virtual address space so that all pools system wide can be mapped in parallel
+    - dispatch messages when the shared memory heap has been resized (for remapping)
+    - new ioctls are FUSION_SHMPOOL_NEW, ATTACH, DETACH, DISPATCH and DESTROY
+    
+    Added support for mmap() on the Fusion device itself, providing one page of shared
+    memory serving as the root structure for all other shared information/memory in a world.
+    
+    Block all slaves at FUSION_ENTER until the master issues the new FUSION_UNBLOCK ioctl.
+
+commit 12e7a9f05943571d84efbdfe85c3b0a075697bdc
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Oct 18 23:34:55 2005 +0000
+
+    No more patches.
+
+commit 08f33a0e5b252e8327e2ed1c42cf650e1514beee
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Oct 18 09:06:47 2005 +0000
+
+    Removed some commented out stuff.
+
+commit d66a4a1875a5e70dbd5bb0f41371779ac1aa7ceb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Sep 13 14:32:25 2005 +0000
+
+    Thanks to "Rob Shortt <rob@tvcentric.com>" for this patch fixing build with
+    Linux 2.6.13 that introduced some changes to the device class API.
+
+commit a6f2b6887459b998761e4cb5ee3bbc6a39bc07d0
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Jun 19 12:45:43 2005 +0000
+
+    Fixed Makefiles for built-in mode.
+
+commit 44b9ee7760c8f5899f1444954ecb774e60311d8a
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Mar 29 13:51:27 2005 +0000
+
+    Ported from FUSION_GET_ID to FUSION_ENTER.
+
+commit 7da47ead017cea2695af0436ac109035593a7d3e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Dec 20 07:57:35 2004 +0000
+
+    updated
+
+commit 3289e14837b6e129ebb0974008ccac4c0c2a3855
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Dec 12 13:09:39 2004 +0000
+
+    Increase performance by ~10% by not calling wake_up*() if nobody is waiting.
+
+commit 78b08e7628630a21406f4a8e671bd042800bd625
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Fri Nov 26 10:23:15 2004 +0000
+
+    xtime is struct timespec on some kernels.
+
+commit e8efa5414fc1fccf1e282224a17f64173deb1128
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Fri Nov 26 10:16:28 2004 +0000
+
+    MINOR() -> iminor().
+
+commit e6f9992cd87315516703cf9fe72f69629a9b9e51
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Nov 16 19:22:37 2004 +0000
+
+    Changed FusionReactor to use the generic FusionEntry code. It shows each
+    reactor's name, number of total dispatch and current nodes in /proc/fusion.
+    
+    Show total number of locks for each Skirmish in /proc/fusion.
+
+commit 33d07b44c43796b3937e795631e8beb09ce7f0d4
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Nov 14 09:13:57 2004 +0000
+
+    Updated patches.
+
+commit 8c96863abf1ddda0a929b987ba94bbefadfe26f8
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Nov 14 06:10:38 2004 +0000
+
+    API version is 1.1 now.
+    Older binaries compiled with the 1.0 API should work with a new 1.1 module.
+    
+    The generic fusion_entries_read_proc() prints the generic entry information,
+    while the specific implementation can add further information like lock status.
+    
+    Take a timestamp whenever an entry is locked (each access) and show the
+    difference between that and now in the proc view.
+    his doesn't use the still too expensive do_gettimeofday() which produces
+    10% overhead here. Instead, just copy the global "struct timeval xtime".
+    
+    Added FUSION_ENTRY_SET_INFO and FUSION_ENTRY_GET_INFO to store/retrieve
+    meta information about an entry. Right now there's just a name to set.
+    
+    This is the full output while running XDirectFB (and some clients)
+    along with 2x DFBTerm, df_cpuload, df_netload and df_dioload:
+    
+    :  dok@skunk[~] cat /proc/fusion/0/skirmishs
+    :    3  ms  ( 5544) 0x00000014  Layer Context
+    :   13  ms  ( 5544) 0x0000000b  Surface Manager
+    :   13  ms  ( 5544) 0x00000002  Fusion Reactor Globals
+    :   24  ms  ( 5544) 0x00000015  Layer Region
+    :  321.2 s  ( 5544) 0x00000009  Clipboard Core
+    :  326.3 s  ( 5544) 0x00000000  Shared Memory Pool
+    :  681.0 s  ( 5544) 0x00000007  Surface Pool
+    :  681.5 s  ( 5544) 0x00000013  UniQuE Window Pool
+    :  681.5 s  ( 5544) 0x00000008  Window Pool
+    :    0.2 h  ( 5544) 0x0000000e  Display Layer 0
+    :    0.2 h  ( 5544) 0x00000003  Arena 'DirectFB/Core'
+    :    0.2 h  ( 5544) 0x00000001  Fusion Arenas
+    :    0.3 h  ( 5544) 0x00000012  UniQuE Context Pool
+    :    0.3 h  ( 5544) 0x00000005  Layer Region Pool
+    :    0.3 h  ( 5544) 0x00000004  Layer Context Pool
+    :    0.3 h  ( 5544) 0x00000011  Display Layer 3
+    :    0.3 h  ( 5544) 0x00000010  Display Layer 2
+    :    0.3 h  ( 5544) 0x0000000f  Display Layer 1
+    :    0.3 h  ( 5544) 0x0000000d  Screen 1
+    :    0.3 h  ( 5544) 0x0000000c  Screen 0
+    :    0.3 h  ( 5544) 0x0000000a  Colorhash Core
+    :    0.3 h  ( 5544) 0x00000006  Palette Pool
+    
+    Added ":" to avoid white space stripping at the front of each line by logmail.
+
+commit 39104a537c14ed87a738b059b4c24e635a6e3ea0
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Nov 12 17:39:23 2004 +0000
+
+    New patches.
+
+commit 8319d3d8e05d0d04ea147d78360fa5894a045028
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Nov 11 00:15:57 2004 +0000
+
+    Updated.
+
+commit 16901c508cb04cb0abf4face9ca6215d96e5cfe1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Nov 7 12:20:53 2004 +0000
+
+    Fixed duplicate watch notification sent during cleanup.
+
+commit 3937c791f1ba24639561825a22859137ce4a03cb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Nov 7 09:15:11 2004 +0000
+
+    Added version numbering to the Fusion Kernel API.
+    The major number is increased if binary compatibility breaks,
+    while the minor number is increased for new features.
+    
+    Added new ioctl FUSION_REF_INHERIT to have a reference inherit
+    the local reference count from another reference, i.e. adding
+    the other's local count to its own. If the inherited reference
+    is changed, the inheritor is also updated.
+    
+    There's just one reference that can be inherited from by each
+    reference, but a reference can have multiple inheritors.
+    
+    Replaced FUSION_GET_ID by FUSION_ENTER. The new ioctl gets a
+    struct containing the API version the applicaiton was compiled
+    with. If the versions are incompatible, an error is returned,
+    otherwise the fusion id passed back to the application via the
+    struct.
+    
+    Use the 'type' field of the ioctl code to encode one of the
+    following command group identifiers: FT_LOUNGE, FT_MESSAGING,
+    FT_CALL, FT_REF, FT_SKIRMISH, FT_PROPERTY and FT_REACTOR.
+    
+    Now, the 'nr' field value is starting at zero within each group.
+    
+    The huge switch in fusion_ioctl() for all commands is replaced
+    by a switch for just the different types (see above). Each type
+    has its own function with a switch for the command numbers.
+    It's not faster on my machine, but at least it looks much better.
+    
+    Fixed a memory leak when clearing local references upon process exit.
+    
+    Added some TODOs.
+
+commit 5ab52a21af673f5433463619326491285629d8c1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Aug 23 12:54:32 2004 +0000
+
+    Added Print() method to FusionEntryClass.
+    
+    Added generic fusion_entries_read_proc() which uses Print() to
+    write each entry into the buffer.
+
+commit be86af04373d713282ca1bc09d21c47813557d2a
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Aug 18 14:09:42 2004 +0000
+
+    Added FUSION_ASSUME(exp) to use instead of FUSION_ASSERT(exp) at some places.
+
+commit b7c8bfcc99bcfec885578fb352775a3a7ce67d23
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Aug 18 14:00:31 2004 +0000
+
+    Use new code for skirmish.
+
+commit 87a17f9fdcd9613c85ff51a05e37f7fbab4ccc49
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Aug 17 20:00:32 2004 +0000
+
+    Simplified timeout code.
+    
+    Added recursive purchase and some more error checking.
+
+commit 274628deb2a61cc57c9a793a26144821950e4778
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Aug 17 17:24:36 2004 +0000
+
+    Added base code for all primitives.
+    
+    Property already uses the new clean code.
+
+commit 3257789127d71214d09a5854a63df73585ed5580
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jul 30 15:01:43 2004 +0000
+
+    Implemented recursive leasing, fixes dead lock during emergency shutdown.
+
+commit 6cbb9c375e2238e67e18421a46b74058dbe3c101
+Author: Ville Syrjala <syrjala@directfb.org>
+Date:   Tue Jul 13 15:42:30 2004 +0000
+
+    Added sysfs/udev support.
+
+commit 0970bf1a21325abf0a4177f2edb96e90673ee32c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Feb 23 23:13:42 2004 +0000
+
+    ;->
+
+commit f16799dec22b6fe59cddc379af3ff72cc1360f2b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Feb 16 16:41:21 2004 +0000
+
+    Added patch for 2.6.3-rc3.
+
+commit 577012ae801c2bd4146660f0fe9e6ee13b6eaeae
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Feb 16 16:33:31 2004 +0000
+
+    Removed obsolete patches.
+    
+    Added patch for 2.4.24.
+
+commit 9b98cd85e8110c42a5543b4d4487402726492284
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Feb 16 12:27:37 2004 +0000
+
+    Use major 252.
+
+commit 21c5f0ba16585497d5b52048c344a8873aa20fe2
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Feb 6 12:43:58 2004 +0000
+
+    Remove non-working patches.
+
+commit 2b92a537d3fdce50cea753d6f76e1ebf62f17633
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Feb 3 04:35:23 2004 +0000
+
+    Special version without semaphores for testing.
+
+commit 9343decb1fa089269910f3e46ed8ece82d9b94e0
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jan 30 15:13:14 2004 +0000
+
+    Updated patch and changelog.
+
+commit bb3aa48a9282721a9d863192e200f819e89956f6
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Jan 7 11:41:02 2004 +0000
+
+    Fixed version check for "make install".
+
+commit fa419aaafc9b90cfd0101821ea7d1fbdebcd88cb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Dec 16 06:05:40 2003 +0000
+
+    Automatically dismiss skirmishs upon death of a single thread.
+    Previously only the death of all threads (of one fusionee) did that.
+    
+    This means that killing or canceling a thread releases its held locks now.
+
+commit e341dbf1e78f578873de84e85fa6befd4bf997a7
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Dec 15 17:11:48 2003 +0000
+
+    'make' and 'make install' works with 2.4 and 2.6 now.
+
+commit 606500d365a573ea4206d892d5a3406f3b439c5b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Dec 12 18:46:10 2003 +0000
+
+    Use semaphores instead of spinlocks.
+
+commit 4b38ef09ae6388ffcd16719ecebf432aec606e91
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Dec 4 12:55:49 2003 +0000
+
+    Show the owner of a property in /proc.
+
+commit 1a2ac5a30ced77ab3aa9ccf987e0af2319de5b3a
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Oct 29 12:11:05 2003 +0000
+
+    Corrected locks for 2.6.0-test9. Also use non-irq versions now in both version.
+    
+    iminor() fix by Johannes Stezenbach <js@convergence.de>.
+
+commit d320e017c1cb14956ab4673867ebc4b88d1ec975
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Oct 24 09:50:48 2003 +0000
+
+    More padding in /proc/fusion/*/fusionees.
+
+commit bb97deb79add6252468dba574ec3938ec943ef37
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Oct 22 17:21:12 2003 +0000
+
+    Prepend local include directory.
+
+commit 505b480e934176ecd082a2e8a1d7fcfedb342fdc
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Oct 17 05:34:21 2003 +0000
+
+    Updated patches.
+
+commit 7feb333f2bfe7166b12dd1cb70d53361b99a58db
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Oct 17 05:14:33 2003 +0000
+
+    Removed "sizeof" from ioctl definitions.
+    Use "MINOR" instead of "minor".
+    
+    Made ioctl numbers sequential.
+    Use "switch(_IOC_NR(cmd))" to help gcc optimizing.
+
+commit 68ce2a93d30fcd8dbfab7b9c791571e9f9fd2cf5
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Oct 14 07:52:01 2003 +0000
+
+    Updated patches for 2.6, too.
+
+commit 0a81376b765a4615763b0bb76316fb34ea5b9c87
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Oct 14 07:41:51 2003 +0000
+
+    Updated patches, 2.6 will follow.
+
+commit 0689abee339b7d6becabd14a8a48036a9252ab2d
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Oct 14 07:15:03 2003 +0000
+
+    Added "/proc/fusion/*/stat":
+    
+    'lease/purchase   cede      attach     detach      ref up   ref down  prevail/swoop dismiss'
+    '    139068     139068         969        841        1315       1161      186576     186296'
+    
+    These are total number of calls.
+
+commit 70ea3ad45455a8ff9fc2de590aa1d4b8bb9f0214
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Oct 4 15:39:42 2003 +0000
+
+    Fixed dead lock for SMP enabled kernels. I thought spinlocks were recursive.
+
+commit 9bce62a3d7f08aad99d7726d0618db45d794f2dd
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jul 25 12:46:10 2003 +0000
+
+    Remove old and broken patches.
+
+commit e3396149f6859cc44c2b5d716393eecbf48e5106
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Thu Jul 24 11:42:43 2003 +0000
+
+    updated patch
+
+commit 448b86e52cf20656948ff48999fef5123206df25
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Thu Jul 24 11:38:44 2003 +0000
+
+    fix oops during initialization on 2.6.0-test1
+
+commit 42db5856afcb14a5fd40d4d6ae07e1ca45010d2b
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Thu Jul 24 01:12:58 2003 +0000
+
+    build patches for 2.6.0-test1
+
+commit 8e72e18bd071a5db83e4a71bcdb1dfb1d843f9ee
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Thu Jul 24 00:13:33 2003 +0000
+
+    fix typo ;-)
+
+commit 85e8c281710d59ac395cf9d84dcc74686dd347c4
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Thu Jul 24 00:10:17 2003 +0000
+
+    support for linux-2.6-test1 (new internal devfs api) should now work with 2.4, 2.5 and 2.6
+
+commit 61da68633c1c69323c9147a8cdce78237dd92c84
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jul 21 13:05:31 2003 +0000
+
+    New ChangeLog.
+
+commit c4c44be9bd98ebbbafc02bf0f19517e8101175a6
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Jul 10 06:57:38 2003 +0000
+
+    Improved documentation, wrote about shared memory and arenas.
+
+commit 1c4deb5018f447ef18eeec11397be7f951d18a75
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Jul 9 23:31:28 2003 +0000
+
+    Added FUSION_REF_WATCH which can be used to install a reference watcher with
+    an optional argument that will be passed to it.
+    
+    The reference watcher is a call that is executed when the reference counter
+    gets zero. The optional argument could, for example, be the id of a user space
+    resource associated with that reference.
+    
+    This is a much better way than polling all references regularly.
+
+commit 74296130c78de7f9e8e2434fd235953ae788644e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jul 8 13:47:48 2003 +0000
+
+    This time right.
+
+commit 1f31c8e8a9a9c3c9ce25ea8912e60ec848997a01
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jul 8 13:42:16 2003 +0000
+
+    Forgot to convert a FusionCallHandler to void*.
+
+commit d8b658be9bcdb5d1e0dd2c2621c910dba2bd1c05
+Author: mm <mm>
+Date:   Tue Jul 8 11:48:25 2003 +0000
+
+    - revert dok's 1.10 -> 1.11 patch to make the build-sys work again
+
+commit 8115eb657be2991bc58141d297d9429b093cccec
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jul 7 18:03:31 2003 +0000
+
+    Removed call handler type definition.
+
+commit 668874d50547c91c8fc49f11f4d1c5e37542e5e1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jun 30 16:46:00 2003 +0000
+
+    Fixed patches, didn't compile with SMP or preemption.
+
+commit 442cfacdf9dd84b77cc182787ee029d6c32799e3
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jun 30 16:41:12 2003 +0000
+
+    Fixed undeclared fusionees_lock, which didn't cause an error if spinlocks
+    are not used.
+
+commit e1c7434c1e58cdc29061b8175be58145035a54c1
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jun 24 16:03:43 2003 +0000
+
+    Show lock-holder (pid and fid) in /proc/fusion.
+
+commit 3a2df192edcba5f6260222ac56ab12a738c1ef43
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jun 17 12:38:40 2003 +0000
+
+    Added version of throughput that uses a pipe.
+
+commit e8fecf843ee355f5efc38e67f53e5bab137cc066
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jun 16 17:47:03 2003 +0000
+
+    Added support for multiple Fusion "worlds" via device minor.
+    
+    New directory layout is
+    	mkdir /dev/fusion
+    	mknod /dev/fusion/0 c 253 0
+    	mknod /dev/fusion/1 c 253 1
+    	...currently limited to eight minors
+    
+    The /proc directory layout also changed this way.
+    
+    Updated all patches.
+
+commit 9eea0ad8c74a3e7f01689ab85798c9bd03c1ab8b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Jun 7 01:30:49 2003 +0000
+
+    Added Makefile for 2.5 kernels to the repository.
+
+commit 5e325982975382e11012481055a6b125d4b713e3
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Jun 5 14:32:08 2003 +0000
+
+    Fixed Fusion for 2.5 kernels! No more tons of kernel debug messages,
+    not even a single note about a process exitting with an active preempt counter.
+    
+    1)
+    Call kmalloc() with GFP_ATOMIC instead of GFP_KERNEL which isn't allowed while a
+    spinlock is held. I'm not sure if we should use GFP_ATOMIC including __GFP_HIGH,
+    but it's the only GFP_* which doesn't include the offending __GFP_WAIT.
+    
+    2)
+    Added missing spin_unlock() calls. I didn't forget them but dropped the
+    unlock in case the spinlock is thrown away and never locked again anyways.
+    Unfortunately these are always required for preemptible kernels because
+    spin_lock/unlock() increase/decrease the preempt counter.
+
+commit 3b97815226dbaacc91ef417c78ecd6dbf96dbbf2
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Jun 4 18:58:10 2003 +0000
+
+    Added new ioctl FUSION_KILL which sends a signal to one or more fusionees
+    with an optional timeout for waiting for their termination.
+
+commit b4d1afca28326ec4d50d0d6bc736fb2e30e27613
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jun 2 17:11:32 2003 +0000
+
+    Updated patches, include recent improvements and fixes.
+
+commit a2965ee815a1dc90bab0bcfe2ec048311b155bbb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Jun 1 21:02:08 2003 +0000
+
+    Extended TOC.
+
+commit 4e247f38eb31d1307b0c49cb491d3362968fe08d
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sun Jun 1 19:51:31 2003 +0000
+
+    Initial version of conceptual documentation.
+
+commit 3719429be995c338f44aa677415a4dcbb6f5ad33
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue May 13 13:17:16 2003 +0000
+
+    Do yield() in fusion_property_cede() if property was purchased.
+
+commit 8f295629246a4b7530eb266aa4620a41bbd6330f
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon May 12 17:13:36 2003 +0000
+
+    Fixed missing arguments.
+
+commit 7110ab53e4fa19d3439afb8a5562a9df9efe94a5
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon May 12 17:08:54 2003 +0000
+
+    Unlock all refs locked by a process during its death.
+    Added error checking (lock owner verification) to ref locking.
+
+commit ee10497ca7edd6cf2ea3033df3325137e5a5cfed
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon May 12 16:48:18 2003 +0000
+
+    Increased the purchase timeout to one second. Don't wait if property is
+    purchased for more than one second.
+    
+    Timeout of leasing stays at 0.1 sec, not waiting at all if property is
+    purchased for more than 0.1 sec.
+
+commit 7ceb6f1082ea74cf703d1f2bf440607500d1672f
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu May 8 18:52:35 2003 +0000
+
+    Don't do a lease/purchase with timeout if property has been purchased more
+    than 100 ms ago. Otherwise timeout after another 100 ms. Better suitable
+    for long time purchasing which fullscreen apps do.
+
+commit 611cf2452979bf4085999af94a73eb350cbca614
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu May 8 17:58:47 2003 +0000
+
+    Added timeout option to fusion_sleep_on() that is used by properties.
+    Leasing/purchasing doesn't fail immediately now if a property is purchased.
+    Instead it fails after a timeout of 20 ms.
+    
+    This improves DirectFB DRI interoperation significantly as DirectFB doesn't
+    give up early to access the hardware if an OpenGL application does the rendering
+    which is most of the time, but depending on the framerate very short periods.
+    If this period is short enough (say having 40 fps) the timeout will never
+    expire and no software fallback is used.
+    
+    Running OpenGL with ~150 fps while scrolling in an IDE which is half transp.
+    above runs quite smooth.
+
+commit 70bc5f305cc8b49a44d0eedcf538d95298373dbd
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Apr 15 11:22:15 2003 +0000
+
+    Fixed typo.
+
+commit 0d9ee559e38e51f527d70930a080bdff03d48ea6
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Apr 15 09:10:03 2003 +0000
+
+    Some more items.
+
+commit a1e653642b8315b7f39c548dbf9ce3b5ee5ee5cc
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Apr 11 11:18:43 2003 +0000
+
+    Updated patch.
+
+commit e09094a9d3b662d657c1aec51004a91fd3ec7e12
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Tue Apr 8 10:00:39 2003 +0000
+
+    forgot to include <linux/version.h>
+
+commit b53d718728ce5c06e26b8b75444200b0f000eca4
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Tue Apr 8 09:39:23 2003 +0000
+
+    fix compilation for 2.5.xx
+
+commit c22ce9b9ec7055b43dd2788477c69d20d31b5478
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Apr 7 13:10:03 2003 +0000
+
+    Updated 2.4 patches.
+
+commit e6ba11ad8ca7ed646c2a75c4a243745ee2a1c0a3
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Apr 7 12:10:59 2003 +0000
+
+    Added an RPC benchmark and a Makefile.
+
+commit 661cdd11250d30ecd7558b2245f203c27f300a05
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Apr 7 12:04:20 2003 +0000
+
+    Added utility function fusion_sleep_on() which does the same as
+    interruptible_sleep_on() but takes an additional argument specifying
+    a spinlock that is unlocked after the wait queue has been modified.
+    
+    Replaced everything like:
+    
+    foo_unlock (foo);
+    /* unsafe gap */
+    interruptible_sleep_on (&foo->wait);
+    
+    by:
+    
+    fusion_sleep_on (&foo->wait, &foo->lock);
+    
+    Closes the unsafe gap (resulting in blocking) on SMP or preemptible kernels.
+    
+    
+    Forgot to call fusion_call_destroy_all() in fusionee_destroy().
+
+commit 874ed124c32313a207caecc68faa3d01a75ed8df
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Apr 5 02:45:42 2003 +0000
+
+    Updated patches.
+
+commit c1d1f057f6de03d8459618903bd21f5138724e5c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Apr 5 02:42:59 2003 +0000
+
+    Added synchronous RPC mechanism (with return value).
+
+commit 6247a1cc81c2993048be89ccc1ef081852041346
+Author: Andreas Hundt <andi@directfb.org>
+Date:   Mon Mar 17 23:04:54 2003 +0000
+
+    built patches for linux 2.5.64.
+    
+    it works somehow, but I get a kernel oops when applications using fusion quit. (even the latency.c application).
+
+commit b8ddadfbeb3903ee0a308409eb4616973285a128
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Mar 3 22:19:15 2003 +0000
+
+    Remove copy of fusion.o during "mkae clean".
+
+commit fd58464b1147e576838d80413b20cb3aad5b10b5
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Mar 3 22:17:42 2003 +0000
+
+    Added Makefile for compiling the fusion module outside the kernel tree.
+    Simply type "make" in the linux-fusion directory. You may need to adjust
+    the kernel path in the Makefile or use "make KERNEL_SOURCE=/foo".
+
+commit e5fa4848161fa5691bd227b47d5c83abbc74e750
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Mar 3 16:18:28 2003 +0000
+
+    Don't free already freed message data during fusionee_destroy().
+
+commit 8db10ffd7702c80e15339ec5fae1d30c6826ce13
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Mar 3 15:23:32 2003 +0000
+
+    Increased message throughput by about 15% by doing one kmalloc per message
+    (header/data) instead of two.
+
+commit 5b96a8fdd82a60fe8fde306dcf6692f0ee229610
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Feb 28 19:56:03 2003 +0000
+
+    Updated patches, added ChangeLog.
+
+commit 81846682c4104f9a3a27dfcbfae717ee24050545
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Feb 28 19:45:34 2003 +0000
+
+    Ouput total messages sent and received.
+
+commit 09bc80e2d65a98028033672e53f2060cdb7a8bf4
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Feb 13 19:14:15 2003 +0000
+
+    Output total number of messages received by each fusionee in /proc.
+
+commit 209f9131a23f05c5b5e2dde04b7bde7d96bd1d01
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Feb 4 20:03:14 2003 +0000
+
+    Plugged a very small mem leak.
+
+commit 64d960d5cc3985fd3898fec22275d9c471469b6b
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jan 31 17:48:10 2003 +0000
+
+    Added #if 0'ed code that gives the receiver thread realtime priority.
+    This results in 100% synchronized message dispatching and processing
+    independent of the nice value of the sender thread. Unfortunately it
+    limits the throughput at 280 thousand messages per second on my machine.
+
+commit 43b91a1bc4cf1b7a27efb32890179d6a5d07a45c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jan 31 16:04:45 2003 +0000
+
+    Measure how many messages are dispatched synchronized.
+    I got 0% with nice 20 and 25% with nice -20. What if the
+    receiver has a higher priority?
+
+commit 89b7e43c7a795bc456e41fbb40ae38d55f7f43f8
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Jan 31 15:33:54 2003 +0000
+
+    Small program measuring the messages per second sent/received.
+    Interestingly it depends on the nice value. I got about 370 thousand
+    messages per second with a nice value of zero, but got about 530 thousand
+    messages per second with a nice value of 20.
+    
+    Doing "cat /proc/fusion/fusionees" during the test shows that no messages
+    queue up when using a nice value of -20. I guess the wakeup_interruptible()
+    within the kernel code leads to synchronized message dispatching.
+    I will add another test that measures the percentage of messages that got
+    received and processed "virtually during" the ioctl to send them.
+
+commit 935ab96d3fc9fdd7a2403cf0e7cda47ffe5d340f
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Jan 30 22:24:35 2003 +0000
+
+    Wrote small test program that stops time of travel of a message.
+    It creates a new thread for receiving messages (generic receiver code
+    doing a blocking read and decoding the message headers). The main
+    thread will send ten messages with a random pause between.
+    One time stamp is taken just before the message gets sent. The other
+    time stamp is taken after the receiver decoded the message header.
+    
+    This piece of code is also the first stand alone example of using the device.
+    
+    
+    The output (PIII 800, 2.4.20-rc2 preemptive):
+    
+    Got message with 0.019 ms latency.
+    Got message with 0.008 ms latency.
+    Got message with 0.009 ms latency.
+    Got message with 0.009 ms latency.
+    Got message with 0.008 ms latency.
+    Got message with 0.008 ms latency.
+    Got message with 0.011 ms latency.
+    Got message with 0.007 ms latency.
+    Got message with 0.007 ms latency.
+    Got message with 0.011 ms latency.
+    
+    
+    These values would be the same if the sender and receiver wouldn't be
+    two threads but two distinct processes. This also doesn't say anything
+    sure about the throughput yet, though 1000/0.007 gives a quite sane
+    value of about 143 thousand messages per second.
+    
+    I'm not sure if the preemptive kernel patch influences this latency,
+    but I guess the throughput would be affected.
+
+commit 079e978ed9b59cd55483d0ff3e44932135fbbdf4
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jan 14 15:21:35 2003 +0000
+
+    Updated all patches.
+
+commit 532522d097f2bca9c7e0f8378c57cba4054994f4
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jan 14 15:09:30 2003 +0000
+
+    "Move-to-front" optimization added to other primitives, too.
+    Reset all id pools during cleanup (last fusionee closes device).
+
+commit 7e085b807cabab0966168bca59cdaaeb1b650162
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Jan 14 13:50:58 2003 +0000
+
+    Needed to fix failing hunk in miscdevice.h
+
+commit 99495db6850ccd25e1d7ed621c44db9e28218b46
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jan 13 18:56:53 2003 +0000
+
+    Updated patches.
+
+commit 2e6610cff4c1a553f15fc2e574a4313f33d50c75
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Jan 13 18:46:09 2003 +0000
+
+    Move skirmish to the front of the doubly linked list each time it is locked.
+    This nearly doubled the frame rate of ClanBomber2 on multi app core
+    on my system.
+
+commit 5f7f625fdb4e4c7b15efa2315e83ef2cf1eca764
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Dec 13 17:13:18 2002 +0000
+
+    Updated patches.
+
+commit 197ebda8a2c0b473421ac4c3787ce3b4aff1f7bc
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Dec 13 17:05:01 2002 +0000
+
+    Added FUSION_PROPERTY_HOLDUP that sends a SIGKILL to the process that
+    purchased the property (e.g. a hanging fullscreen application).
+
+commit 4c70abbcaa01800833b83a729e8faad0c2a64a23
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Dec 5 17:46:50 2002 +0000
+
+    New patches.
+
+commit 8c2125cd4084277f6df32349aaa2ec86bc482533
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Thu Dec 5 17:36:08 2002 +0000
+
+    Implemented poll(). Making select() work, too.
+
+commit 77d8395a2593cfd50ea5922e83638c2c26d51867
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Nov 12 21:30:39 2002 +0000
+
+    Updated patches.
+    Fixed copyright info.
+
+commit a5efa672acff6b777e92f4f5ae54e5e54af04086
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Nov 12 21:21:12 2002 +0000
+
+    Implemented auto-cleanup if last fusionee closes the device.
+    
+    ipc_cleanup script is obsolete now. Simply kill all processes having
+    /dev/fusion open and everything gets cleaned up.
+    
+    If it will ever crash... ;)
+
+commit 65642328b9fbbfddf1ad9b5dd9bcf67227fe08bf
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Nov 11 04:10:44 2002 +0000
+
+    Updated patches and TODO file.
+
+commit b3f88da7c4c7164231accdc8ce06432223c31b3e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Nov 11 01:58:58 2002 +0000
+
+    Added messaging to the Fusion Kernel Device. There are two ways of sending
+    messages. The simple way is to use FUSION_SEND_MESSAGE specifying the
+    recipient's fusion id and an optional message id. The other way is to
+    create a reactor with FUSION_REACTOR_NEW which is the process shared
+    part of the old multi app reactor. FUSION_REACTOR_ATTACH adds the callers
+    fusion id to the list of attached fusionees. FUSION_REACTOR_DISPATCH
+    is used to send a message to all attached fusionees. So reactor_dispatch()
+    only needs one system call (instead of two plus two times the number
+    of attached fusionees).
+    
+    Messages are received by doing a read() on the device. This way multiple
+    messages (depending on the read buffer size) are received by one system
+    call.
+    
+    There's only one thread now for all reactors.
+    
+    FusionSkirmish is a recursive lock now.
+
+commit c10fb7ab0d1611e99a54eadc26d7107ec9c64f80
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Tue Nov 5 21:42:00 2002 +0000
+
+    No need to patch misc.c, fusion_init() got called twice if compiled in.
+
+commit f09f81571c24098102d915696bf947eb90c7e507
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Nov 4 16:41:26 2002 +0000
+
+    Updated.
+
+commit 932374095a6672ea3ec9b9841dd1cd838c0aa0ee
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Nov 4 16:28:36 2002 +0000
+
+    Implemented FusionProperty in kernel space (200k -> 700k lease/cede per sec).
+
+commit c5dca1868608329a9c21e07156d068ee0085867e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Nov 2 06:09:54 2002 +0000
+
+    Fixed.
+
+commit 8da48b1129509fdb130f0a47cc5053f14dc7a87c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Nov 2 03:26:59 2002 +0000
+
+    fusion_init/exit non-static now.
+
+commit ddac134bb27ca074b7a5006caf67200dd993c6c9
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Nov 2 03:25:00 2002 +0000
+
+    Should really work now if compiled in.
+    Added 2.4.16 patch.
+
+commit 37feb82a0ffc00ba7331881134e25523d146f13e
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Nov 2 02:19:58 2002 +0000
+
+    New patches.
+
+commit fa3d384f61b7665db73cb6a5d3641128c82a2d15
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Sat Nov 2 01:28:29 2002 +0000
+
+    Added skirmish implementation,
+    no benefit yet except speed (600k -> 700k prevail/dismiss per second).
+    
+    SIGSTOP defering/blocking could be added.
+
+commit 84f322339abc2ea5cb1bb5809e28a26c75b313bb
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Nov 1 15:13:02 2002 +0000
+
+    Use ANSI C member initialization.
+
+commit 753c0a11b5a8bf60281bb8af88ec6ac56ca26704
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Nov 1 14:55:58 2002 +0000
+
+    Added /proc/fusion/fusionees. Minor cleanup. Added locking to fusionee code.
+
+commit 4e0bcb5b40c6df9e2332c16b7c910dd2bc483f56
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Fri Nov 1 13:59:12 2002 +0000
+
+    Remember pid of process that created the reference, shown in /proc/fusion/refs.
+    Added spin_lock() to fusion_ref_destroy() before destroying the reference.
+
+commit ed2b0cf08869cbbe4bfa17f44c17b67d79c61b9c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Oct 28 17:31:32 2002 +0000
+
+    Added TODO file with three items.
+
+commit c3e12dda48467db2bc7faec7b598170592cdf92c
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Oct 28 17:17:03 2002 +0000
+
+    Should work now if built in (not using as a module).
+    Updated patches.
+
+commit 9c85229ac56321c9472a0ba6d686a463e6896c40
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Mon Oct 28 17:04:55 2002 +0000
+
+    Added proc entry ("/proc/fusion/refs" for now).
+
+commit 2b77e705af5883f504e0ed13ba870d84635e60ba
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Oct 16 16:03:39 2002 +0000
+
+    Implemented fusion_ref_zero_lock() via wait queue.
+
+commit b3ff6a21f01288371e7cae477e00a5937b237966
+Author: Denis Oliver Kropp <dok@directfb.org>
+Date:   Wed Oct 16 13:05:47 2002 +0000
+
+    New CVS module for the (still optional) Fusion Kernel Device.

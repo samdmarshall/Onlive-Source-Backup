@@ -1,0 +1,390 @@
+
+                                 ifplugd 0.28
+
+   Copyright 2002-2005 Lennart Poettering <mzvscyhtq (at) 0pointer (dot)
+   de>
+     * [1]License
+     * [2]News
+     * [3]Overview
+     * [4]Current Status
+     * [5]Documentation
+     * [6]Requirements
+     * [7]Installation
+     * [8]Acknowledgements
+     * [9]Download
+
+License
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at
+   your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+News
+
+   Sat Jun 4 2005:
+
+   [10]Version 0.28 released, changes include: build fixes from Stefan
+   Seyfried.
+
+   Wed Mar 30 2005:
+
+   [11]Version 0.27 released, changes include: new option --no-startup.
+
+   Sun Dec 19 2004:
+
+   [12]Version 0.26 released, changes include: changed MII code for
+   better compatibility with some 3COM Boomerang cards.
+
+   Mon May 10 2004:
+
+   [13]Version 0.25 released, changes include: Revert to more classic
+   link checking support. The new checking order is: ETHTOOL, MII, WLAN,
+   IFF. The obsolete API "PRIV" is no longer checked by the automatic API
+   detection code. However, you may enable it forcibly by passing -m priv
+   on the command line.
+
+   Mon Apr 12 2004:
+
+   [14]Version 0.24 released, changes include: add IFF_RUNNING link check
+   support and make it the default. This might break some setups. You may
+   workaround this by passing -m to the daemon for selecting a different
+   API. Please report breakages!
+
+   Wed Apr 7 2004:
+
+   [15]Version 0.23 released, changes include: don't make /dev/tty1 the
+   controlling TTY when beeping
+
+   Tue Feb 10 2004:
+
+   [16]Version 0.22 released, changes include: rename ifstatus to
+   ifplugstatus due to namespace collision, minor fixes
+
+   Mon Jan 26 2004:
+
+   [17]Version 0.21b released, added missing file.
+
+   Mon Jan 26 2004:
+
+   [18]Version 0.21 released, changes include: better compatibility with
+   wireless devices, compatibility with newer kernels
+
+   Sun Nov 9 2003:
+
+   [19]Version 0.20 released, changes include: fix wrong message, build
+   fix
+
+   Mon Oct 20 2003:
+
+   [20]Version 0.19 released, changes include: New option
+   --wait-for-kill, this requires [21]libdaemon 0.3
+
+   Fri Oct 17 2003:
+
+   [22]Version 0.18 released, changes include: Some bugs fixed
+
+   Fri Sep 13 2003:
+
+   [23]Version 0.17b released, changes include: typo and date fix
+
+   Fri Sep 13 2003:
+
+   [24]Version 0.17 released, changes include: documentation update,
+   better support for multiple interfaces, gcc 2.95 build fix
+
+   Thu Aug 13 2003:
+
+   [25]Version 0.16 released, changes include: RPM spec file added, build
+   fixes, WLAN improvements (including compatibility with the upcoming
+   waproamd, a WLAN roaming daemon), monitor mode for use in conjunction
+   with PCMCIA devices, better support for multiple interface setups,
+   SUPPORTED_DRIVERS returns
+
+   Thu July 10 2003:
+
+   [26]Version 0.15 released, changes include: bad umask fix,
+   documentation update
+
+   Mon July 7 2003:
+
+   [27]Version 0.14 released, changes include: autoconf usage, new
+   dependency [28]libdaemon, wireless LAN support, support for
+   suspending/resuming, many fixes
+
+Overview
+
+   ifplugd is a Linux daemon which will automatically configure your
+   ethernet device when a cable is plugged in and automatically
+   unconfigure it if the cable is pulled. This is useful on laptops with
+   onboard network adapters, since it will only configure the interface
+   when a cable is really connected.
+
+   ifplugd ifplugd interfaces with your distribution's native network
+   configuration utilities.
+
+   Some features:
+     * Uses your distribution's native ifup/ifdown programs.
+     * May beep when the cable is unplugged, plugged, the interface
+       configuration succeeded or failed.
+     * Supports the Linux SIOCETHTOOL (newer, aka ethtool API),
+       SIOCGMIIREG (older, aka mii-diag/mii-tool API) and SIOCDEVPRIVATE
+       (oldest, aka mii-tool API) ioctl()s for getting link status.
+       Release 0.24 introduces support for link detection with the
+       IFF_RUNNING interface flag.
+     * Syslog support
+     * Small program - the binary is just 25 KB (plus 16 KB for
+       libdaemon).
+     * Multiple ethernet interface support
+     * Can be configured to ignore short "unplugged" periods (-d option)
+       or short "plugged" periods(-u option)
+     * Support for wireless networking. Whenever an association to an AP
+       is detected the network is configured. Have a look on [29]waproamd
+       if you need a facility to configure WEP keys before AP
+       associations succeed.
+     * Compatibility mode for network devices which do not support cable
+       detection (-F option)
+
+Current Status
+
+   Version 0.28 is stable and has all the sensible features its users
+   could think of.
+
+Documentation
+
+   Have a look on the man pages [30]ifplugd(8), [31]ifplugstatus(8),
+   [32]ifplugd.conf(5). (An XSLT capable browser is required)
+
+  Configuration
+
+   Edit /etc/ifplugd/ifplugd.conf for configuration changes. This file is
+   a bourne shell script sourced by the init script and used to start
+   ifplugd with appropriate arguments. You may specify more than one
+   ethernet interface in INTERFACES. For each interface a seperate
+   instance of ifplugd is spawned. The arguments specified in ARGS are
+   append to ifplugd's command line. Have a look on ifplugd -h or man
+   ifplugd for further information about the available options.
+
+   The network interface which is controlled by ifplugd should not be
+   configured automatically by your distribution's network subsystem,
+   since ifplugd will do this for you if needed.
+
+   On Debian systems, any interfaces named in ifplugd's INTERFACES
+   environment variable should not also be listed in an "auto" stanza in
+   /etc/network/interfaces.
+
+  Troubleshooting
+
+   When you are using the hotplug subsystem (Debian package hotplug) you
+   may notice that the network device is configured even when it is not
+   listed on an auto line in /etc/network/interface. This may be due to
+   hotplug being configured to ifup the network interface when it becomes
+   available. This was the default behavior in the Debian hotplug package
+   prior to release 0.0.20030117-1, for example. To prevent this you
+   should either upgrade your hotplug package or comment out the ifup
+   call in /etc/hotplug/net.agent.
+
+   When using ifplugd together with APM (and probably ACPI) suspends,
+   strange things may happen: some network devices fail to detect the
+   network cable for a short period of time before and after the suspend.
+   When using the -f switch, this will be treated as "no link beat", thus
+   the network is shutdown after a timeout. During this timeout the
+   machine changes to suspended state. When it is resumed again, the
+   timeout period will have expired and so the network is deconfigured,
+   however, as the next cable detection succeeds, the network is
+   configured again immediately. To fix this problem, ifplugd should be
+   disabled before the APM suspend and enabled back after the suspend.
+   This may be done by using apmd and adding a script to
+   /etc/apm/{suspend,resume}.d which simply calls /etc/init.d/ifplugd
+   suspend, resp. /etc/init.d/ifplugd resume. It might even be a good
+   idea to shut down the network completely during suspend, this may be
+   achieved by calling /etc/init.d/ifplugd stop and /etc/init.d/ifplugd
+   start in the appropriate places. I strongly urge the packagers of this
+   software for the Linux distributions to add such scripts to their
+   packages.
+
+  FAQ
+
+    1. Q: I want to use ifplugd with my PCMCIA device, but ifplugd quits
+       when it doesn't find eth0, when I have not inserted the card. What
+       can I do?
+       A: Use the -f switch. This is not very clean however, since
+       modprobe is called on each cable detection query of ifplugd to
+       load a module for the network device. This is suboptimal. You
+       should probably run ifplugd only when the card is really inserted.
+    2. Q: I am using the -f switch, but the kernel logs are getting
+       filled with messages like "modprobe: modprobe: Can't locate module
+       eth0". What can I do?
+       A: Make sure you have a line like alias eth0 off in your
+       /etc/modules.conf
+    3. Q: When the cable is unplugged and the interface shut down it is
+       still available with ifconfig and markes as UP. Why this?
+       A: ifplugd cannot detect the link beat with a shut down interface
+       on certain (most as of kernel 2.4.19) network drivers. Thus
+       ifplugd enables the interface before querying the link status.
+       This may be switched off with -a flag. You might want to use it if
+       you have a sane network driver (e.g. eepro100). The subdirectory
+       patches/ in the ifplugd distribution includes a patch for the
+       8139too 0.9.26 driver, which makes the driver compatible with -a.
+       Don't ask me how to apply this patch. If you don't know, you won't
+       need it.
+    4. Q: Does it work with anything else than plain ethernet or wireless
+       LAN?
+       A: Certainly not, since the MII and ETHTOOL ioctl()s and the
+       wireless extension don't exist on other network device types.
+    5. Q: I have a Realtek 8139 based network card. Everytime ifplugd
+       starts on bootup my machine freezes. What can I do?
+       A: This is a bug in the 8139too driver 0.9.25 (at least) shipped
+       with Linux 2.4.19, please upgrade to 8139too 0.9.26 (Linux 2.4.20
+       or seperately at
+       [33]http://www.sourceforge.net/projects/gkernel/).
+    6. Q: There are already laptop-net's ifd and miid, why did you write
+       your own daemon?
+       A: laptop-net was too integrated with its profile system and
+       didn't work on my hardware when I had a look on it. It seemed
+       easier to me to write a simple but feature complete replacement
+       than using laptop-net without most of the special features
+       disabled. I didn't know about miid when I wrote ifplugd, but in
+       any case ifplugd is much better than miid. For a comparison of
+       miid and ifplugd, have a look on
+       [34]http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=162763&repeat
+       merged=yes
+    7. Q: I have two interfaces (e.g. WLAN and copper ethernet), both
+       controlled by ifplugd, and want to force the network traffic to go
+       over the faster one of them, in case both are available at the
+       same time. How can I do this?
+       A: A tool I wrote called [35]ifmetric might be exactly what you're
+       looking for.
+
+Requirements
+
+   A newer Linux Kernel (I think 2.2 is good enough, alltough I tested it
+   only with 2.4) with a compatible device driver and ethernet card. Most
+   modern cards and drivers are compatible, like mine which works with
+   the 8139too driver.
+
+   ifplugd was developed and tested on Debian GNU/Linux "testing" from
+   July 2003, it should work on most other Linux distributions (and maybe
+   Unix versions) since it uses GNU autoconf and GNU libtool for source
+   code configuration and shared library management.
+
+   The machine used was a Medion 9580-F laptop with a Realtek 8139
+   network card and a PRISM1 PCMCIA wireless LAN card.
+
+   ifplugd needs [36]libdaemon.
+
+Installation
+
+   As this package is made with the GNU autotools you should run
+   ./configure inside the distribution directory for configuring the
+   source tree. After that you should run make for compilation and make
+   install (as root) for installation of ifplugd.
+
+   The installation scripts create an init script in
+   ${sysconfdir}/init.d/ifplugd, however no /etc/rc?.d/ links are created
+   for it.
+
+   Extensive installation instructions for installation of ifplugd on
+   Fedora Core 1 are available at [37]Geoff Ericksson's web site.
+
+Acknowledgements
+
+   For the developers of mii-diag, ethtool and laptop-net, since I looked
+   on their source codes for learning how to use the link beat ioctls.
+
+   Oliver Kurth for packaging ifplugd for Debian and ifplugd's manpage
+
+   Stefan Seyfried, Thomas Hood, Asgeir Nilsen, Sean Reifschneider, R.
+   Steve McKown, David Mitchell, Norbert Preining, Herbert Graeber for
+   patches
+
+   Frederic Lepied for integrating ifplugd into Mandrake Linux
+
+Download
+
+   The newest release is always available from
+   [38]http://0pointer.de/lennart/projects/ifplugd/
+
+   The current release is [39]0.28
+
+   Get ifplugd's development sources from the [40]Subversion
+   [41]repository ([42]viewcvs):
+svn checkout svn://seth.intheinter.net/ifplugd/trunk ifplugd
+
+   You may find an up to date Debian package of ifplugd on the [43]Debian
+   package repository.
+
+   ifplugd is nowadays included in many popular distributions (Mandrake,
+   Gentoo, Suse, Debian, Ubuntu); [44]Conectiva packages are available
+   courtesy of Gonzalo Nemmi. Fedora Core packages are available from
+   [45]Dag Wieers.
+
+   If you want to be notified whenever I release a new version of this
+   software use the subscription feature of [46]Freshmeat.
+
+   New! There is a joint ifplugd and waproamd [47]mailing list available.
+     _________________________________________________________________
+
+
+    Lennart Poettering <mzvscyhtq (at) 0pointer (dot) de>, June 2005
+
+   $Id: README.html.in 124 2005-06-04 19:22:59Z lennart $
+
+References
+
+   1. README#license
+   2. README#news
+   3. README#overview
+   4. README#status
+   5. README#documentation
+   6. README#requirements
+   7. README#installation
+   8. README#acks
+   9. README#download
+  10. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.27.tar.gz
+  11. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.27.tar.gz
+  12. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.26.tar.gz
+  13. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.25.tar.gz
+  14. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.24.tar.gz
+  15. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.23.tar.gz
+  16. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.22.tar.gz
+  17. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.21b.tar.gz
+  18. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.21.tar.gz
+  19. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.20.tar.gz
+  20. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.19.tar.gz
+  21. http://0pointer.de/lennart/projects/libdaemon/
+  22. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.18.tar.gz
+  23. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.17b.tar.gz
+  24. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.17.tar.gz
+  25. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.16.tar.gz
+  26. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.15.tar.gz
+  27. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.14.tar.gz
+  28. http://0pointer.de/lennart/projects/libdaemon/
+  29. http://0pointer.de/lennart/projects/waproamd/
+  30. http://0pointer.de/lennart/projects/ifplugd/ifplugd.8.xml
+  31. http://0pointer.de/lennart/projects/ifplugd/ifplugstatus.8.xml
+  32. http://0pointer.de/lennart/projects/ifplugd/ifplugd.conf.5.xml
+  33. http://www.sourceforge.net/projects/gkernel/
+  34. http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=162763&repeatmerged=yes
+  35. http://0pointer.de/lennart/projects/ifmetric/
+  36. http://0pointer.de/lennart/projects/libdaemon/
+  37. http://www.acmc.uq.edu.au/~gbe/linux/installation_of_ifplugd.html
+  38. http://0pointer.de/lennart/projects/ifplugd/
+  39. http://0pointer.de/lennart/projects/ifplugd/ifplugd-0.28.tar.gz
+  40. http://subversion.tigris.org/
+  41. svn://seth.intheinter.net/ifplugd
+  42. http://0pointer.de/cgi-bin/viewcvs.cgi/?root=ifplugd
+  43. http://packages.debian.org/ifplugd
+  44. http://www.linuxdicas.com.ar/caleb/rpm
+  45. http://dag.wieers.com/packages/ifplugd/
+  46. http://freshmeat.net/projects/ifplugd/
+  47. https://seth.intheinter.net/mailman/listinfo/ifplugd-discuss

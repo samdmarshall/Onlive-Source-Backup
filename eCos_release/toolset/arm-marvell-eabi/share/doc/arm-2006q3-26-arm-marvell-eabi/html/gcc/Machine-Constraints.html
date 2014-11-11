@@ -1,0 +1,947 @@
+<html lang="en">
+<head>
+<title>Machine Constraints - Using the GNU Compiler Collection (GCC)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using the GNU Compiler Collection (GCC)">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Constraints.html#Constraints" title="Constraints">
+<link rel="prev" href="Modifiers.html#Modifiers" title="Modifiers">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'' and ``Funding
+Free Software'', the Front-Cover texts being (a) (see below), and with
+the Back-Cover Texts being (b) (see below).  A copy of the license is
+included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Front-Cover Text is:
+
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Machine-Constraints"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Modifiers.html#Modifiers">Modifiers</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Constraints.html#Constraints">Constraints</a>
+<hr>
+</div>
+
+<h4 class="subsection">5.35.4 Constraints for Particular Machines</h4>
+
+<p><a name="index-machine-specific-constraints-1969"></a><a name="index-constraints_002c-machine-specific-1970"></a>
+Whenever possible, you should use the general-purpose constraint letters
+in <code>asm</code> arguments, since they will convey meaning more readily to
+people reading your code.  Failing that, use the constraint letters
+that usually have very similar meanings across architectures.  The most
+commonly used constraints are `<samp><span class="samp">m</span></samp>' and `<samp><span class="samp">r</span></samp>' (for memory and
+general-purpose registers respectively; see <a href="Simple-Constraints.html#Simple-Constraints">Simple Constraints</a>), and
+`<samp><span class="samp">I</span></samp>', usually the letter indicating the most common
+immediate-constant format.
+
+ <p>For each machine architecture, the
+<samp><span class="file">config/</span><var>machine</var><span class="file">/</span><var>machine</var><span class="file">.h</span></samp> file defines additional
+constraints.  These constraints are used by the compiler itself for
+instruction generation, as well as for <code>asm</code> statements; therefore,
+some of the constraints are not particularly interesting for <code>asm</code>. 
+The constraints are defined through these macros:
+
+     <dl>
+<dt><code>REG_CLASS_FROM_LETTER</code><dd>Register class constraints (usually lowercase).
+
+     <br><dt><code>CONST_OK_FOR_LETTER_P</code><dd>Immediate constant constraints, for non-floating point constants of
+word size or smaller precision (usually uppercase).
+
+     <br><dt><code>CONST_DOUBLE_OK_FOR_LETTER_P</code><dd>Immediate constant constraints, for all floating point constants and for
+constants of greater than word size precision (usually uppercase).
+
+     <br><dt><code>EXTRA_CONSTRAINT</code><dd>Special cases of registers or memory.  This macro is not required, and
+is only defined for some machines. 
+</dl>
+
+ <p>Inspecting these macro definitions in the compiler source for your
+machine is the best way to be certain you have the right constraints. 
+However, here is a summary of the machine-dependent constraints
+available on some particular machines.
+
+     <dl>
+<dt><em>ARM family&mdash;<samp></em><span class="file">arm.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>f</code><dd>Floating-point register
+
+          <br><dt><code>w</code><dd>VFP floating-point register
+
+          <br><dt><code>F</code><dd>One of the floating-point constants 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0
+or 10.0
+
+          <br><dt><code>G</code><dd>Floating-point constant that would satisfy the constraint `<samp><span class="samp">F</span></samp>' if it
+were negated
+
+          <br><dt><code>I</code><dd>Integer that is valid as an immediate operand in a data processing
+instruction.  That is, an integer in the range 0 to 255 rotated by a
+multiple of 2
+
+          <br><dt><code>J</code><dd>Integer in the range &minus;4095 to 4095
+
+          <br><dt><code>K</code><dd>Integer that satisfies constraint `<samp><span class="samp">I</span></samp>' when inverted (ones complement)
+
+          <br><dt><code>L</code><dd>Integer that satisfies constraint `<samp><span class="samp">I</span></samp>' when negated (twos complement)
+
+          <br><dt><code>M</code><dd>Integer in the range 0 to 32
+
+          <br><dt><code>Q</code><dd>A memory reference where the exact address is in a single register
+(``<samp><span class="samp">m</span></samp>'' is preferable for <code>asm</code> statements)
+
+          <br><dt><code>R</code><dd>An item in the constant pool
+
+          <br><dt><code>S</code><dd>A symbol in the text segment of the current file
+
+          <br><dt><code>Uv</code><dd>A memory reference suitable for VFP load/store insns (reg+constant offset)
+
+          <br><dt><code>Uy</code><dd>A memory reference suitable for iWMMXt load/store instructions.
+
+          <br><dt><code>Uq</code><dd>A memory reference suitable for the ARMv4 ldrsb instruction. 
+</dl>
+
+     <br><dt><em>AVR family&mdash;<samp></em><span class="file">avr.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>l</code><dd>Registers from r0 to r15
+
+          <br><dt><code>a</code><dd>Registers from r16 to r23
+
+          <br><dt><code>d</code><dd>Registers from r16 to r31
+
+          <br><dt><code>w</code><dd>Registers from r24 to r31.  These registers can be used in `<samp><span class="samp">adiw</span></samp>' command
+
+          <br><dt><code>e</code><dd>Pointer register (r26&ndash;r31)
+
+          <br><dt><code>b</code><dd>Base pointer register (r28&ndash;r31)
+
+          <br><dt><code>q</code><dd>Stack pointer register (SPH:SPL)
+
+          <br><dt><code>t</code><dd>Temporary register r0
+
+          <br><dt><code>x</code><dd>Register pair X (r27:r26)
+
+          <br><dt><code>y</code><dd>Register pair Y (r29:r28)
+
+          <br><dt><code>z</code><dd>Register pair Z (r31:r30)
+
+          <br><dt><code>I</code><dd>Constant greater than &minus;1, less than 64
+
+          <br><dt><code>J</code><dd>Constant greater than &minus;64, less than 1
+
+          <br><dt><code>K</code><dd>Constant integer 2
+
+          <br><dt><code>L</code><dd>Constant integer 0
+
+          <br><dt><code>M</code><dd>Constant that fits in 8 bits
+
+          <br><dt><code>N</code><dd>Constant integer &minus;1
+
+          <br><dt><code>O</code><dd>Constant integer 8, 16, or 24
+
+          <br><dt><code>P</code><dd>Constant integer 1
+
+          <br><dt><code>G</code><dd>A floating point constant 0.0
+</dl>
+
+     <br><dt><em>CRX Architecture&mdash;<samp></em><span class="file">crx.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>b</code><dd>Registers from r0 to r14 (registers without stack pointer)
+
+          <br><dt><code>l</code><dd>Register r16 (64-bit accumulator lo register)
+
+          <br><dt><code>h</code><dd>Register r17 (64-bit accumulator hi register)
+
+          <br><dt><code>k</code><dd>Register pair r16-r17. (64-bit accumulator lo-hi pair)
+
+          <br><dt><code>I</code><dd>Constant that fits in 3 bits
+
+          <br><dt><code>J</code><dd>Constant that fits in 4 bits
+
+          <br><dt><code>K</code><dd>Constant that fits in 5 bits
+
+          <br><dt><code>L</code><dd>Constant that is one of -1, 4, -4, 7, 8, 12, 16, 20, 32, 48
+
+          <br><dt><code>G</code><dd>Floating point constant that is legal for store immediate
+</dl>
+
+     <br><dt><em>PowerPC and IBM RS6000&mdash;<samp></em><span class="file">rs6000.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>b</code><dd>Address base register
+
+          <br><dt><code>f</code><dd>Floating point register
+
+          <br><dt><code>v</code><dd>Vector register
+
+          <br><dt><code>h</code><dd>`<samp><span class="samp">MQ</span></samp>', `<samp><span class="samp">CTR</span></samp>', or `<samp><span class="samp">LINK</span></samp>' register
+
+          <br><dt><code>q</code><dd>`<samp><span class="samp">MQ</span></samp>' register
+
+          <br><dt><code>c</code><dd>`<samp><span class="samp">CTR</span></samp>' register
+
+          <br><dt><code>l</code><dd>`<samp><span class="samp">LINK</span></samp>' register
+
+          <br><dt><code>x</code><dd>`<samp><span class="samp">CR</span></samp>' register (condition register) number 0
+
+          <br><dt><code>y</code><dd>`<samp><span class="samp">CR</span></samp>' register (condition register)
+
+          <br><dt><code>z</code><dd>`<samp><span class="samp">FPMEM</span></samp>' stack memory for FPR-GPR transfers
+
+          <br><dt><code>I</code><dd>Signed 16-bit constant
+
+          <br><dt><code>J</code><dd>Unsigned 16-bit constant shifted left 16 bits (use `<samp><span class="samp">L</span></samp>' instead for
+<code>SImode</code> constants)
+
+          <br><dt><code>K</code><dd>Unsigned 16-bit constant
+
+          <br><dt><code>L</code><dd>Signed 16-bit constant shifted left 16 bits
+
+          <br><dt><code>M</code><dd>Constant larger than 31
+
+          <br><dt><code>N</code><dd>Exact power of 2
+
+          <br><dt><code>O</code><dd>Zero
+
+          <br><dt><code>P</code><dd>Constant whose negation is a signed 16-bit constant
+
+          <br><dt><code>G</code><dd>Floating point constant that can be loaded into a register with one
+instruction per word
+
+          <br><dt><code>Q</code><dd>Memory operand that is an offset from a register (`<samp><span class="samp">m</span></samp>' is preferable
+for <code>asm</code> statements)
+
+          <br><dt><code>R</code><dd>AIX TOC entry
+
+          <br><dt><code>S</code><dd>Constant suitable as a 64-bit mask operand
+
+          <br><dt><code>T</code><dd>Constant suitable as a 32-bit mask operand
+
+          <br><dt><code>U</code><dd>System V Release 4 small data area reference
+</dl>
+
+     <br><dt><em>MorphoTech family&mdash;<samp></em><span class="file">mt.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>I</code><dd>Constant for an arithmetic insn (16-bit signed integer).
+
+          <br><dt><code>J</code><dd>The constant 0.
+
+          <br><dt><code>K</code><dd>Constant for a logical insn (16-bit zero-extended integer).
+
+          <br><dt><code>L</code><dd>A constant that can be loaded with <code>lui</code> (i.e. the bottom 16
+bits are zero).
+
+          <br><dt><code>M</code><dd>A constant that takes two words to load (i.e. not matched by
+<code>I</code>, <code>K</code>, or <code>L</code>).
+
+          <br><dt><code>N</code><dd>Negative 16-bit constants other than -65536.
+
+          <br><dt><code>O</code><dd>A 15-bit signed integer constant.
+
+          <br><dt><code>P</code><dd>A positive 16-bit constant. 
+</dl>
+
+     <br><dt><em>Intel 386&mdash;<samp></em><span class="file">i386.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>q</code><dd>`<samp><span class="samp">a</span></samp>', <code>b</code>, <code>c</code>, or <code>d</code> register for the i386. 
+For x86-64 it is equivalent to `<samp><span class="samp">r</span></samp>' class (for 8-bit instructions that
+do not use upper halves).
+
+          <br><dt><code>Q</code><dd>`<samp><span class="samp">a</span></samp>', <code>b</code>, <code>c</code>, or <code>d</code> register (for 8-bit instructions,
+that do use upper halves).
+
+          <br><dt><code>R</code><dd>Legacy register&mdash;equivalent to <code>r</code> class in i386 mode. 
+(for non-8-bit registers used together with 8-bit upper halves in a single
+instruction)
+
+          <br><dt><code>A</code><dd>Specifies the `<samp><span class="samp">a</span></samp>' or `<samp><span class="samp">d</span></samp>' registers.  This is primarily useful
+for 64-bit integer values (when in 32-bit mode) intended to be returned
+with the `<samp><span class="samp">d</span></samp>' register holding the most significant bits and the
+`<samp><span class="samp">a</span></samp>' register holding the least significant bits.
+
+          <br><dt><code>f</code><dd>Floating point register
+
+          <br><dt><code>t</code><dd>First (top of stack) floating point register
+
+          <br><dt><code>u</code><dd>Second floating point register
+
+          <br><dt><code>a</code><dd>`<samp><span class="samp">a</span></samp>' register
+
+          <br><dt><code>b</code><dd>`<samp><span class="samp">b</span></samp>' register
+
+          <br><dt><code>c</code><dd>`<samp><span class="samp">c</span></samp>' register
+
+          <br><dt><code>C</code><dd>Specifies constant that can be easily constructed in SSE register without
+loading it from memory.
+
+          <br><dt><code>d</code><dd>`<samp><span class="samp">d</span></samp>' register
+
+          <br><dt><code>D</code><dd>`<samp><span class="samp">di</span></samp>' register
+
+          <br><dt><code>S</code><dd>`<samp><span class="samp">si</span></samp>' register
+
+          <br><dt><code>x</code><dd>`<samp><span class="samp">xmm</span></samp>' SSE register
+
+          <br><dt><code>y</code><dd>MMX register
+
+          <br><dt><code>I</code><dd>Constant in range 0 to 31 (for 32-bit shifts)
+
+          <br><dt><code>J</code><dd>Constant in range 0 to 63 (for 64-bit shifts)
+
+          <br><dt><code>K</code><dd>`<samp><span class="samp">0xff</span></samp>'
+
+          <br><dt><code>L</code><dd>`<samp><span class="samp">0xffff</span></samp>'
+
+          <br><dt><code>M</code><dd>0, 1, 2, or 3 (shifts for <code>lea</code> instruction)
+
+          <br><dt><code>N</code><dd>Constant in range 0 to 255 (for <code>out</code> instruction)
+
+          <br><dt><code>Z</code><dd>Constant in range 0 to <code>0xffffffff</code> or symbolic reference known to fit specified range. 
+(for using immediates in zero extending 32-bit to 64-bit x86-64 instructions)
+
+          <br><dt><code>e</code><dd>Constant in range &minus;2147483648 to 2147483647 or symbolic reference known to fit specified range. 
+(for using immediates in 64-bit x86-64 instructions)
+
+          <br><dt><code>G</code><dd>Standard 80387 floating point constant
+</dl>
+
+     <br><dt><em>Intel IA-64&mdash;<samp></em><span class="file">ia64.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>General register <code>r0</code> to <code>r3</code> for <code>addl</code> instruction
+
+          <br><dt><code>b</code><dd>Branch register
+
+          <br><dt><code>c</code><dd>Predicate register (`<samp><span class="samp">c</span></samp>' as in &ldquo;conditional&rdquo;)
+
+          <br><dt><code>d</code><dd>Application register residing in M-unit
+
+          <br><dt><code>e</code><dd>Application register residing in I-unit
+
+          <br><dt><code>f</code><dd>Floating-point register
+
+          <br><dt><code>m</code><dd>Memory operand. 
+Remember that `<samp><span class="samp">m</span></samp>' allows postincrement and postdecrement which
+require printing with `<samp><span class="samp">%Pn</span></samp>' on IA-64. 
+Use `<samp><span class="samp">S</span></samp>' to disallow postincrement and postdecrement.
+
+          <br><dt><code>G</code><dd>Floating-point constant 0.0 or 1.0
+
+          <br><dt><code>I</code><dd>14-bit signed integer constant
+
+          <br><dt><code>J</code><dd>22-bit signed integer constant
+
+          <br><dt><code>K</code><dd>8-bit signed integer constant for logical instructions
+
+          <br><dt><code>L</code><dd>8-bit adjusted signed integer constant for compare pseudo-ops
+
+          <br><dt><code>M</code><dd>6-bit unsigned integer constant for shift counts
+
+          <br><dt><code>N</code><dd>9-bit signed integer constant for load and store postincrements
+
+          <br><dt><code>O</code><dd>The constant zero
+
+          <br><dt><code>P</code><dd>0 or &minus;1 for <code>dep</code> instruction
+
+          <br><dt><code>Q</code><dd>Non-volatile memory for floating-point loads and stores
+
+          <br><dt><code>R</code><dd>Integer constant in the range 1 to 4 for <code>shladd</code> instruction
+
+          <br><dt><code>S</code><dd>Memory operand except postincrement and postdecrement
+</dl>
+
+     <br><dt><em>FRV&mdash;<samp></em><span class="file">frv.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Register in the class <code>ACC_REGS</code> (<code>acc0</code> to <code>acc7</code>).
+
+          <br><dt><code>b</code><dd>Register in the class <code>EVEN_ACC_REGS</code> (<code>acc0</code> to <code>acc7</code>).
+
+          <br><dt><code>c</code><dd>Register in the class <code>CC_REGS</code> (<code>fcc0</code> to <code>fcc3</code> and
+<code>icc0</code> to <code>icc3</code>).
+
+          <br><dt><code>d</code><dd>Register in the class <code>GPR_REGS</code> (<code>gr0</code> to <code>gr63</code>).
+
+          <br><dt><code>e</code><dd>Register in the class <code>EVEN_REGS</code> (<code>gr0</code> to <code>gr63</code>). 
+Odd registers are excluded not in the class but through the use of a machine
+mode larger than 4 bytes.
+
+          <br><dt><code>f</code><dd>Register in the class <code>FPR_REGS</code> (<code>fr0</code> to <code>fr63</code>).
+
+          <br><dt><code>h</code><dd>Register in the class <code>FEVEN_REGS</code> (<code>fr0</code> to <code>fr63</code>). 
+Odd registers are excluded not in the class but through the use of a machine
+mode larger than 4 bytes.
+
+          <br><dt><code>l</code><dd>Register in the class <code>LR_REG</code> (the <code>lr</code> register).
+
+          <br><dt><code>q</code><dd>Register in the class <code>QUAD_REGS</code> (<code>gr2</code> to <code>gr63</code>). 
+Register numbers not divisible by 4 are excluded not in the class but through
+the use of a machine mode larger than 8 bytes.
+
+          <br><dt><code>t</code><dd>Register in the class <code>ICC_REGS</code> (<code>icc0</code> to <code>icc3</code>).
+
+          <br><dt><code>u</code><dd>Register in the class <code>FCC_REGS</code> (<code>fcc0</code> to <code>fcc3</code>).
+
+          <br><dt><code>v</code><dd>Register in the class <code>ICR_REGS</code> (<code>cc4</code> to <code>cc7</code>).
+
+          <br><dt><code>w</code><dd>Register in the class <code>FCR_REGS</code> (<code>cc0</code> to <code>cc3</code>).
+
+          <br><dt><code>x</code><dd>Register in the class <code>QUAD_FPR_REGS</code> (<code>fr0</code> to <code>fr63</code>). 
+Register numbers not divisible by 4 are excluded not in the class but through
+the use of a machine mode larger than 8 bytes.
+
+          <br><dt><code>z</code><dd>Register in the class <code>SPR_REGS</code> (<code>lcr</code> and <code>lr</code>).
+
+          <br><dt><code>A</code><dd>Register in the class <code>QUAD_ACC_REGS</code> (<code>acc0</code> to <code>acc7</code>).
+
+          <br><dt><code>B</code><dd>Register in the class <code>ACCG_REGS</code> (<code>accg0</code> to <code>accg7</code>).
+
+          <br><dt><code>C</code><dd>Register in the class <code>CR_REGS</code> (<code>cc0</code> to <code>cc7</code>).
+
+          <br><dt><code>G</code><dd>Floating point constant zero
+
+          <br><dt><code>I</code><dd>6-bit signed integer constant
+
+          <br><dt><code>J</code><dd>10-bit signed integer constant
+
+          <br><dt><code>L</code><dd>16-bit signed integer constant
+
+          <br><dt><code>M</code><dd>16-bit unsigned integer constant
+
+          <br><dt><code>N</code><dd>12-bit signed integer constant that is negative&mdash;i.e. in the
+range of &minus;2048 to &minus;1
+
+          <br><dt><code>O</code><dd>Constant zero
+
+          <br><dt><code>P</code><dd>12-bit signed integer constant that is greater than zero&mdash;i.e. in the
+range of 1 to 2047.
+
+     </dl>
+
+     <br><dt><em>Blackfin family&mdash;<samp></em><span class="file">bfin.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>P register
+
+          <br><dt><code>d</code><dd>D register
+
+          <br><dt><code>z</code><dd>A call clobbered P register.
+
+          <br><dt><code>D</code><dd>Even-numbered D register
+
+          <br><dt><code>W</code><dd>Odd-numbered D register
+
+          <br><dt><code>e</code><dd>Accumulator register.
+
+          <br><dt><code>A</code><dd>Even-numbered accumulator register.
+
+          <br><dt><code>B</code><dd>Odd-numbered accumulator register.
+
+          <br><dt><code>b</code><dd>I register
+
+          <br><dt><code>B</code><dd>B register
+
+          <br><dt><code>f</code><dd>M register
+
+          <br><dt><code>c</code><dd>Registers used for circular buffering, i.e. I, B, or L registers.
+
+          <br><dt><code>C</code><dd>The CC register.
+
+          <br><dt><code>x</code><dd>Any D, P, B, M, I or L register.
+
+          <br><dt><code>y</code><dd>Additional registers typically used only in prologues and epilogues: RETS,
+RETN, RETI, RETX, RETE, ASTAT, SEQSTAT and USP.
+
+          <br><dt><code>w</code><dd>Any register except accumulators or CC.
+
+          <br><dt><code>Ksh</code><dd>Signed 16 bit integer (in the range -32768 to 32767)
+
+          <br><dt><code>Kuh</code><dd>Unsigned 16 bit integer (in the range 0 to 65535)
+
+          <br><dt><code>Ks7</code><dd>Signed 7 bit integer (in the range -64 to 63)
+
+          <br><dt><code>Ku7</code><dd>Unsigned 7 bit integer (in the range 0 to 127)
+
+          <br><dt><code>Ku5</code><dd>Unsigned 5 bit integer (in the range 0 to 31)
+
+          <br><dt><code>Ks4</code><dd>Signed 4 bit integer (in the range -8 to 7)
+
+          <br><dt><code>Ks3</code><dd>Signed 3 bit integer (in the range -3 to 4)
+
+          <br><dt><code>Ku3</code><dd>Unsigned 3 bit integer (in the range 0 to 7)
+
+          <br><dt><code>P</code><var>n</var><dd>Constant <var>n</var>, where <var>n</var> is a single-digit constant in the range 0 to 4.
+
+          <br><dt><code>M1</code><dd>Constant 255.
+
+          <br><dt><code>M2</code><dd>Constant 65535.
+
+          <br><dt><code>J</code><dd>An integer constant with exactly a single bit set.
+
+          <br><dt><code>L</code><dd>An integer constant with all bits set except exactly one.
+
+          <br><dt><code>H</code>
+<br><dt><code>Q</code><dd>Any SYMBOL_REF. 
+</dl>
+
+     <br><dt><em>M32C&mdash;<samp></em><span class="file">m32c.c</span><em></samp></em>
+<br><dt><em>Rsp</em><dt><em>Rfb</em><dt><em>Rsb</em><dd>`<samp><span class="samp">$sp</span></samp>', `<samp><span class="samp">$fb</span></samp>', `<samp><span class="samp">$sb</span></samp>'.
+
+     <br><dt><em>Rcr</em><dd>Any control register, when they're 16 bits wide (nothing if control
+registers are 24 bits wide)
+
+     <br><dt><em>Rcl</em><dd>Any control register, when they're 24 bits wide.
+
+     <br><dt><em>R0w</em><dt><em>R1w</em><dt><em>R2w</em><dt><em>R3w</em><dd>$r0, $r1, $r2, $r3.
+
+     <br><dt><em>R02</em><dd>$r0 or $r2, or $r2r0 for 32 bit values.
+
+     <br><dt><em>R13</em><dd>$r1 or $r3, or $r3r1 for 32 bit values.
+
+     <br><dt><em>Rdi</em><dd>A register that can hold a 64 bit value.
+
+     <br><dt><em>Rhl</em><dd>$r0 or $r1 (registers with addressable high/low bytes)
+
+     <br><dt><em>R23</em><dd>$r2 or $r3
+
+     <br><dt><em>Raa</em><dd>Address registers
+
+     <br><dt><em>Raw</em><dd>Address registers when they're 16 bits wide.
+
+     <br><dt><em>Ral</em><dd>Address registers when they're 24 bits wide.
+
+     <br><dt><em>Rqi</em><dd>Registers that can hold QI values.
+
+     <br><dt><em>Rad</em><dd>Registers that can be used with displacements ($a0, $a1, $sb).
+
+     <br><dt><em>Rsi</em><dd>Registers that can hold 32 bit values.
+
+     <br><dt><em>Rhi</em><dd>Registers that can hold 16 bit values.
+
+     <br><dt><em>Rhc</em><dd>Registers chat can hold 16 bit values, including all control
+registers.
+
+     <br><dt><em>Rra</em><dd>$r0 through R1, plus $a0 and $a1.
+
+     <br><dt><em>Rfl</em><dd>The flags register.
+
+     <br><dt><em>Rmm</em><dd>The memory-based pseudo-registers $mem0 through $mem15.
+
+     <br><dt><em>Rpi</em><dd>Registers that can hold pointers (16 bit registers for r8c, m16c; 24
+bit registers for m32cm, m32c).
+
+     <br><dt><em>Rpa</em><dd>Matches multiple registers in a PARALLEL to form a larger register. 
+Used to match function return values.
+
+     <br><dt><em>Is3</em><dd>-8 <small class="dots">...</small> 7
+
+     <br><dt><em>IS1</em><dd>-128 <small class="dots">...</small> 127
+
+     <br><dt><em>IS2</em><dd>-32768 <small class="dots">...</small> 32767
+
+     <br><dt><em>IU2</em><dd>0 <small class="dots">...</small> 65535
+
+     <br><dt><em>In4</em><dd>-8 <small class="dots">...</small> -1 or 1 <small class="dots">...</small> 8
+
+     <br><dt><em>In5</em><dd>-16 <small class="dots">...</small> -1 or 1 <small class="dots">...</small> 16
+
+     <br><dt><em>In4</em><dd>-8 <small class="dots">...</small> -1 or 1 <small class="dots">...</small> 8
+
+     <br><dt><em>IM2</em><dd>-65536 <small class="dots">...</small> -1
+
+     <br><dt><em>Ilb</em><dd>An 8 bit value with exactly one bit set.
+
+     <br><dt><em>Ilw</em><dd>A 16 bit value with exactly one bit set.
+
+     <br><dt><em>Sd</em><dd>The common src/dest memory addressing modes.
+
+     <br><dt><em>Sa</em><dd>Memory addressed using $a0 or $a1.
+
+     <br><dt><em>Si</em><dd>Memory addressed with immediate addresses.
+
+     <br><dt><em>Ss</em><dd>Memory addressed using the stack pointer ($sp).
+
+     <br><dt><em>Sf</em><dd>Memory addressed using the frame base register ($fb).
+
+     <br><dt><em>Ss</em><dd>Memory addressed using the small base register ($sb).
+
+     <br><dt><em>S1</em><dd>$r1h
+
+     <br><dt><em>MIPS&mdash;<samp></em><span class="file">mips.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>d</code><dd>General-purpose integer register
+
+          <br><dt><code>f</code><dd>Floating-point register (if available)
+
+          <br><dt><code>h</code><dd>`<samp><span class="samp">Hi</span></samp>' register
+
+          <br><dt><code>l</code><dd>`<samp><span class="samp">Lo</span></samp>' register
+
+          <br><dt><code>x</code><dd>`<samp><span class="samp">Hi</span></samp>' or `<samp><span class="samp">Lo</span></samp>' register
+
+          <br><dt><code>y</code><dd>General-purpose integer register
+
+          <br><dt><code>z</code><dd>Floating-point status register
+
+          <br><dt><code>I</code><dd>Signed 16-bit constant (for arithmetic instructions)
+
+          <br><dt><code>J</code><dd>Zero
+
+          <br><dt><code>K</code><dd>Zero-extended 16-bit constant (for logic instructions)
+
+          <br><dt><code>L</code><dd>Constant with low 16 bits zero (can be loaded with <code>lui</code>)
+
+          <br><dt><code>M</code><dd>32-bit constant which requires two instructions to load (a constant
+which is not `<samp><span class="samp">I</span></samp>', `<samp><span class="samp">K</span></samp>', or `<samp><span class="samp">L</span></samp>')
+
+          <br><dt><code>N</code><dd>Negative 16-bit constant
+
+          <br><dt><code>O</code><dd>Exact power of two
+
+          <br><dt><code>P</code><dd>Positive 16-bit constant
+
+          <br><dt><code>G</code><dd>Floating point zero
+
+          <br><dt><code>Q</code><dd>Memory reference that can be loaded with more than one instruction
+(`<samp><span class="samp">m</span></samp>' is preferable for <code>asm</code> statements)
+
+          <br><dt><code>R</code><dd>Memory reference that can be loaded with one instruction
+(`<samp><span class="samp">m</span></samp>' is preferable for <code>asm</code> statements)
+
+          <br><dt><code>S</code><dd>Memory reference in external OSF/rose PIC format
+(`<samp><span class="samp">m</span></samp>' is preferable for <code>asm</code> statements)
+</dl>
+
+     <br><dt><em>Motorola 680x0 and ColdFire&mdash;<samp></em><span class="file">m68k.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Address register
+
+          <br><dt><code>d</code><dd>Data register
+
+          <br><dt><code>f</code><dd>68881 floating-point register, if available
+
+          <br><dt><code>I</code><dd>Integer in the range 1 to 8
+
+          <br><dt><code>J</code><dd>16-bit signed number
+
+          <br><dt><code>K</code><dd>Signed number whose magnitude is greater than 0x80
+
+          <br><dt><code>L</code><dd>Integer in the range &minus;8 to &minus;1
+
+          <br><dt><code>M</code><dd>Signed number whose magnitude is greater than 0x100
+
+          <br><dt><code>Q</code><dd>Address register indirect addressing mode
+
+          <br><dt><code>S</code><dd>Operands that satisfy <code>m</code> when -mpcrel is in effect
+
+          <br><dt><code>T</code><dd>Operands that satisfy <code>s</code> when -mpcrel is not in effect
+
+          <br><dt><code>U</code><dd>Register offset addressing mode
+
+          <br><dt><code>G</code><dd>Floating point constant that is not a 68881 constant
+</dl>
+
+     <br><dt><em>Motorola 68HC11 &amp; 68HC12 families&mdash;<samp></em><span class="file">m68hc11.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Register `a'
+
+          <br><dt><code>b</code><dd>Register `b'
+
+          <br><dt><code>d</code><dd>Register `d'
+
+          <br><dt><code>q</code><dd>An 8-bit register
+
+          <br><dt><code>t</code><dd>Temporary soft register _.tmp
+
+          <br><dt><code>u</code><dd>A soft register _.d1 to _.d31
+
+          <br><dt><code>w</code><dd>Stack pointer register
+
+          <br><dt><code>x</code><dd>Register `x'
+
+          <br><dt><code>y</code><dd>Register `y'
+
+          <br><dt><code>z</code><dd>Pseudo register `z' (replaced by `x' or `y' at the end)
+
+          <br><dt><code>A</code><dd>An address register: x, y or z
+
+          <br><dt><code>B</code><dd>An address register: x or y
+
+          <br><dt><code>D</code><dd>Register pair (x:d) to form a 32-bit value
+
+          <br><dt><code>L</code><dd>Constants in the range &minus;65536 to 65535
+
+          <br><dt><code>M</code><dd>Constants whose 16-bit low part is zero
+
+          <br><dt><code>N</code><dd>Constant integer 1 or &minus;1
+
+          <br><dt><code>O</code><dd>Constant integer 16
+
+          <br><dt><code>P</code><dd>Constants in the range &minus;8 to 2
+
+     </dl>
+
+     <br><dt><em>SPARC&mdash;<samp></em><span class="file">sparc.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>f</code><dd>Floating-point register on the SPARC-V8 architecture and
+lower floating-point register on the SPARC-V9 architecture.
+
+          <br><dt><code>e</code><dd>Floating-point register.  It is equivalent to `<samp><span class="samp">f</span></samp>' on the
+SPARC-V8 architecture and contains both lower and upper
+floating-point registers on the SPARC-V9 architecture.
+
+          <br><dt><code>c</code><dd>Floating-point condition code register.
+
+          <br><dt><code>d</code><dd>Lower floating-point register.  It is only valid on the SPARC-V9
+architecture when the Visual Instruction Set is available.
+
+          <br><dt><code>b</code><dd>Floating-point register.  It is only valid on the SPARC-V9 architecture
+when the Visual Instruction Set is available.
+
+          <br><dt><code>h</code><dd>64-bit global or out register for the SPARC-V8+ architecture.
+
+          <br><dt><code>I</code><dd>Signed 13-bit constant
+
+          <br><dt><code>J</code><dd>Zero
+
+          <br><dt><code>K</code><dd>32-bit constant with the low 12 bits clear (a constant that can be
+loaded with the <code>sethi</code> instruction)
+
+          <br><dt><code>L</code><dd>A constant in the range supported by <code>movcc</code> instructions
+
+          <br><dt><code>M</code><dd>A constant in the range supported by <code>movrcc</code> instructions
+
+          <br><dt><code>N</code><dd>Same as `<samp><span class="samp">K</span></samp>', except that it verifies that bits that are not in the
+lower 32-bit range are all zero.  Must be used instead of `<samp><span class="samp">K</span></samp>' for
+modes wider than <code>SImode</code>
+
+          <br><dt><code>O</code><dd>The constant 4096
+
+          <br><dt><code>G</code><dd>Floating-point zero
+
+          <br><dt><code>H</code><dd>Signed 13-bit constant, sign-extended to 32 or 64 bits
+
+          <br><dt><code>Q</code><dd>Floating-point constant whose integral representation can
+be moved into an integer register using a single sethi
+instruction
+
+          <br><dt><code>R</code><dd>Floating-point constant whose integral representation can
+be moved into an integer register using a single mov
+instruction
+
+          <br><dt><code>S</code><dd>Floating-point constant whose integral representation can
+be moved into an integer register using a high/lo_sum
+instruction sequence
+
+          <br><dt><code>T</code><dd>Memory address aligned to an 8-byte boundary
+
+          <br><dt><code>U</code><dd>Even register
+
+          <br><dt><code>W</code><dd>Memory address for `<samp><span class="samp">e</span></samp>' constraint registers
+
+          <br><dt><code>Y</code><dd>Vector zero
+
+     </dl>
+
+     <br><dt><em>TMS320C3x/C4x&mdash;<samp></em><span class="file">c4x.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Auxiliary (address) register (ar0-ar7)
+
+          <br><dt><code>b</code><dd>Stack pointer register (sp)
+
+          <br><dt><code>c</code><dd>Standard (32-bit) precision integer register
+
+          <br><dt><code>f</code><dd>Extended (40-bit) precision register (r0-r11)
+
+          <br><dt><code>k</code><dd>Block count register (bk)
+
+          <br><dt><code>q</code><dd>Extended (40-bit) precision low register (r0-r7)
+
+          <br><dt><code>t</code><dd>Extended (40-bit) precision register (r0-r1)
+
+          <br><dt><code>u</code><dd>Extended (40-bit) precision register (r2-r3)
+
+          <br><dt><code>v</code><dd>Repeat count register (rc)
+
+          <br><dt><code>x</code><dd>Index register (ir0-ir1)
+
+          <br><dt><code>y</code><dd>Status (condition code) register (st)
+
+          <br><dt><code>z</code><dd>Data page register (dp)
+
+          <br><dt><code>G</code><dd>Floating-point zero
+
+          <br><dt><code>H</code><dd>Immediate 16-bit floating-point constant
+
+          <br><dt><code>I</code><dd>Signed 16-bit constant
+
+          <br><dt><code>J</code><dd>Signed 8-bit constant
+
+          <br><dt><code>K</code><dd>Signed 5-bit constant
+
+          <br><dt><code>L</code><dd>Unsigned 16-bit constant
+
+          <br><dt><code>M</code><dd>Unsigned 8-bit constant
+
+          <br><dt><code>N</code><dd>Ones complement of unsigned 16-bit constant
+
+          <br><dt><code>O</code><dd>High 16-bit constant (32-bit constant with 16 LSBs zero)
+
+          <br><dt><code>Q</code><dd>Indirect memory reference with signed 8-bit or index register displacement
+
+          <br><dt><code>R</code><dd>Indirect memory reference with unsigned 5-bit displacement
+
+          <br><dt><code>S</code><dd>Indirect memory reference with 1 bit or index register displacement
+
+          <br><dt><code>T</code><dd>Direct memory reference
+
+          <br><dt><code>U</code><dd>Symbolic address
+
+     </dl>
+
+     <br><dt><em>S/390 and zSeries&mdash;<samp></em><span class="file">s390.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Address register (general purpose register except r0)
+
+          <br><dt><code>c</code><dd>Condition code register
+
+          <br><dt><code>d</code><dd>Data register (arbitrary general purpose register)
+
+          <br><dt><code>f</code><dd>Floating-point register
+
+          <br><dt><code>I</code><dd>Unsigned 8-bit constant (0&ndash;255)
+
+          <br><dt><code>J</code><dd>Unsigned 12-bit constant (0&ndash;4095)
+
+          <br><dt><code>K</code><dd>Signed 16-bit constant (&minus;32768&ndash;32767)
+
+          <br><dt><code>L</code><dd>Value appropriate as displacement.
+               <dl>
+       <dt><code>(0..4095)</code><dd>       for short displacement
+       <br><dt><code>(-524288..524287)</code><dd>       for long displacement
+</dl>
+
+          <br><dt><code>M</code><dd>Constant integer with a value of 0x7fffffff.
+
+          <br><dt><code>N</code><dd>Multiple letter constraint followed by 4 parameter letters.
+               <dl>
+         <dt><code>0..9:</code><dd>         number of the part counting from most to least significant
+         <br><dt><code>H,Q:</code><dd>         mode of the part
+         <br><dt><code>D,S,H:</code><dd>         mode of the containing operand
+         <br><dt><code>0,F:</code><dd>         value of the other parts (F&mdash;all bits set)
+</dl>
+          The constraint matches if the specified part of a constant
+has a value different from it's other parts.
+
+          <br><dt><code>Q</code><dd>Memory reference without index register and with short displacement.
+
+          <br><dt><code>R</code><dd>Memory reference with index register and short displacement.
+
+          <br><dt><code>S</code><dd>Memory reference without index register but with long displacement.
+
+          <br><dt><code>T</code><dd>Memory reference with index register and long displacement.
+
+          <br><dt><code>U</code><dd>Pointer with short displacement.
+
+          <br><dt><code>W</code><dd>Pointer with long displacement.
+
+          <br><dt><code>Y</code><dd>Shift count operand.
+
+     </dl>
+
+     <br><dt><em>Xstormy16&mdash;<samp></em><span class="file">stormy16.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>Register r0.
+
+          <br><dt><code>b</code><dd>Register r1.
+
+          <br><dt><code>c</code><dd>Register r2.
+
+          <br><dt><code>d</code><dd>Register r8.
+
+          <br><dt><code>e</code><dd>Registers r0 through r7.
+
+          <br><dt><code>t</code><dd>Registers r0 and r1.
+
+          <br><dt><code>y</code><dd>The carry register.
+
+          <br><dt><code>z</code><dd>Registers r8 and r9.
+
+          <br><dt><code>I</code><dd>A constant between 0 and 3 inclusive.
+
+          <br><dt><code>J</code><dd>A constant that has exactly one bit set.
+
+          <br><dt><code>K</code><dd>A constant that has exactly one bit clear.
+
+          <br><dt><code>L</code><dd>A constant between 0 and 255 inclusive.
+
+          <br><dt><code>M</code><dd>A constant between &minus;255 and 0 inclusive.
+
+          <br><dt><code>N</code><dd>A constant between &minus;3 and 0 inclusive.
+
+          <br><dt><code>O</code><dd>A constant between 1 and 4 inclusive.
+
+          <br><dt><code>P</code><dd>A constant between &minus;4 and &minus;1 inclusive.
+
+          <br><dt><code>Q</code><dd>A memory reference that is a stack push.
+
+          <br><dt><code>R</code><dd>A memory reference that is a stack pop.
+
+          <br><dt><code>S</code><dd>A memory reference that refers to a constant address of known value.
+
+          <br><dt><code>T</code><dd>The register indicated by Rx (not implemented yet).
+
+          <br><dt><code>U</code><dd>A constant that is not between 2 and 15 inclusive.
+
+          <br><dt><code>Z</code><dd>The constant 0.
+
+     </dl>
+
+     <br><dt><em>Xtensa&mdash;<samp></em><span class="file">xtensa.h</span><em></samp></em><dd>
+          <dl>
+<dt><code>a</code><dd>General-purpose 32-bit register
+
+          <br><dt><code>b</code><dd>One-bit boolean register
+
+          <br><dt><code>A</code><dd>MAC16 40-bit accumulator register
+
+          <br><dt><code>I</code><dd>Signed 12-bit integer constant, for use in MOVI instructions
+
+          <br><dt><code>J</code><dd>Signed 8-bit integer constant, for use in ADDI instructions
+
+          <br><dt><code>K</code><dd>Integer constant valid for BccI instructions
+
+          <br><dt><code>L</code><dd>Unsigned constant valid for BccUI instructions
+
+     </dl>
+
+ </dl>
+
+<!-- Each of the following nodes are wrapped in separate -->
+<!-- "@ifset INTERNALS" to work around memory limits for the default -->
+<!-- configuration in older tetex distributions.  Known to not work: -->
+<!-- tetex-1.0.7, known to work: tetex-2.0.2. -->
+</body></html>
+

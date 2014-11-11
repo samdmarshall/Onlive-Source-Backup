@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuiteShellEchoServiceFail
+Exec=/src/jhbuild/checkout/dbus/test/test-shell-service "this should 'fail' because of an unterminated quote 
+User=anyrandomuser
+

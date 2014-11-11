@@ -1,0 +1,119 @@
+.TH ifplugd 8 User Manuals
+.SH NAME
+ifplugd \- A link detection daemon for ethernet devices
+.SH SYNOPSIS
+\fBifplugd [\fIoptions\fB]
+\f1
+.SH DESCRIPTION
+ifplugd is a daemon which will automatically configure your ethernet device when a cable is plugged in and automatically unconfigure it if the cable is pulled. This is useful on laptops with on-board network adapters, since it will only configure the interface when a cable is really connected.
+
+It uses your distribution's native ifup/ifdown programs, but can be configured to do anything you wish when the state of the interface changes. It may ignore short unplugged whiles (\fB-d\f1 option) or plugged whiles (\fB-u\f1 option).
+
+ifplugd may be used in "compatibility mode" by specifying -F on the command line. Than ifplugd will treat network drivers which do not support link beat querying as always online.
+.SH OPTIONS
+.TP
+\fB-a | --no-auto\f1
+Do not enable interface automatically (default: off) 
+.TP
+\fB-n | --no-daemon\f1
+Do not daemonize (for debugging) (default: off) 
+.TP
+\fB-s | --no-syslog\f1
+Do not use syslog, use stdout instead (for debugging) (default: off). 
+.TP
+\fB-b | --no-beep\f1
+Do not beep (off) 
+.TP
+\fB-f | --ignore-fail\f1
+Ignore detection failure, retry instead. Failure is treated as "no link". (default: off) 
+.TP
+\fB-F | --ignore-fail-positive\f1
+Ignore detection failure, retry instead. Failure is treated as "link detected". (default: off) 
+.TP
+\fB-i | --iface=\f1 \fIIFACE\f1
+Specify ethernet interface (default: eth0) 
+.TP
+\fB-r | --run=\f1 \fIEXEC\f1
+Specify program to execute when link status changes (default: \fI/etc/ifplugd/ifplugd.action\f1) 
+.TP
+\fB-I | --ignore-retval\f1
+Don't exit on nonzero return value of program executed on link change. (default: off) 
+.TP
+\fB-t | --poll-time=\f1 \fISECS\f1
+Specify poll time in seconds (default: 1) 
+.TP
+\fB-u | --delay-up=\f1 \fISECS\f1
+Specify delay for configuring interface (default: 0) 
+.TP
+\fB-d | --delay-down=\f1 \fISECS\f1
+Specify delay for deconfiguring interface (default: 5) 
+.TP
+\fB-m | --api-mode=\f1 \fIMODE\f1
+Force a specific link beat detection ioctl() API. Possible values are auto, iff, wlan, ethtool, mii, and priv for automatic detection, interface flag (IFF_RUNNING), wireless extension, SIOCETHTOOL, SIOCGMIIREG resp. SIOCPRIV. Only the first character of the argument is relevant, case insensitive. (default: auto) 
+.TP
+\fB-p | --no-startup\f1
+Don't call the script to bring up network on deamon start (default: off) 
+.TP
+\fB-q | --no-shutdown\f1
+Don't call the script for network shutdown on deamon quit (default: off) 
+.TP
+\fB-w | --wait-on-fork\f1
+When daemonizing, wait until the background process finished with the initial link beat detection. When this is enabled, the parent process will return the link status on exit. 1 means link beat detected, 2 stands for link beat not detected, everything else is an error. 
+.TP
+\fB-W | --wait-on-kill\f1
+When killing a running daemon (with -k) wait until the daemon died. 
+.TP
+\fB-x | --extra-arg=\f1 \fIARG\f1
+Specify an extra argument to be passed to the action script. 
+.TP
+\fB-M | --monitor\f1
+Don't fail when the network interface is not available, instead use NETLINK to monitor device avaibility. The is useful for PCMCIA devices and similar. 
+.TP
+\fB-h | --help\f1
+Show help 
+.TP
+\fB-k | --kill\f1
+Kill a running daemon (Specify -i to select the daemon instance to kill) 
+.TP
+\fB-c | --check-running\f1
+Check if a daemon is running for a given network interface. Sets the return value to 0 if a daemon is already running or to 255 if not. 
+.TP
+\fB-v | --version\f1
+Show version 
+.TP
+\fB-S | --supend\f1
+Suspend a running daemon. The daemon will no longer check the link status until it is resumed (-R) again. (Specify -i to select the daemon instance to suspend.) 
+.TP
+\fB-R | --resume\f1
+Resume a suspended daemon. (Specify -i to select the daemon instance to resume.) 
+.TP
+\fB-z | --info\f1
+Request that a running daemon shall write its status information to syslog. (Specify -i to select the daemon instance to send the request to.) 
+.SH FILES
+\fI/etc/ifplugd/ifplugd.conf\f1: this file is sourced by the init script \fI/etc/init.d/ifplugd\f1 and contains the interface to be monitored and the options to be used.
+
+\fI/etc/ifplugd/ifplugd.action\f1: this is the script which will be called by the daemon whenever the state of the interface changes. It takes two areguments: the first is the interface name (eg. eth0), the second either "up" or "down". 
+
+\fI/var/run/ifplugd.<iface>.pid\f1: the pid file for ifplugd.
+.SH ENVIRONMENT
+The action script will be called with two environment variables set:
+
+\fIIFPLUGD_PREVIOUS\f1 The previous link status. Either "up", "down", "error" or "disabled". The former values should be obvious, the latter is set on daemon startup.
+
+\fIIFPLUGD_CURRENT\f1 The current link status. See above for possible values.
+.SH SIGNALS
+\fISIGINT, SIGTERM\f1 ifplugd will quit, possibly running the shutdown script. This is issued by passing -k to ifplugd.
+
+\fISIGQUIT\f1 ifplugd will quit, the shutdown script is never run.
+
+\fISIGHUP\f1 ifplugd will write its status information to syslog. This is issued by -z.
+
+\fISIGUSR1\f1 ifplugd will go to suspend mode. (-S)
+
+\fISIGUSR2\f1 ifplugd will resume from suspend mode. (-R)
+.SH AUTHOR
+ifplugd was written by Lennart Poettering <mzvscyhtq (at) 0pointer (dot) de>. ifplugd is available at \fBhttp://0pointer.de/lennart/projects/ifplugd/\f1
+.SH SEE ALSO
+\fBifplugd.conf(5)\f1, \fBifup(8)\f1, \fBinterfaces(5)\f1, \fBifconfig(8)\f1, \fBifplugstatus(8)\f1
+.SH COMMENTS
+This man page was written using \fBxmltoman(1)\f1 by Oliver Kurth.

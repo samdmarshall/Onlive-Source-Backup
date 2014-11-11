@@ -1,0 +1,96 @@
+2006-02-15  Uwe Kindler  <uwe_kindler@web.de>
+
+	* cdl/can_mcf52xx.cdl Added two interfaces
+	CYGINT_DEVS_CAN_MCF52xx_FLEXCAN_SUPP_STD_CAN_ID and
+	CYGINT_DEVS_CAN_MCF52xx_FLEXCAN_SUPP_EXT_CAN_ID.
+	The number of standard and extended message boxes is now
+	configurable:
+	CYGNUM_DEVS_CAN_MCF52xx_FLEXCAN[set ::flexcan]_STD_MBOXES
+	CYGNUM_DEVS_CAN_MCF52xx_FLEXCAN[set ::flexcan]_EXT_MBOXES
+	Channged default TX buffer to 15.
+
+	* src/can_mcf52xx.c Added initialisation macro for second
+	FlexCAN modul. Driver partly rewritten - support of up to
+	15 message buffers when reception of all CAN frames is
+	configured - improves performance when "bursts" of CAN
+	messages arrive. Changed message buffer configuration -
+	only the config key CYG_IO_SET_CONFIG_CAN_MSGBUF is
+	supported now. The exact configuration option is defined
+	in new data field cyg_can_msgbuf_cfg_id in cyg_can_msgbuf_cfg
+	structure.
+
+	* tests/flexcan_filter.c
+	* tests/flexcan_wake.c
+	* tests/flexcan_remote.c
+	* tests/flexcan_load.c
+	Changed message buffer configuration to support of new
+	config key CYG_IO_SET_CONFIG_CAN_MSGBUF. Removed baudrate
+	runtime configuration of 250 kBaud - now default
+	value is used.
+
+2005-09-20  Uwe Kindler  <uwe_kindler@web.de>
+
+	* src/can_mcf52xx.c Only support events of tx message buffers
+          in flexcan_getevent() if CYGOPT_IO_CAN_TX_EVENT_SUPPORT is
+          active.
+
+2005-09-11  Uwe Kindler  <uwe_kindler@web.de>
+
+	* cdl/can_mcf52xx.cdl Default message buffer configuration 
+	  changed. Message buffer 13 now is transmit message buffer.
+	  Message buffers 14 and 15 are no receive message buffers
+	  for all standard and extended frames.
+	  
+	* src/can_mcf52xx.c Driver partly rewritten. Support for message 
+	  filtering added. Message buffer handling added. Several bugs 
+	  fixed. Support added for configuration options
+	  CYG_IO_SET_CONFIG_CAN_REMOTE_BUF
+	  CYG_IO_SET_CONFIG_CAN_FILTER_MSG
+	  CYG_IO_SET_CONFIG_CAN_FILTER_ALL
+	  CYG_IO_SET_CONFIG_CAN_MODE
+	  CYG_IO_GET_CONFIG_CAN_STATE
+	  CYG_IO_GET_CONFIG_CAN_MSGBUF_INFO
+	  CYG_IO_GET_CONFIG_CAN_HDI
+	  
+	* tests/flexcan_filter.c Test of message filtering addded
+	* tests/flexcan_wake.c Test of mode setting and standby mode of
+	  FlexCAN module added.
+	
+2005-05-24  Uwe Kindler  <uwe_kindler@web.de>
+
+	* mcf52xx FlexCAN driver package created
+
+//===========================================================================
+//####ECOSGPLCOPYRIGHTBEGIN####
+// -------------------------------------------
+// This file is part of eCos, the Embedded Configurable Operating System.
+// Copyright (C) 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+//
+// eCos is free software; you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 or (at your option) any later version.
+//
+// eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with eCos; if not, write to the Free Software Foundation, Inc.,
+// 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+//
+// As a special exception, if other files instantiate templates or use macros
+// or inline functions from this file, or you compile this file and link it
+// with other works to produce a work based on this file, this file does not
+// by itself cause the resulting work to be covered by the GNU General Public
+// License. However the source code for this file must still be made available
+// in accordance with section (3) of the GNU General Public License.
+//
+// This exception does not invalidate any other reasons why a work based on
+// this file might be covered by the GNU General Public License.
+//
+// Alternative licenses for eCos may be arranged by contacting Red Hat, Inc.
+// at http://sources.redhat.com/ecos/ecos-license/
+// -------------------------------------------
+//####ECOSGPLCOPYRIGHTEND####
+//===========================================================================

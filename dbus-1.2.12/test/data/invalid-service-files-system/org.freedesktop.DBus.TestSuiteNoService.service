@@ -1,0 +1,4 @@
+[D-BUS Service]
+Exec=/src/jhbuild/checkout/dbus/test/test-service
+User=anyrandomuser
+

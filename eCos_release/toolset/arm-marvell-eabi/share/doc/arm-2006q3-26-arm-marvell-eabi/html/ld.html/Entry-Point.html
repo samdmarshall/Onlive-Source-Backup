@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+<title>Entry Point - Untitled</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Untitled">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Simple-Commands.html#Simple-Commands" title="Simple Commands">
+<link rel="next" href="File-Commands.html#File-Commands" title="File Commands">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Entry-Point"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="File-Commands.html#File-Commands">File Commands</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Simple-Commands.html#Simple-Commands">Simple Commands</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.4.1 Setting the Entry Point</h4>
+
+<p><a name="index-ENTRY_0028_0040var_007bsymbol_007d_0029-297"></a><a name="index-start-of-execution-298"></a><a name="index-first-instruction-299"></a><a name="index-entry-point-300"></a>The first instruction to execute in a program is called the <dfn>entry
+point</dfn>.  You can use the <code>ENTRY</code> linker script command to set the
+entry point.  The argument is a symbol name:
+<pre class="smallexample">     ENTRY(<var>symbol</var>)
+</pre>
+   <p>There are several ways to set the entry point.  The linker will set the
+entry point by trying each of the following methods in order, and
+stopping when one of them succeeds:
+     <ul>
+<li>the `<samp><span class="samp">-e</span></samp>' <var>entry</var> command-line option;
+<li>the <code>ENTRY(</code><var>symbol</var><code>)</code> command in a linker script;
+<li>the value of the symbol <code>start</code>, if defined;
+<li>the address of the first byte of the `<samp><span class="samp">.text</span></samp>' section, if present;
+<li>The address <code>0</code>. 
+</ul>
+
+   </body></html>
+

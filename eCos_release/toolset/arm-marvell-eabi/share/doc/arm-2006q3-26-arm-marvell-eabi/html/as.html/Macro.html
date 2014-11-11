@@ -1,0 +1,133 @@
+<html lang="en">
+<head>
+<title>Macro - Using as</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using as">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Pseudo-Ops.html#Pseudo-Ops" title="Pseudo Ops">
+<link rel="prev" href="Long.html#Long" title="Long">
+<link rel="next" href="MRI.html#MRI" title="MRI">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Macro"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="MRI.html#MRI">MRI</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Long.html#Long">Long</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Pseudo-Ops.html#Pseudo-Ops">Pseudo Ops</a>
+<hr>
+</div>
+
+<h3 class="section">7.66 <code>.macro</code></h3>
+
+<p><a name="index-macros-385"></a>The commands <code>.macro</code> and <code>.endm</code> allow you to define macros that
+generate assembly output.  For example, this definition specifies a macro
+<code>sum</code> that puts a sequence of numbers into memory:
+
+<pre class="example">             .macro  sum from=0, to=5
+             .long   \from
+             .if     \to-\from
+             sum     "(\from+1)",\to
+             .endif
+             .endm
+</pre>
+   <p class="noindent">With that definition, `<samp><span class="samp">SUM 0,5</span></samp>' is equivalent to this assembly input:
+
+<pre class="example">             .long   0
+             .long   1
+             .long   2
+             .long   3
+             .long   4
+             .long   5
+</pre>
+     <dl>
+<dt><code>.macro </code><var>macname</var><a name="index-g_t_002emacro-_0040var_007bmacname_007d-386"></a><dt><code>.macro </code><var>macname</var> <var>macargs</var><code> ...</code><a name="index-g_t_002emacro-_0040var_007bmacname_007d-_0040var_007bmacargs_007d-_0040dots_007b_007d-387"></a><dd><a name="index-g_t_0040code_007bmacro_007d-directive-388"></a>Begin the definition of a macro called <var>macname</var>.  If your macro
+definition requires arguments, specify their names after the macro name,
+separated by commas or spaces.  You can qualify the macro argument to
+indicate whether all invocations must specify a non-blank value (through
+`<samp><span class="samp">:</span><code>req</code></samp>'), or whether it takes all of the remaining arguments
+(through `<samp><span class="samp">:</span><code>vararg</code></samp>').  You can supply a default value for any
+macro argument by following the name with `<samp><span class="samp">=</span><var>deflt</var></samp>'.  You
+cannot define two macros with the same <var>macname</var> unless it has been
+subject to the <code>.purgem</code> directive (See <a href="Purgem.html#Purgem">Purgem</a>.) between the two
+definitions.  For example, these are all valid <code>.macro</code> statements:
+
+          <dl>
+<dt><code>.macro comm</code><dd>Begin the definition of a macro called <code>comm</code>, which takes no
+arguments.
+
+          <br><dt><code>.macro plus1 p, p1</code><dt><code>.macro plus1 p p1</code><dd>Either statement begins the definition of a macro called <code>plus1</code>,
+which takes two arguments; within the macro definition, write
+`<samp><span class="samp">\p</span></samp>' or `<samp><span class="samp">\p1</span></samp>' to evaluate the arguments.
+
+          <br><dt><code>.macro reserve_str p1=0 p2</code><dd>Begin the definition of a macro called <code>reserve_str</code>, with two
+arguments.  The first argument has a default value, but not the second. 
+After the definition is complete, you can call the macro either as
+`<samp><span class="samp">reserve_str </span><var>a</var><span class="samp">,</span><var>b</var></samp>' (with `<samp><span class="samp">\p1</span></samp>' evaluating to
+<var>a</var> and `<samp><span class="samp">\p2</span></samp>' evaluating to <var>b</var>), or as `<samp><span class="samp">reserve_str
+,</span><var>b</var></samp>' (with `<samp><span class="samp">\p1</span></samp>' evaluating as the default, in this case
+`<samp><span class="samp">0</span></samp>', and `<samp><span class="samp">\p2</span></samp>' evaluating to <var>b</var>). 
+</dl>
+
+     <br><dt><code>.macro m p1:req, p2=0, p3:vararg</code><a name="index-g_t_002emacro-m-p1_003areq_002c-p2_003d0_002c-p3_003avararg-389"></a><dd>Begin the definition of a macro called <code>m</code>, with at least three
+arguments.  The first argument must always have a value specified, but
+not the second, which instead has a default value. The third formal
+will get assigned all remaining arguments specified at invocation time.
+
+     <p>When you call a macro, you can specify the argument values either by
+position, or by keyword.  For example, `<samp><span class="samp">sum 9,17</span></samp>' is equivalent to
+`<samp><span class="samp">sum to=17, from=9</span></samp>'.
+
+     <p>Note that since each of the <var>macargs</var> can be an identifier exactly
+as any other one permitted by the target architecture, there may be
+occasional problems if the target hand-crafts special meanings to certain
+characters when they occur in a special position.  For example, if colon
+(<code>:</code>) is generally permitted to be part of a symbol name, but the
+architecture specific code special-cases it when occuring as the final
+character of a symbol (to denote a label), then the macro parameter
+replacement code will have no way of knowing that and consider the whole
+construct (including the colon) an identifier, and check only this
+identifier for being the subject to parameter substitution.  In this
+example, besides the potential of just separating identifier and colon
+by white space, using alternate macro syntax (See <a href="Altmacro.html#Altmacro">Altmacro</a>.) and
+ampersand (<code>&amp;</code>) as the character to separate literal text from macro
+parameters (or macro parameters from one another) would provide a way to
+achieve the same effect:
+
+     <pre class="example">          	.altmacro
+          	.macro label l
+          l&amp;:
+          	.endm
+     </pre>
+     <p>This applies identically to the identifiers used in <code>.irp</code> (See <a href="Irp.html#Irp">Irp</a>.) 
+and <code>.irpc</code> (See <a href="Irpc.html#Irpc">Irpc</a>.).
+
+     <br><dt><code>.endm</code><a name="index-g_t_002eendm-390"></a><dd><a name="index-g_t_0040code_007bendm_007d-directive-391"></a>Mark the end of a macro definition.
+
+     <br><dt><code>.exitm</code><a name="index-g_t_002eexitm-392"></a><dd><a name="index-g_t_0040code_007bexitm_007d-directive-393"></a>Exit early from the current macro definition.
+
+     <p><a name="index-number-of-macros-executed-394"></a><a name="index-macros_002c-count-executed-395"></a><br><dt><code>\@</code><a name="index-g_t_005c_0040_0040-396"></a><dd><samp><span class="command">as</span></samp> maintains a counter of how many macros it has
+executed in this pseudo-variable; you can copy that number to your
+output with `<samp><span class="samp">\@</span></samp>', but <em>only within a macro definition</em>.
+
+     <br><dt><code>LOCAL </code><var>name</var><code> [ , ... ]</code><a name="index-LOCAL-_0040var_007bname_007d-_005b-_002c-_0040dots_007b_007d-_005d-397"></a><dd><em>Warning: </em><code>LOCAL</code><em> is only available if you select &ldquo;alternate
+macro syntax&rdquo; with `<samp></em><span class="samp">--alternate</span><em></samp>' or </em><code>.altmacro</code><em>.</em>
+See <a href="Altmacro.html#Altmacro"><code>.altmacro</code></a>. 
+</dl>
+
+   </body></html>
+

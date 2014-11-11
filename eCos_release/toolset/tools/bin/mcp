@@ -1,0 +1,3 @@
+#!/bin/bash
+
+arm-marvell-eabi-objcopy -O binary $1 /tftpboot/harris_sboot.bin

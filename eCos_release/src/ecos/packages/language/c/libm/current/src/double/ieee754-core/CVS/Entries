@@ -1,0 +1,25 @@
+/e_acos.c/1.6/Thu May 23 23:07:43 2002//
+/e_acosh.c/1.2/Thu May 23 23:07:43 2002//
+/e_asin.c/1.6/Thu May 23 23:07:43 2002//
+/e_atan2.c/1.6/Thu May 23 23:07:44 2002//
+/e_atanh.c/1.2/Thu May 23 23:07:44 2002//
+/e_cosh.c/1.7/Wed Apr 14 20:40:57 2004//
+/e_exp.c/1.6/Thu May 23 23:07:44 2002//
+/e_fmod.c/1.6/Thu May 23 23:07:44 2002//
+/e_gamma.c/1.2/Thu May 23 23:07:44 2002//
+/e_gamma_r.c/1.2/Thu May 23 23:07:44 2002//
+/e_hypot.c/1.2/Thu May 23 23:07:44 2002//
+/e_j0.c/1.2/Thu May 23 23:07:44 2002//
+/e_j1.c/1.2/Thu May 23 23:07:45 2002//
+/e_jn.c/1.2/Thu May 23 23:07:45 2002//
+/e_lgamma.c/1.2/Thu May 23 23:07:45 2002//
+/e_lgamma_r.c/1.2/Thu May 23 23:07:45 2002//
+/e_log.c/1.6/Thu May 23 23:07:45 2002//
+/e_log10.c/1.6/Thu May 23 23:07:45 2002//
+/e_pow.c/1.7/Thu May 23 23:07:45 2002//
+/e_rem_pio2.c/1.6/Thu May 23 23:07:45 2002//
+/e_remainder.c/1.2/Thu May 23 23:07:46 2002//
+/e_scalb.c/1.6/Thu May 23 23:07:46 2002//
+/e_sinh.c/1.7/Wed Apr 14 20:40:57 2004//
+/e_sqrt.c/1.6/Thu May 23 23:07:46 2002//
+D

@@ -1,0 +1,14 @@
+This package was debianized by Jeff Bailey <jbailey@raspberryginger.com> on
+Sun, 23 Jan 2005 21:11:50 -0500.
+
+It was downloaded from http://www.kernel.org/pub/linux/libs/klibc/
+
+Copyright 2004-2006 H. Peter Anvin <hpa@zytor.com>
+
+License:
+
+BSD/GPL
+
+On Debian GNU/Linux systems, the complete text of the UCB BSD license and the
+GNU General Public License v2 can be found in `/usr/share/common-licenses/BSD'
+and `/usr/share/common-licenses/GPL-2'.

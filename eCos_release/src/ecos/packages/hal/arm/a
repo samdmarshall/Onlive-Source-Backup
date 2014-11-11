@@ -1,0 +1,473 @@
+arch/current/src/redboot_linux_exec.c:  "   mcr p15,0,r0,c1,c0,0\n"          \
+arch/current/src/redboot_linux_exec.c:  "   mcr p15,0,r0,c7,c10,4\n"         \
+arch/current/src/redboot_linux_exec.c:  "   mcr p15,0,r0,c7,c7,0\n"          \
+arch/current/src/redboot_linux_exec.c:  "   mcr p15,0,r0,c7,c10,4\n"           \
+arch/current/src/redboot_linux_exec.c:  "   mcr p15,0,r0,c7,c7,0\n"            \
+arm9/smdk2410/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/smdk2410/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/smdk2410/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c15,c1,0
+arm9/smdk2410/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c1,c0,0
+arm9/smdk2410/current/include/hal_platform_setup.h:        mcr        MMU_CP,0,r1,MMU_Control,c0
+arm9/smdk2410/current/src/smdk2410_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/smdk2410/current/src/smdk2410_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/orion/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/orion/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/orion/current/include/hal_platform_setup.h:        mcr        MMU_CP,0,r1,MMU_Control,c0
+arm9/orion/current/src/orion_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/orion/current/src/orion_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/galois.original/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/galois.original/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/galois.original/current/include/hal_platform_setup.h:        mcr        MMU_CP,0,r1,MMU_Control,c0
+arm9/galois.original/current/src/galois_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/galois.original/current/src/galois_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/galois.good/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/galois.good/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/galois.good/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));	\
+arm9/galois.good/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));	\
+arm9/galois.good/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));			\
+arm9/galois.good/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));			\
+Binary file arm9/galois.good/current/include/.hal_platform_setup.h.swp matches
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c7,0	// Flush data and instruction cache
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c8,c7,0	// Flush ID TLBs
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c9,c0,0	// Flush Read-Buffer
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c10,4	// Drain write buffer
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c13,c0,0	// Disable virtual ID mapping
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r1,c1,c0,0	// Write MMU control register
+arm9/innovator/current/include/hal_platform_setup.h:        mcr	MMU_CP,0,r1,MMU_Control,c0
+arm9/innovator/current/include/hal_platform_setup.h:        //        mcr     MMU_CP,0,r0,MMU_InvalidateCache,c7,0	// Flush data and instruction cache
+arm9/innovator/current/include/hal_platform_setup.h:        //	mcr     MMU_CP,0,r0,MMU_TLB,c7,0        	// Flush ID TLBs
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c7,0	// Flush data and instruction cache
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c8,c7,0	// Flush ID TLBs
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c9,c0,0	// Flush Read-Buffer
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c10,4	// Drain write buffer
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r0,c13,c0,0	// Disable virtual ID mapping
+arm9/innovator/current/include/hal_platform_setup.h:	mcr p15,0,r1,c1,c0,0	// Write MMU control register
+arm9/innovator/current/include/hal_platform_setup.h:        mcr p15, 0, r1, c15, c1, 0  // Write ARM925T configuration register.
+arm9/innovator/current/include/hal_platform_setup.h:        mcr p15, 0x0, r0, c7, c5, 0x0  
+arm9/innovator/current/include/hal_platform_setup.h:        mcr p15, 0x0, r1, c1, c0, 0x0
+arm9/innovator/current/include/hal_platform_setup.h:        mcr	MMU_CP,0,r1,MMU_Control,c0
+arm9/innovator/current/include/hal_platform_setup.h:        //        mcr     MMU_CP,0,r0,MMU_InvalidateCache,c7,0	// Flush data and instruction cache
+arm9/innovator/current/include/hal_platform_setup.h:        //	mcr     MMU_CP,0,r0,MMU_TLB,c7,0        	// Flush ID TLBs
+arm9/innovator/current/src/innovator_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/innovator/current/src/innovator_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c5,0           // clear instruction cache
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c15,c1,0
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c1,c0,0
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c7,c13,1
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr     p15,0,r3,c7,c13,1
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c1,c0,0
+arm9/excalibur/current/include/hal_platform_setup.h:        mcr     MMU_CP,0,r1,MMU_Control,c0
+arm9/excalibur/current/src/excalibur_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/excalibur/current/src/excalibur_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/galois.step0/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/galois.step0/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/galois.step0/current/include/hal_platform_setup.h:        mcr        MMU_CP,0,r1,MMU_Control,c0
+arm9/galois.step0/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));	\
+arm9/galois.step0/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));	\
+arm9/galois.step0/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));			\
+arm9/galois.step0/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));			\
+arm9/galois.step0/current/src/galois_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/galois.step0/current/src/galois_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/aaed2000/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/aaed2000/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/aaed2000/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c15,c1,0
+arm9/aaed2000/current/include/hal_platform_setup.h:        mcr p15, 0, r0, c1, c0, 0
+arm9/aaed2000/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0
+arm9/aaed2000/current/src/aaed2000_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+arm9/aaed2000/current/src/aaed2000_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+arm9/galois/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c1,c0,0
+arm9/galois/current/include/hal_platform_setup.h:        mcr  p15,0,r0,c7,c6,0           // clear data cache
+arm9/galois/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));	\
+arm9/galois/current/include/galois_common.h:			__asm__ __volatile__ ("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));	\
+arm9/galois/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c14, 1" : : "r" (addr));			\
+arm9/galois/current/include/galois_common.h:			_WRS_ASM("mcr p15, 0, %0, c7, c6, 1" : : "r" (addr));			\
+arm9/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c1,c0,0;"                                      \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* flush ICache */                  \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* flush ICache */                  \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c5,0;"  /* flush ITLB only */               \
+arm9/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+arm9/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+arm9/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c7,c6,0" /* clear data cache */                  \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c6,0;" /* flush d-cache */                  \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c8,c7,0;" /* flush i+d-TLBs */                 \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,0;"  /* clean DCache */                 \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c6,0;"  /* flush DCache */                  \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* and drain the write buffer */    \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c14,2;"  /* clean index in DCache */        \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* drain the write buffer */        \
+arm9/var/current/include/hal_cache.h:	"mcr	p15, 0, r0, c7, c14, 2;" \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* drain the write buffer */        \
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* drain the write buffer */        \
+arm9/var/current/include/hal_cache.h:		"mcr	p15, 0, r2, c7, c14, 2;" 								\
+arm9/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* drain the write buffer */        		\
+arm9/var/current/include/hal_cache.h://                      "mcr  p15,0,%0,c7,c6,1;" /* flush entry away */
+arm9/var/current/include/hal_cache.h://        asm volatile ("mcr  p15,0,%0,c7,c10,1;" /* push entry to RAM */
+arm9/var/current/src/arm9_misc.c:                  "mcr p15,0,r1,c7,c7,0;"  /* clear I+DCache */
+arm9/var/current/src/arm9_misc.c:                  "mcr p15,0,r1,c7,c10,4;" /* Drain Write Buffer */
+arm9/var/current/src/arm9_misc.c:                  "mcr p15,0,r1,c8,c7,0;"  /* Invalidate TLBs */
+arm9/var/current/src/arm9_misc.c:                  "mcr p15,0,r1,c1,c0,0;"
+cma230/current/include/hal_cache.h://    mcr  MMU_CP,0,r1,MMU_Control,c0    
+cma230/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+cma230/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+cma230/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+cma230/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+cma230/current/include/hal_cache.h://    mcr  MMU_CP,0,r1,MMU_InvalidateCache,c0
+cma230/current/include/hal_cache.h:	"mcr p15,0,r1,c7,c0,0;"                 \
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c1,c0,0                                           ;\
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c7,c6,0 /* DCache invalidate (discard) */         ;\
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c7,c5,0 /* ICache invalidate */                   ;\
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c8,c6,0 /* DCache TLB invalidate */               ;\
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c8,c5,0 /* ICache TLB invalidate */               ;\
+ebsa285/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c15,c1,2                                          ;\
+ebsa285/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+ebsa285/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+ebsa285/current/include/hal_cache.h:        "mcr  p15,0,r1,c7,c6,0" /* clear data cache */                  \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c6,0;"  /* clear data cache */              \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c7,0;"  /* flush I+D TLBs */                \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c6,0;"  /* clear data cache */              \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* and drain the write buffer */    \
+ebsa285/current/include/hal_cache.h:                      "mcr  p15,0,%0,c7,c6,1;" /* flush entry away */   \
+ebsa285/current/include/hal_cache.h:        asm volatile ("mcr  p15,0,%0,c7,c10,1;" /* push entry to RAM */ \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c10,4;"                                     \
+ebsa285/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c1,c0,0;"                                      \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* clear instruction cache */       \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* clear instruction cache */       \
+ebsa285/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c5,0;"  /* flush I TLB only */              \
+ebsa285/current/src/ebsa285_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" 
+ebsa285/current/src/ebsa285_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" 
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r2,MMU_Control,c0	/* MMU off */           
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Base,c0                                 
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_FlushTLB,c0,0	/* Invalidate TLB */    
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_FlushIDC,c0,0	/* Invalidate Caches */ 
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_DomainAccess,c0                         
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0                              
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r2,MMU_Control,c0    /* MMU off */             
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Base,c0                                 
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_TLB,c7,0      /* Invalidate TLB */      
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_FlushIDC,c0,0 /* Invalidate Caches */   
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_DomainAccess,c0                         
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0                              
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r5,MMU_Control,c0    /* MMU off */
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_TLB,c7,0      /* Invalidate TLB */
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_FlushIDC,c0,0 /* Invalidate Caches */
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r5,MMU_Control,c0
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r5,MMU_Control,c0    /* MMU off */
+edb7xxx/current/include/hal_platform_setup.h:15:	mcr	MMU_CP,0,r1,MMU_TLB,c7,0      /* Invalidate TLB */
+edb7xxx/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_FlushIDC,c0,0 /* Invalidate Caches */
+edb7xxx/current/include/hal_cache.h://    mcr  MMU_CP,0,r1,MMU_Control,c0    
+edb7xxx/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+edb7xxx/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0;"        \
+edb7xxx/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0,0;"      \
+edb7xxx/current/include/hal_cache.h:                  "mcr  p15,0,r1,c1,c0,0;"                              \
+edb7xxx/current/include/hal_cache.h:                  "mcr  p15,0,r1,c8,c7,0;"  /* flush I+D TLBs */        \
+edb7xxx/current/include/hal_cache.h://    mcr  MMU_CP,0,r1,MMU_InvalidateCache,c0
+edb7xxx/current/include/hal_cache.h:	"mcr p15,0,r1,c7,c7,0;"                 \
+sa11x0/cerfpda/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c1, c0, 0 	//  MMU off
+sa11x0/cerfpda/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c8, c7, 0 	//  Flush TLB
+sa11x0/cerfpda/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c7, 0 	//  Flush caches
+sa11x0/cerfpda/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/cerfpda/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/cerfpda/current/include/hal_platform_setup.h:	    mcr	    MMU_CP,0,r1,MMU_Control,c0
+sa11x0/cerfpda/current/src/cerfpda_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/cerfpda/current/src/cerfpda_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/brutus/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c15,c1,2
+sa11x0/brutus/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0
+sa11x0/brutus/current/src/brutus_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/brutus/current/src/brutus_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/cerf/current/include/hal_platform_setup.h:		mcr     p15, 0, r0, c1, c0, 0 	//  MMU off
+sa11x0/cerf/current/include/hal_platform_setup.h:		mcr     p15, 0, r0, c8, c7, 0 	//  Flush TLB
+sa11x0/cerf/current/include/hal_platform_setup.h:		mcr     p15, 0, r0, c7, c7, 0 	//  Flush caches
+sa11x0/cerf/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/cerf/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/cerf/current/include/hal_platform_setup.h:	    mcr	    MMU_CP,0,r1,MMU_Control,c0
+sa11x0/cerf/current/src/cerf_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/cerf/current/src/cerf_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/flexanet/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/flexanet/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/flexanet/current/include/hal_platform_setup.h:        mcr     MMU_CP,0,r1,MMU_Control,c0
+sa11x0/flexanet/current/src/flexanet_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/flexanet/current/src/flexanet_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/sa1100mm/current/include/hal_platform_setup.h:        mcr     p15,0,r1,c15,c1,2
+sa11x0/sa1100mm/current/include/hal_platform_setup.h:        mcr     MMU_CP,0,r1,MMU_Control,c0
+sa11x0/sa1100mm/current/src/sa1100mm_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/sa1100mm/current/src/sa1100mm_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c7,0	// Flush data and instruction cache
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r0,c8,c7,0	// Flush ID TLBs
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r0,c9,c0,0	// Flush Read-Buffer
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r0,c7,c10,4	// Drain write buffer
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r0,c13,c0,0	// Disable virtual ID mapping
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr p15,0,r1,c1,c0,0	// Write MMU control register
+sa11x0/ipaq/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/ipaq/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0
+sa11x0/ipaq/current/include/hal_platform_setup.h:        mcr     MMU_CP,0,r0,MMU_InvalidateCache,c7,0	// Flush data and instruction cache
+sa11x0/ipaq/current/include/hal_platform_setup.h:	mcr     MMU_CP,0,r0,MMU_TLB,c7,0        	// Flush ID TLBs
+sa11x0/ipaq/current/src/ipaq_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/ipaq/current/src/ipaq_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr	p15,0,r1,c1,c0
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c7,c5,0 // Icache
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c8,c5,0 // ITLB
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c7,c6,0 // Dcache
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,c8,c6,0 // DTLB
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/nano/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/nano/current/include/hal_platform_setup.h:	mcr	p15,0,r1,c1,c0
+sa11x0/nano/current/src/nano_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/nano/current/src/nano_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+sa11x0/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c1,c0,0;"                                      \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* flush ICache */                  \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* flush ICache */                  \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c5,0;"  /* flush ITLB only */               \
+sa11x0/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0"                                         \
+sa11x0/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+sa11x0/var/current/include/hal_cache.h:        "mcr  p15,0,r1,c7,c6,0" /* clear data cache */                  \
+sa11x0/var/current/include/hal_cache.h:	"mcr    p15,0,r1,c7,c6,0;"                                      \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c7,0;"                                      \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c6,0;"  /* flush DCache */                  \
+sa11x0/var/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* and drain the write buffer */    \
+sa11x0/var/current/include/hal_cache.h:                      "mcr  p15,0,%0,c7,c6,1;" /* flush entry away */   \
+sa11x0/var/current/include/hal_cache.h:        asm volatile ("mcr  p15,0,%0,c7,c10,1;" /* push entry to RAM */ \
+sa11x0/var/current/include/hal_cache.h:	"mcr    p15,0,r1,c7,c10,4;"                                     \
+sa11x0/assabet/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/assabet/current/include/hal_platform_setup.h:        mcr     p15,0,r0,\
+sa11x0/assabet/current/include/hal_platform_setup.h:	mcr	MMU_CP,0,r1,MMU_Control,c0
+sa11x0/assabet/current/src/assabet_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+sa11x0/assabet/current/src/assabet_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c8, c7, 0   //  Flush TLB
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c7, c7, 0   //  Flush caches
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c15, c1, 0
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p14, 0, r1, c6, c0, 0
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/xsengine/current/include/hal_platform_setup.h:  mcr     MMU_CP,0,r1,MMU_Control,c0
+xscale/xsengine/current/src/xsengine_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+xscale/xsengine/current/src/xsengine_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+xscale/iop310/current/include/hal_iop310.h:              "   mcr p15,0,r0,c1,c0,0\n"    \
+xscale/iop310/current/src/iop310_misc.c:        "mcr      p14,0,%0,c0,c0,0;" // write into PMNC
+xscale/iop310/current/src/iop310_misc.c:        "mcr      p14,0,%0,c1,c0,0;" // write into CCNT
+xscale/iop310/current/src/iop310_misc.c:            "mcr      p14,0,%0,c0,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:        "mcr      p13,0,r1,c0,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:            "mcr      p14,0,%0,c0,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:            "mcr      p13,0,r2,c8,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:            "mcr      p13,0,r2,c8,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:        "mcr      p13,0,%0,c0,c0,0;"
+xscale/iop310/current/src/iop310_misc.c:            "mcr      p14,0,%0,c0,c0,0;"
+xscale/cores/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c1,c0,0;"                                      \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* invalidate instruction cache */  \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c5,0;"  /* clear instruction cache */       \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c5,0;"  /* flush I TLB only */              \
+xscale/cores/current/include/hal_cache.h:        "mcr  p15,0,r1,c7,c10,4;"   /* drain write buffer */            \
+xscale/cores/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+xscale/cores/current/include/hal_cache.h:	"mcr  p15,0,r1,c1,c0,1;"                                        \
+xscale/cores/current/include/hal_cache.h:        "mcr  p15,0,r1,c1,c0,0;"                                        \
+xscale/cores/current/include/hal_cache.h:	"mcr  p15,0,r1,c1,c0,1;"                                        \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c6,0;"  /* invalidate data cache */         \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c7,c6,0;"  /* invalidate data cache */         \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r1,c8,c7,0;"  /* flush I+D TLBs */                \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c2,5;"  /* allocate a line    */            \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c6,0;"  /* invalidate data cache */         \
+xscale/cores/current/include/hal_cache.h:        "mcr    p15,0,r0,c7,c10,4;" /* and drain the write buffer */    \
+xscale/cores/current/include/hal_cache.h:                      "mcr  p15,0,%0,c7,c6,1;" /* flush entry away */   \
+xscale/cores/current/include/hal_cache.h:        asm volatile ("mcr  p15,0,%0,c7,c10,1;" /* push entry to RAM */ \
+xscale/cores/current/include/hal_cache.h:	"mcr    p15,0,r1,c7,c10,4;"                                     \
+xscale/cores/current/include/hal_xscale.h:	mcr	p15, 0, \reg, c1, c0, 0
+xscale/cores/current/include/hal_xscale.h:              "   mcr p15,0,r0,c1,c0,0\n"    \
+xscale/cores/current/src/xscale_misc.c:		  "mcr  p15,0,r0,c14,c8,0\n"   // ibcr0
+xscale/cores/current/src/xscale_misc.c:		  "mcr  p15,0,r0,c14,c9,0\n"   // ibcr1
+xscale/cores/current/src/xscale_misc.c:		  "mcr  p15,0,r0,c14,c4,0\n"   // dbcon
+xscale/cores/current/src/xscale_misc.c:		  "mcr  p14,0,r0,c10,c0,0\n"   // dcsr
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p15,0,%0,c14,c8,0" : : "r"(x) );
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p15,0,%0,c14,c9,0" : : "r"(x) );
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p15,0,%0,c14,c0,0" : : "r"(x) );
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p15,0,%0,c14,c3,0" : : "r"(x) );
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p15,0,%0,c14,c4,0" : : "r"(x) );
+xscale/cores/current/src/xscale_stub.c:    asm volatile ("mcr p14,0,%0,c10,c0,0" : : "r"(x) );
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c15, c1, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c3, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c7, 0   // flush Icache, Dcache and BTB
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c8, c7, 0   // flush instuction and data TLBs
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4	// drain the write & fill buffers
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r1, c7, c2, 5   // allocate a Dcache line
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r2, c7, c2, 5   // allocate a Dcache line
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c6, 0   // flush Dcache
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r1, c7, c2, 5   // allocate a Dcache line
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r2, c7, c2, 5   // allocate a Dcache line
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c6, 0   // flush Dcache
+xscale/iq80321/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c5, 0		// flush I cache
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c10, 4		// drain WB
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/iq80321/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c8, c7, 0		// flush TLBs
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c8, c7, 0   //  Flush TLB
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c7, c7, 0   //  Flush caches
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c15, c1, 0
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p14, 0, r1, c6, c0, 0
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/picasso/current/include/hal_platform_setup.h:  mcr     MMU_CP,0,r1,MMU_Control,c0
+xscale/picasso/current/src/picasso_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+xscale/picasso/current/src/picasso_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c7, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr 	p15, 0, r0, c8, c7, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 1
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c3, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c1, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c7, 0   // flush Icache, Dcache and BTB
+xscale/prpmc1100/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c8, c7, 0   // flush instuction and data TLBs
+xscale/prpmc1100/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4	// drain the write & fill buffers
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15,0,r0,c7,c10,4
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15,0,r0,c1,c0,1
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c15, c1, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c7, 0		// flush Icache, Dcache and BTB
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c8, c7, 0		// flush instuction and data TLBs
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c3, c0, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c2, 5		 // allocate a Dcache line
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r2, c7, c2, 5		// allocate a Dcache line
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c6, 0		// flush Dcache
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/npwr/current/include/hal_platform_setup.h:	mcr p15, 0, r0, c7, c10, 4		// 
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		// multi-bit detection
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		
+xscale/npwr/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c2,5		/* allocate a line    */
+xscale/npwr/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c6,0		/* invalidate data cache */
+xscale/npwr/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c10,4
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c5, 0		// flush I cache
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c10, 4		// drain WB
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/npwr/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c8, c7, 0		// flush TLBs
+xscale/npwr/current/include/hal_platform_setup.h:        mcr	p13,0,r0,c0,c0,0 // write to INTCTL
+xscale/npwr/current/include/hal_platform_setup.h:        mcr	p13,0,r0,c8,c0,0 // write to INTSTR
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c7, 0
+xscale/grg/current/include/hal_platform_setup.h:        mcr 	p15, 0, r0, c8, c7, 0
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 1
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c3, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c1, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c7, 0   // flush Icache, Dcache and BTB
+xscale/grg/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c8, c7, 0   // flush instuction and data TLBs
+xscale/grg/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4	// drain the write & fill buffers
+xscale/verde/current/include/hal_verde.h:#define _TMR0_WRITE(val)  asm volatile ("mcr p6, 0, %0, c0, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TMR1_WRITE(val)  asm volatile ("mcr p6, 0, %0, c1, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TCR0_WRITE(val)  asm volatile ("mcr p6, 0, %0, c2, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TCR1_WRITE(val)  asm volatile ("mcr p6, 0, %0, c3, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TRR0_WRITE(val)  asm volatile ("mcr p6, 0, %0, c4, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TRR1_WRITE(val)  asm volatile ("mcr p6, 0, %0, c5, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _TISR_WRITE(val)  asm volatile ("mcr p6, 0, %0, c6, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _WDTCR_WRITE(val) asm volatile ("mcr p6, 0, %0, c7, c1, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _INTCTL_WRITE(val) asm volatile ("mcr p6, 0, %0, c0, c0, 0" : : "r" (val))
+xscale/verde/current/include/hal_verde.h:#define _INTSTR_WRITE(val) asm volatile ("mcr p6, 0, %0, c4, c0, 0" : : "r" (val))
+xscale/verde/current/src/verde_misc.c:    asm volatile ("mcr  p15,0,r1,c7,c10,4\n");
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c7, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr 	p15, 0, r0, c8, c7, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 1
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c3, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c1, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c10, 4  // drain the write & fill buffers
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c7, c7, 0   // flush Icache, Dcache and BTB
+xscale/ixdp425/current/include/hal_platform_setup.h:        mcr     p15, 0, r0, c8, c7, 0   // flush instuction and data TLBs
+xscale/ixdp425/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4	// drain the write & fill buffers
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15,0,r0,c7,c10,4
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c15, c1, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c7, 0		// flush Icache, Dcache and BTB
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c8, c7, 0		// flush instuction and data TLBs
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c3, c0, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c1, c0, 0
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c2, 5		 // allocate a Dcache line
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r2, c7, c2, 5		// allocate a Dcache line
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c6, 0		// flush Dcache
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr p15, 0, r0, c7, c10, 4		// 
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		// multi-bit detection
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p13, 0, r0, c0, c1, 0		
+xscale/iq80310/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c2,5		/* allocate a line    */
+xscale/iq80310/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c6,0		/* invalidate data cache */
+xscale/iq80310/current/include/hal_platform_setup.h:        mcr    p15,0,r0,c7,c10,4
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c5, 0		// flush I cache
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c7, c10, 4		// drain WB
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r0, c2, c0, 0		// load page table pointer
+xscale/iq80310/current/include/hal_platform_setup.h:	mcr	p15, 0, r1, c8, c7, 0		// flush TLBs
+xscale/iq80310/current/include/hal_platform_setup.h:        mcr	p13,0,r0,c0,c0,0 // write to INTCTL
+xscale/iq80310/current/include/hal_platform_setup.h:        mcr	p13,0,r0,c8,c0,0 // write to INTSTR
+xscale/iq80310/current/src/diag/diag.c:	 "mcr	p13, 0, r0, c0, c0, 0;"
+xscale/iq80310/current/src/diag/diag.c:	"mcr p14, 0, r1, c0, c0, 0 ;"
+xscale/iq80310/current/src/diag/diag.c:	"mcr p14, 0, r1, c0, c0, 0 ;"
+xscale/iq80310/current/src/diag/diag.c:	 "mcr p14, 0, r1, c0, c0, 0 ;"
+xscale/iq80310/current/src/diag/diag.c:	 "mcr p14, 0, r1, c0, c0, 0 ;"
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c15, c1, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c7, 0		// flush Icache, Dcache and BTB
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c8, c7, 0		// flush instuction and data TLBs
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c1, c0, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c3, c0, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c1, c0, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c10, 4		// drain the write & fill buffers
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c1, c0, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r1, c7, c2, 5
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r1, c7, c2, 5	// allocate a Dcache line
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c6, 0
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c10, 4
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c1, c0, 0	// caches off -- MMU off or ID map
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c7, 0	// Invalidate the I & D cache, mini- d cache, and BTB
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c7, c10, 4	// Drain write buffer -- r0 ignored
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p15, 0, r0, c3, c0, 0  
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr		p14, 0, r0, c6, c0, 0					// Turbo Mode on
+xscale/mpc50/current/include/hal_platform_setup.h:		mcr    p15, 0, r0, c1, c0, 0	// (caches off, MMU off, etc.)
+xscale/mpc50/current/src/mpc50_misc.c:	asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base));
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c8, c7, 0   //  Flush TLB
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c7, c7, 0   //  Flush caches
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c15, c1, 0
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p14, 0, r1, c6, c0, 0
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     p15, 0, r0, c1, c0, 0
+xscale/uE250/current/include/hal_platform_setup.h:  mcr     MMU_CP,0,r1,MMU_Control,c0
+xscale/uE250/current/src/uE250_misc.c:    asm volatile ("mcr  p15,0,%0,c2,c0,0" : : "r"(ttb_base) /*:*/);
+xscale/uE250/current/src/uE250_misc.c:    asm volatile ("mcr  p15,0,%0,c3,c0,0" : : "r"(i) /*:*/);

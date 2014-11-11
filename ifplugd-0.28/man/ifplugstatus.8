@@ -1,0 +1,53 @@
+.TH ifplugstatus 8 User Manuals
+.SH NAME
+ifplugstatus \- A link beat detection tool
+.SH SYNOPSIS
+\fBifplugstatus [\fIoptions\fB] [\fIINTERFACE\fB]
+\f1
+.SH DESCRIPTION
+ifplugstatus is an utility which may be used to detect the link status of a local Linux ethernet device, much in the same way mii-diag, mii-tool and ethtool work. In fact it supports all three different APIs these three tools use. In addition it supports link checking with the IFF_RUNNING interface flag, which most modern drivers (not only ethernet) support, and association status checking with the wireless extension API for WLAN devices.
+
+The APIs are tried in the following order:
+
+First the newest API: \fISIOCETHTOOL\f1 (aka ethtool API)
+
+Second the next older API: \fISIOCGMIIREG\f1 (aka mii-diag API)
+
+Than the WLAN API: \fIwireless extension\f1 (aka iwconfig API)
+
+Followed by the cleanest API: \fIIFF_RUNNING\f1 (aka ifconfig API)
+
+The oldest API (\fISIOCPRIV\f1 aka mii-tool API) is not tested since it is obsolete.
+
+ifplugstatus may be used in shell script since it returns the current status as return value. It is especially useful to detect the available APIs on the used network driver. (Option \fB-v\f1)
+.SH OPTIONS
+You may specify an ethernet device on the command line. Otherwise ifplugstatus will check all available network interfaces.
+.TP
+\fB-a | --auto\f1
+Enable interface automatically before querying (default: off) 
+.TP
+\fB-h | --help\f1
+Show help 
+.TP
+\fB-q | --quiet\f1
+Decrease verbosity by one. If the verbosity is < 0, no text will be shown, only the return value is relevant; if the verbosity is = 0, a terse status will be shown; If the verbosity is > 0, detailed information about the used API is returned. (By default the verbosity is 0)
+.TP
+\fB-v | --verbose\f1
+Increase verbosity by one. See option \fB-q\f1. 
+.TP
+\fB-V | --version\f1
+Show version 
+.SH RETURN VALUES
+\fI0\f1 Success
+
+\fI1\f1 Failure
+
+\fI2\f1 Link beat detected (only available when an interface is specified)
+
+\fI3\f1 Unplugged (same here)
+.SH AUTHOR
+ifplugd was written by Lennart Poettering <mzvscyhtq (at) 0pointer (dot) de>. ifplugd is available at \fBhttp://0pointer.de/lennart/projects/ifplugd/\f1
+.SH SEE ALSO
+\fBmii-diag(8)\f1, \fBmii-tool(8)\f1, \fBethtool(8)\f1, \fBifplugd(8)\f1
+.SH COMMENTS
+This man page was written using \fBxml2man(1)\f1 by Oliver Kurth.

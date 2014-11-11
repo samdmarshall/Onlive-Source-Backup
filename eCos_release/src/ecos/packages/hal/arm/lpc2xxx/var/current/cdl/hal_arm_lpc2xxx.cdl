@@ -1,0 +1,191 @@
+# ====================================================================
+#
+#      hal_arm_lpc2xxx.cdl
+#
+#      Philips LPC2XXX HAL package configuration data
+#
+# ====================================================================
+#####ECOSGPLCOPYRIGHTBEGIN####
+## -------------------------------------------
+## This file is part of eCos, the Embedded Configurable Operating System.
+## Copyright (C) 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+## Copyright (C) 2003 Nick Garnett <nickg@calivar.com>
+## Copyright (C) 2004 eCosCentric Limited 
+##
+## eCos is free software; you can redistribute it and/or modify it under
+## the terms of the GNU General Public License as published by the Free
+## Software Foundation; either version 2 or (at your option) any later version.
+##
+## eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or
+## FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+## for more details.
+##
+## You should have received a copy of the GNU General Public License along
+## with eCos; if not, write to the Free Software Foundation, Inc.,
+## 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+##
+## As a special exception, if other files instantiate templates or use macros
+## or inline functions from this file, or you compile this file and link it
+## with other works to produce a work based on this file, this file does not
+## by itself cause the resulting work to be covered by the GNU General Public
+## License. However the source code for this file must still be made available
+## in accordance with section (3) of the GNU General Public License.
+##
+## This exception does not invalidate any other reasons why a work based on
+## this file might be covered by the GNU General Public License.
+## -------------------------------------------
+#####ECOSGPLCOPYRIGHTEND####
+# ====================================================================
+######DESCRIPTIONBEGIN####
+#
+# Author(s):      jani 
+# Contributors:   gthomas, tkoeller, tdrury, nickg
+# Date:           2001-07-12
+#
+#####DESCRIPTIONEND####
+#
+# ====================================================================
+
+cdl_package CYGPKG_HAL_ARM_LPC2XXX {
+    display       "Philips LPC2XXX variant HAL"
+    parent        CYGPKG_HAL_ARM
+    define_header hal_arm_lpc2xxx.h
+    include_dir   cyg/hal
+    hardware
+    description   "
+        The LPC2XXX HAL package provides the support needed to run
+        eCos on Philips LPC2XXX based targets."
+
+    compile       hal_diag.c lpc2xxx_misc.c
+
+    implements    CYGINT_HAL_DEBUG_GDB_STUBS
+    implements    CYGINT_HAL_DEBUG_GDB_STUBS_BREAK
+    implements    CYGINT_HAL_VIRTUAL_VECTOR_SUPPORT
+    implements    CYGINT_HAL_VIRTUAL_VECTOR_COMM_BAUD_SUPPORT
+    implements    CYGINT_HAL_ARM_ARCH_ARM7
+    implements    CYGINT_HAL_ARM_THUMB_ARCH
+
+    # Let the architectural HAL see this variant's files
+    define_proc {
+        puts $::cdl_header "#define CYGBLD_HAL_VAR_INTS_H <cyg/hal/hal_var_ints.h>"
+        puts $::cdl_system_header "#define CYGBLD_HAL_ARM_VAR_IO_H"
+        puts $::cdl_system_header "#define CYGBLD_HAL_ARM_VAR_ARCH_H"
+    }
+
+    # This is going to get really messy before long as the number of parts
+    # explodes. Its useful to know the actual part in use, but its just as
+    # useful to know which family it belongs to. LPC210x shouldn't really
+    # be in the list of devices, but will probably break something if removed.
+    cdl_component CYGHWR_HAL_ARM_LPC2XXX {
+        display        "LPC2XXX variant used"
+        flavor         data
+        default_value  { "LPC210x" }
+        legal_values   { "LPC210x"
+                "LPC2101" "LPC2102" "LPC2103" "LPC2104" "LPC2105" "LPC2106"
+                "LPC2114" "LPC2119" "LPC2124" "LPC2129" "LPC2131" "LPC2132" 
+                "LPC2134" "LPC2136" "LPC2138" "LPC2141" "LPC2142" "LPC2144"
+                "LPC2146" "LPC2148" "LPC2194" "LPC2210" "LPC2212" "LPC2214"
+                "LPC2220" "LPC2290" "LPC2292" "LPC2294" }
+        description    "
+             The LPC2XXX microcontroller family has several variants,
+             the main differences being the amount of on-chip RAM,
+             flash and peripherals. This option allows the platform
+             HALs to select the specific microcontroller being used."
+
+        cdl_option CYGHWR_HAL_ARM_LPC2XXX_FAMILY {
+            display       "LPC2XXX variant family"
+            flavor        data
+            calculated    {
+                is_substr(CYGHWR_HAL_ARM_LPC2XXX, "LPC22") ? "LPC22XX" :
+                is_substr(CYGHWR_HAL_ARM_LPC2XXX, "LPC213") ? "LPC213X" :
+                is_substr(CYGHWR_HAL_ARM_LPC2XXX, "LPC214") ? "LPC214X" :
+                is_substr(CYGHWR_HAL_ARM_LPC2XXX, "LPC210") ? "LPC210X" :
+                "LPC21XX"
+                          }
+            description   "
+                This specifies the family that the processor
+                belongs to. This is useful as it defines certain common
+                characteristics (e.g lpc22xx has the external bus and
+                lpc214x has USB) which affect which features should be
+                available in the HAL."
+        }
+    }
+
+    cdl_option CYGNUM_HAL_ARM_LPC2XXX_VPBDIV {
+        display       "VPB clock divisor"
+        flavor        data
+        legal_values  { 4 2 1 }
+        default_value { 4 }
+        description   "
+            This option sets the divisor for the VPB clock relative to
+            the processor clock. 4 means that the VPB clock runs at
+            one fourth the processor clock, 2 means that it runs at
+            one half of the processor clock and 1 means that it is the
+            same as the processor clock."
+    }
+
+    cdl_option CYGNUM_HAL_ARM_LPC2XXX_XCLKDIV {
+        display         "XCLK clock divisor"
+        flavor          data
+        legal_values    { 4 2 1 }
+        default_value   { 4 }
+        active_if       { CYGHWR_HAL_ARM_LPC2XXX_FAMILY == "LPC22XX" }
+        description     "
+            This option sets the divisor for the XCLK clock relative
+            to the processor clock. 4 means that the XCLK clock runs
+            at one fourth the processor clock, 2 means that it runs at
+            one half of the processor clock and 1 means that it is the
+            same as the processor clock."
+    }
+
+    cdl_component CYGNUM_HAL_RTC_CONSTANTS {
+        display       "Real-time clock constants"
+        flavor        none
+
+        cdl_option CYGNUM_HAL_RTC_NUMERATOR {
+            display       "Real-time clock numerator"
+            flavor        data
+            default_value 1000000000
+        }
+        cdl_option CYGNUM_HAL_RTC_DENOMINATOR {
+            display       "Real-time clock denominator"
+            flavor        data
+            default_value 100
+        }
+        cdl_option CYGNUM_HAL_RTC_PERIOD {
+            display       "Real-time clock period"
+            flavor        data
+            default_value { ((CYGNUM_HAL_ARM_LPC2XXX_CLOCK_SPEED) / 
+                              CYGNUM_HAL_RTC_DENOMINATOR) }
+        }
+    }
+   
+    # Enable this by default, as I believe it won't affect parts that
+    # don't have the problem (other than slowing them down slightly)
+    # but causes a lock-up on those that do...
+    cdl_option CYGHWR_HAL_ARM_LPC2XXX_EXTINT_ERRATA {
+        display       "EXTINT.1 errata workaround"
+        flavor        bool       
+        default_value 1           
+        description   "
+
+            On some chips writing to the EXTPOLAR or EXTMODE registers
+            while VPBDIV is non-zero can corrupt the latter. Also
+            reading them will yield incorrect values.  Enable this
+            option to work around the problem."  
+    }
+
+    cdl_option CYGHWR_HAL_ARM_LPC2XXX_IDLE_PWRSAVE {
+        display       "Stop clock in idle loop to save power"
+        flavor        bool
+        default_value { is_active(CYGPKG_REDBOOT) ? 0 : 1 }
+        description   "
+           Select this option when it is desired to save power by
+           stoping the processor clock in the idle loop. This is
+           controlled by the PCON register. Generally this is a good
+           thing, but it may be necessary to disable this when
+           debugging via JTAG, as stopping the clock can prevent the
+           debugger getting control of the system."
+    }
+}

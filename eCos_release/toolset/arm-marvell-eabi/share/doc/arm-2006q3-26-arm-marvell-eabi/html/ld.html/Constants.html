@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+<title>Constants - Untitled</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Untitled">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Expressions.html#Expressions" title="Expressions">
+<link rel="next" href="Symbols.html#Symbols" title="Symbols">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Constants"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Symbols.html#Symbols">Symbols</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Expressions.html#Expressions">Expressions</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.10.1 Constants</h4>
+
+<p><a name="index-integer-notation-436"></a><a name="index-constants-in-linker-scripts-437"></a>All constants are integers.
+
+   <p>As in C, the linker considers an integer beginning with `<samp><span class="samp">0</span></samp>' to be
+octal, and an integer beginning with `<samp><span class="samp">0x</span></samp>' or `<samp><span class="samp">0X</span></samp>' to be
+hexadecimal.  The linker considers other integers to be decimal.
+
+   <p><a name="index-scaled-integers-438"></a><a name="index-K-and-M-integer-suffixes-439"></a><a name="index-M-and-K-integer-suffixes-440"></a><a name="index-suffixes-for-integers-441"></a><a name="index-integer-suffixes-442"></a>In addition, you can use the suffixes <code>K</code> and <code>M</code> to scale a
+constant by
+<!-- TEXI2ROFF-KILL -->
+<!-- END TEXI2ROFF-KILL -->
+<code>1024</code> or <code>1024*1024</code>
+<!-- TEXI2ROFF-KILL -->
+<!-- END TEXI2ROFF-KILL -->
+respectively. For example, the following all refer to the same quantity:
+<pre class="smallexample">     _fourk_1 = 4K;
+     _fourk_2 = 4096;
+     _fourk_3 = 0x1000;
+</pre>
+   </body></html>
+

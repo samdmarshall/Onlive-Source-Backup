@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuite.PrivServer
+Exec=/src/jhbuild/checkout/dbus/test/name-test/test-privserver
+

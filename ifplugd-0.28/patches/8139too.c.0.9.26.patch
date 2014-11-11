@@ -1,0 +1,13 @@
+--- 8139too.c.dist	Thu Oct 31 23:45:04 2002
++++ 8139too.c	Thu Oct 31 23:45:46 2002
+@@ -2449,8 +2449,8 @@
+ 	int rc = 0;
+ 	int phy = tp->phys[0] & 0x3f;
+ 
+-	if (!netif_running(dev))
+-		return -EINVAL;
++//	if (!netif_running(dev))
++//		return -EINVAL;
+ 
+ 	if (cmd != SIOCETHTOOL) {
+ 		/* With SIOCETHTOOL, this would corrupt the pointer.  */

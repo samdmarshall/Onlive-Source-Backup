@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuiteEchoService
+Exec=/src/jhbuild/checkout/dbus/test/test-service
+

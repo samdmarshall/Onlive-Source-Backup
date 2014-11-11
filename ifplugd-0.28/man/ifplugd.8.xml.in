@@ -1,0 +1,299 @@
+<?xml version="1.0" standalone='no'?>
+<!DOCTYPE manpage SYSTEM "xmltoman.dtd">
+<?xml-stylesheet type="text/xsl" href="xmltoman.xsl" ?>
+
+<!-- $Id: ifplugd.8.xml.in 119 2005-03-30 16:14:39Z lennart $ -->
+
+<!-- 
+  This file is part of ifplugd.
+
+  ifplugd is free software; you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free
+  Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
+
+  ifplugd is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+  for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with ifplugd; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA. 
+-->
+
+  <manpage name="ifplugd" section="8" desc="A link detection daemon for ethernet devices">
+
+	<synopsis>
+	  <cmd>ifplugd [<arg>options</arg>]</cmd>
+	</synopsis>
+	
+	<description>
+	  <p>ifplugd is a daemon which will automatically configure your
+		ethernet device when a cable is plugged in and automatically
+		unconfigure it if the cable is pulled. This is useful on
+		laptops with on-board network adapters, since it will only
+		configure the interface when a cable is really connected.</p>
+	  
+	  <p>It uses your distribution's native ifup/ifdown programs, but
+		can be configured to do anything you wish when the state of
+		the interface changes. It may ignore short unplugged whiles
+		(<opt>-d</opt> option) or plugged whiles (<opt>-u</opt> option).</p>
+
+      <p>ifplugd may be used in "compatibility mode" by specifying -F
+      on the command line. Than ifplugd will treat network drivers
+      which do not support link beat querying as always online.</p>
+
+
+</description>
+	
+	<options>
+	  
+	  <option>
+		<p><opt>-a | --no-auto</opt></p>
+		<optdesc><p>
+			Do not enable interface automatically (default: off)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-n | --no-daemon</opt></p>
+		<optdesc><p>
+			Do not daemonize (for debugging) (default: off)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-s | --no-syslog</opt></p>
+		<optdesc><p>
+			Do not use syslog, use stdout instead (for debugging) (default: off).
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-b | --no-beep</opt></p>
+		<optdesc><p>
+			Do not beep (off)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-f | --ignore-fail</opt></p>
+		<optdesc><p>
+			Ignore detection failure, retry instead. Failure is treated as "no link". (default: off)
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-F | --ignore-fail-positive</opt></p>
+		<optdesc><p>
+			Ignore detection failure, retry instead. Failure is treated as "link detected". (default: off)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-i | --iface=</opt> <arg>IFACE</arg></p>
+		<optdesc><p>
+			Specify ethernet interface (default: eth0)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-r | --run=</opt> <arg>EXEC</arg></p>
+		<optdesc><p>
+			Specify program to execute when link status changes (default: <file>@sysconfdir@/ifplugd/ifplugd.action</file>)
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-I | --ignore-retval</opt></p>
+		<optdesc><p>
+			Don't exit on nonzero return value of program executed on link change. (default: off)
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-t | --poll-time=</opt> <arg>SECS</arg></p>
+		<optdesc><p>
+			Specify poll time in seconds (default: 1)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-u | --delay-up=</opt> <arg>SECS</arg></p>
+		<optdesc><p>
+			Specify delay for configuring interface (default: 0)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-d | --delay-down=</opt> <arg>SECS</arg></p>
+		<optdesc><p>
+			Specify delay for deconfiguring interface (default: 5)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-m | --api-mode=</opt> <arg>MODE</arg></p> <optdesc><p>
+		Force a specific link beat detection ioctl() API. Possible
+		values are auto, iff, wlan, ethtool, mii, and priv for automatic
+		detection, interface flag (IFF_RUNNING), wireless extension, SIOCETHTOOL, SIOCGMIIREG
+		resp. SIOCPRIV. Only the first character of the argument is
+		relevant, case insensitive.  (default: auto) </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-p | --no-startup</opt></p>
+		<optdesc><p>
+			Don't call the script to bring up network on deamon start (default: off)
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-q | --no-shutdown</opt></p>
+		<optdesc><p>
+			Don't call the script for network shutdown on deamon quit (default: off)
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-w | --wait-on-fork</opt></p> 
+
+		<optdesc><p> When daemonizing, wait until the background
+		process finished with the initial link beat detection. When
+		this is enabled, the parent process will return the link
+		status on exit. 1 means link beat detected, 2 stands for link
+		beat not detected, everything else is an error.
+		</p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-W | --wait-on-kill</opt></p> 
+
+		<optdesc><p> When killing a running daemon (with -k) wait
+		until the daemon died.
+        </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-x | --extra-arg=</opt> <arg>ARG</arg></p>
+		<optdesc><p>
+			Specify an extra argument to be passed to the action script.
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+	  	<p><opt>-M | --monitor</opt></p>
+		<optdesc><p>
+			Don't fail when the network interface is not available, instead use NETLINK to monitor device avaibility. The is useful for PCMCIA devices and similar. 
+		</p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-h | --help</opt></p>
+		<optdesc><p>
+			Show help
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-k | --kill</opt></p>
+		<optdesc><p>
+			Kill a running daemon (Specify -i to select the daemon instance to kill)
+		  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-c | --check-running</opt></p>
+		<optdesc><p>
+			Check if a daemon is running for a given network interface. Sets the return value to 0 if a daemon is already running or to 255 if not.
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-v | --version</opt></p>
+		<optdesc><p>
+			Show version
+		  </p></optdesc>
+	  </option>
+	  
+	  <option>
+		<p><opt>-S | --supend</opt></p> <optdesc><p> Suspend a running
+		daemon. The daemon will no longer check the link status until
+		it is resumed (-R) again. (Specify -i to select the daemon instance
+		to suspend.)  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-R | --resume</opt></p> <optdesc><p> Resume a suspended
+		daemon. (Specify -i to select the daemon instance
+		to resume.)  </p></optdesc>
+	  </option>
+
+	  <option>
+		<p><opt>-z | --info</opt></p> <optdesc><p>Request that a
+		running daemon shall write its status information to
+		syslog. (Specify -i to select the daemon instance to send the
+		request to.)  </p></optdesc>
+	  </option>
+
+	</options>
+	
+	<section name="Files">
+	  
+	  <p><file>@sysconfdir@/ifplugd/ifplugd.conf</file>: this file is sourced
+		by the init script <file>@sysconfdir@/init.d/ifplugd</file> and
+		contains the interface to be monitored and the options to be
+		used.</p>
+	  
+	  <p><file>@sysconfdir@/ifplugd/ifplugd.action</file>: this is the script
+		which will be called by the daemon whenever the state of the
+	 	interface changes. It takes two areguments: the first is the interface
+		name (eg. eth0), the second either "up" or "down". </p>
+		
+	  <p><file>/var/run/ifplugd.&lt;iface&gt;.pid</file>: the pid file
+	  for ifplugd.</p>
+	  
+	</section>
+	
+	<section name="Environment">
+	  <p>The action script will be called with two environment variables set:</p>
+
+	  <p><arg>IFPLUGD_PREVIOUS</arg> The previous link status. Either
+	  "up", "down", "error" or "disabled". The former values should be
+	  obvious, the latter is set on daemon startup.</p>
+
+	  <p><arg>IFPLUGD_CURRENT</arg> The current link status. See above
+	  for possible values.</p>
+
+	</section>
+
+    <section name="Signals">
+      <p><arg>SIGINT, SIGTERM</arg> ifplugd will quit, possibly running the shutdown script. This is issued by passing -k to ifplugd.</p>
+      <p><arg>SIGQUIT</arg> ifplugd will quit, the shutdown script is never run.</p>
+      <p><arg>SIGHUP</arg> ifplugd will write its status information to syslog. This is issued by -z.</p>
+      <p><arg>SIGUSR1</arg> ifplugd will go to suspend mode. (-S)</p>
+      <p><arg>SIGUSR2</arg> ifplugd will resume from suspend mode. (-R)</p>
+    </section>
+
+	<section name="Author">
+	  <p>ifplugd was written by Lennart Poettering
+		&lt;@PACKAGE_BUGREPORT@&gt;. ifplugd is available
+		at <url
+		href="@PACKAGE_URL@"/>
+	  </p>
+	</section>
+	
+	<section name="See also">
+	  <p>
+		<manref name="ifplugd.conf" section="5"/>, <manref name="ifup" section="8"/>, <manref name="interfaces"
+		  section="5"/>, <manref name="ifconfig" section="8"/>, <manref name="ifplugstatus" section="8"/>
+	  </p>
+	</section>
+	
+	<section name="Comments">
+	  <p>This man page was written using <manref name="xmltoman" section="1"
+		  href="http://masqmail.cx/xml2man/"/> by Oliver Kurth.</p>
+	</section>
+	
+  </manpage>

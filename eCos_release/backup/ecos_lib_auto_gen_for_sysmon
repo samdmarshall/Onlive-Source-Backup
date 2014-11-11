@@ -1,0 +1,59 @@
+PATH=$PATH:$PWD/toolset/tools/bin
+export ECOS_REPOSITORY=$PWD/src/ecos/packages
+LOCAL_ROOT=$PWD
+
+rm -fr lib_release_for_sysmon
+mkdir lib_release_for_sysmon
+mkdir lib_release_for_sysmon/galois.0x14000000
+mkdir lib_release_for_sysmon/berlin.0x14000000
+
+rm -fr galois_default
+mkdir galois_default
+cd galois_default
+MLT_H=../src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.h
+MLT_LDI=../src/ecos/packages/hal/arm/arm9/galois/current/include/pkgconf/mlt_arm_arm9_galois_ram.ldi
+VECTOR=../src/ecos/packages/hal/arm/arch/current/src/vectors.S
+
+echo "build Galois LIB with heap end at 0x14000000 for system monitor measurement"
+rm -fr $MLT_H $MLT_H.0x14000000
+svn update $MLT_H.0x14000000
+mv $MLT_H.0x14000000 $MLT_H
+rm -fr $MLT_LDI $MLT_LDI.0x14000000
+svn update $MLT_LDI.0x14000000 
+mv $MLT_LDI.0x14000000 $MLT_LDI
+rm -fr $VECTOR $VECTOR.Galois
+svn update $VECTOR.Galois
+mv $VECTOR.Galois $VECTOR
+
+rm -fr *
+ecosconfig new galois default_for_sysmon
+ecosconfig tree
+make -s
+cp -fr install/. ../lib_release_for_sysmon/galois.0x14000000/.
+
+echo "build Berlin LIB with heap end at 0x14000000 for system monitor measurement"
+rm -fr $MLT_H $MLT_H.0x14000000
+svn update $MLT_H.0x14000000
+mv $MLT_H.0x14000000 $MLT_H
+rm -fr $MLT_LDI $MLT_LDI.0x14000000
+svn update $MLT_LDI.0x14000000 
+mv $MLT_LDI.0x14000000 $MLT_LDI
+rm -fr $VECTOR $VECTOR.Berlin
+svn update $VECTOR.Berlin
+mv $VECTOR.Berlin $VECTOR
+
+rm -fr *
+ecosconfig new galois default_for_sysmon
+ecosconfig tree
+make -s
+cp -fr install/. ../lib_release_for_sysmon/berlin.0x14000000/.
+
+cd $LOCAL_ROOT
+rm -fr lib_release_for_sysmon/final_lib
+mkdir lib_release_for_sysmon/final_lib
+cd lib_release_for_sysmon/final_lib
+cp ../../lib_release_for_sysmon/berlin.0x14000000/lib/extras.o extras_CPU1_SysMonitor.o
+cp ../../lib_release_for_sysmon/berlin.0x14000000/lib/libextras.a libextras_CPU1_SysMonitor.a
+cp ../../lib_release_for_sysmon/berlin.0x14000000/lib/libtarget.a libtarget_CPU1_SysMonitor.a
+cp ../../lib_release_for_sysmon/berlin.0x14000000/lib/vectors.o vectors_Berlin.o
+cp ../../lib_release_for_sysmon/galois.0x14000000/lib/vectors.o vectors_Galois.o

@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+include /usr/share/cdbs/1/class/makefile.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+
+ifeq ($(DEB_ARCH),armel)
+DEB_MAKE_ENVVARS := CONFIG_AEABI=y
+endif
+ifeq ($(DEB_ARCH),ia64)
+DEB_MAKE_ENVVARS := ARCH=ia64
+endif
+ifeq ($(DEB_ARCH),sparc)
+DEB_MAKE_ENVVARS := ARCH=sparc
+endif
+ifeq ($(DEB_ARCH),s390)
+DEB_MAKE_ENVVARS := ARCH=s390
+endif
+ifeq ($(DEB_ARCH),powerpc)
+ARCH=ppc
+endif
+ifneq (,$(findstring $(DEB_ARCH),mips mipsel))
+DEB_MAKE_ENVVARS := ARCH=mips
+endif
+
+DEB_MAKE_INVOKE := make
+DEB_MAKE_CLEAN_TARGET := clean
+DEB_MAKE_BUILD_TARGET := all
+DEB_MAKE_ENVVARS := INSTALLROOT=debian/tmp $(DEB_MAKE_ENVVARS)
+
+# Enable this to get verbose build information
+DEB_MAKE_ENVVARS += KBUILD_VERBOSE=1
+
+DEB_MAKE_INVOKE = make -C $(DEB_BUILDDIR) $(DEB_MAKE_ENVVARS)
+
+DEB_MAKE_INSTALL_TARGET := install
+
+DEB_FIXPERMS_EXCLUDE := klibc-
+
+pre-build::
+	if [ ! -e linux ]; then \
+		rm -rf linux/include; \
+		mkdir -p linux/include; \
+		ln -s /usr/include/linux linux/include; \
+		for x in /usr/include/asm*; do \
+			ln -s $${x} linux/include; \
+		done \
+	fi
+
+clean::
+	rm -rf linux
+	make $(DEB_MAKE_ENVVARS) mrproper
+

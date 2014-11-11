@@ -1,0 +1,8 @@
+#cardctl resume
+./mrvlsdio_load
+if echo $1 2>&1 | grep dbg > /dev/null; then
+	insmod mlan-dbg.ko
+else
+	insmod mlan.ko
+fi
+insmod $1.ko

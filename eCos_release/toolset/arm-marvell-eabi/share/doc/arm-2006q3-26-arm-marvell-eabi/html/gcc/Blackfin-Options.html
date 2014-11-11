@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+<title>Blackfin Options - Using the GNU Compiler Collection (GCC)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Using the GNU Compiler Collection (GCC)">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Submodel-Options.html#Submodel-Options" title="Submodel Options">
+<link rel="prev" href="AVR-Options.html#AVR-Options" title="AVR Options">
+<link rel="next" href="CRIS-Options.html#CRIS-Options" title="CRIS Options">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU General Public License'' and ``Funding
+Free Software'', the Front-Cover texts being (a) (see below), and with
+the Back-Cover Texts being (b) (see below).  A copy of the license is
+included in the section entitled ``GNU Free Documentation License''.
+
+(a) The FSF's Front-Cover Text is:
+
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Blackfin-Options"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="CRIS-Options.html#CRIS-Options">CRIS Options</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="AVR-Options.html#AVR-Options">AVR Options</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Submodel-Options.html#Submodel-Options">Submodel Options</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.17.4 Blackfin Options</h4>
+
+<p><a name="index-Blackfin-Options-770"></a>
+     <dl>
+<dt><code>-momit-leaf-frame-pointer</code><dd><a name="index-momit_002dleaf_002dframe_002dpointer-771"></a>Don't keep the frame pointer in a register for leaf functions.  This
+avoids the instructions to save, set up and restore frame pointers and
+makes an extra register available in leaf functions.  The option
+<samp><span class="option">-fomit-frame-pointer</span></samp> removes the frame pointer for all functions
+which might make debugging harder.
+
+     <br><dt><code>-mspecld-anomaly</code><dd><a name="index-mspecld_002danomaly-772"></a>When enabled, the compiler will ensure that the generated code does not
+contain speculative loads after jump instructions.  This option is enabled
+by default.
+
+     <br><dt><code>-mno-specld-anomaly</code><dd><a name="index-mno_002dspecld_002danomaly-773"></a>Don't generate extra code to prevent speculative loads from occurring.
+
+     <br><dt><code>-mcsync-anomaly</code><dd><a name="index-mcsync_002danomaly-774"></a>When enabled, the compiler will ensure that the generated code does not
+contain CSYNC or SSYNC instructions too soon after conditional branches. 
+This option is enabled by default.
+
+     <br><dt><code>-mno-csync-anomaly</code><dd><a name="index-mno_002dcsync_002danomaly-775"></a>Don't generate extra code to prevent CSYNC or SSYNC instructions from
+occurring too soon after a conditional branch.
+
+     <br><dt><code>-mlow-64k</code><dd><a name="index-mlow_002d64k-776"></a>When enabled, the compiler is free to take advantage of the knowledge that
+the entire program fits into the low 64k of memory.
+
+     <br><dt><code>-mno-low-64k</code><dd><a name="index-mno_002dlow_002d64k-777"></a>Assume that the program is arbitrarily large.  This is the default.
+
+     <br><dt><code>-mid-shared-library</code><dd><a name="index-mid_002dshared_002dlibrary-778"></a>Generate code that supports shared libraries via the library ID method. 
+This allows for execute in place and shared libraries in an environment
+without virtual memory management.  This option implies <samp><span class="option">-fPIC</span></samp>.
+
+     <br><dt><code>-mno-id-shared-library</code><dd><a name="index-mno_002did_002dshared_002dlibrary-779"></a>Generate code that doesn't assume ID based shared libraries are being used. 
+This is the default.
+
+     <br><dt><code>-mshared-library-id=n</code><dd><a name="index-mshared_002dlibrary_002did-780"></a>Specified the identification number of the ID based shared library being
+compiled.  Specifying a value of 0 will generate more compact code, specifying
+other values will force the allocation of that number to the current
+library but is no more space or time efficient than omitting this option.
+
+     <br><dt><code>-mlong-calls</code><dt><code>-mno-long-calls</code><dd><a name="index-mlong_002dcalls-781"></a><a name="index-mno_002dlong_002dcalls-782"></a>Tells the compiler to perform function calls by first loading the
+address of the function into a register and then performing a subroutine
+call on this register.  This switch is needed if the target function
+will lie outside of the 24 bit addressing range of the offset based
+version of subroutine call instruction.
+
+     <p>This feature is not enabled by default.  Specifying
+<samp><span class="option">-mno-long-calls</span></samp> will restore the default behavior.  Note these
+switches have no effect on how the compiler generates code to handle
+function calls via function pointers. 
+</dl>
+
+ </body></html>
+

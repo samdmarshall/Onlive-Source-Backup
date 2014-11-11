@@ -1,0 +1,26 @@
+/Makefile/1.1/Mon May 20 22:25:32 2002//
+/bitvector.c/1.1/Mon May 20 22:25:32 2002//
+/bitvector.h/1.1/Mon May 20 22:25:32 2002//
+/digits.cl/1.1/Mon May 20 22:25:32 2002//
+/hre.h/1.1/Mon May 20 22:25:32 2002//
+/hre_api.c/1.1/Mon May 20 22:25:32 2002//
+/hre_api.h/1.1/Mon May 20 22:25:32 2002//
+/hre_api_internal.h/1.1/Mon May 20 22:25:32 2002//
+/hre_internal.h/1.1/Mon May 20 22:25:32 2002//
+/letters.cl/1.1/Mon May 20 22:25:32 2002//
+/li_recognizer.c/1.1/Mon May 20 22:25:33 2002//
+/li_recognizer.h/1.1/Mon May 20 22:25:33 2002//
+/li_recognizer_internal.h/1.1/Mon May 20 22:25:33 2002//
+/matrix.c/1.1/Mon May 20 22:25:33 2002//
+/matrix.h/1.1/Mon May 20 22:25:33 2002//
+/nxscribble.c/1.1/Mon May 20 22:25:33 2002//
+/nxscribble.syms/1.1/Mon May 20 22:25:33 2002//
+/punc.cl/1.1/Mon May 20 22:25:33 2002//
+/sc.c/1.1/Mon May 20 22:25:33 2002//
+/sc.h/1.1/Mon May 20 22:25:33 2002//
+/scrib.h/1.1/Mon May 20 22:25:33 2002//
+/scribwidget.c/1.1/Mon May 20 22:25:33 2002//
+/util.c/1.1/Mon May 20 22:25:33 2002//
+/util.h/1.1/Mon May 20 22:25:33 2002//
+/zdebug.h/1.1/Mon May 20 22:25:33 2002//
+D
